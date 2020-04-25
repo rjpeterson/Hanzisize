@@ -2,9 +2,10 @@ const puppeteer = require('puppeteer');
 const { assert } = require('chai');
 const extensionId = require('../extensionId')
 
-const extensionPath = "D:\My Documents\Code\Chrome Extensions\hanzisize-reboot";
+const extensionPath = "D:/My Documents/Code/Chrome Extensions/hanzisize-reboot";
 const extensionPopupHtml = "popup.html";
 let browser = null;
+let extensionPage = null;
 
 describe('Extension popup', function() {
   this.timeout(20000); // default is 2 seconds and that may not be enough to boot browsers and pages.
@@ -18,8 +19,13 @@ describe('Extension popup', function() {
 
   describe('popup content', () => {
     it('displays a number input box', async () => {
-      const inputElement = await extensionPage.$('min-font-size');
-      assert.ok(inputElement, 'Input field is not rendered');
+      const inputElement = await extensionPage.$('#min-font-size');
+      assert.ok(inputElement, 'Input field does not exist');
+    })
+
+    it('displays a submit button', async () => {
+      const submitButton = await extensionPage.$('#submit');
+      assert.ok(submitButton, 'Submit button does not exist')
     })
   })
 });
@@ -30,18 +36,19 @@ async function boot() {
   browser = await puppeteer.launch({
     headless: false, // extensions only allowed in head-full mode
     devtools: true,
+    ignoreDefaultArgs: true,
     args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '-disable-gpu',
-      '--no-first-run',
-      '--disable-notifications',
+      // '--no-sandbox',
+      // '--disable-setuid-sandbox',
+      // '-disable-gpu',
+      // '--no-first-run',
+      // '--disable-notifications',
       '--enable-remote-extensions',
-      //`--disable-extensions-except=${extensionPath}`,
+      `--disable-extensions-except=${extensionPath}`,
       `--load-extension=${extensionPath}`
     ] 
   });
 
-  const extensionPage = await browser.newPage();
+  extensionPage = await browser.newPage();
   await extensionPage.goto(`chrome-extension://${extensionId}/${extensionPopupHtml}`);
 };
