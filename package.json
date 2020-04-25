@@ -1,0 +1,27 @@
+{
+  "name": "hanzisize-reboot",
+  "version": "1.0.0",
+  "description": "A chrome extension to change Chinese font-size",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjpeterson/Hanzisize.git"
+  },
+  "author": "Ryan Peterson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rjpeterson/Hanzisize/issues"
+  },
+  "homepage": "https://github.com/rjpeterson/Hanzisize#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "sinon-chrome": "^3.0.1"
+  },
+  "dependencies": {
+    "mocha": "^7.1.1",
+    "puppeteer": "^3.0.1"
+  }
+}
