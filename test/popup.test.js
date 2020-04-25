@@ -1,54 +1,45 @@
-const puppeteer = require('puppeteer');
 const { assert } = require('chai');
-const extensionId = require('../extensionId')
-
-const extensionPath = "D:/My Documents/Code/Chrome Extensions/hanzisize-reboot";
-const extensionPopupHtml = "popup.html";
-let browser = null;
-let extensionPage = null;
+const pupBrowser = require('./testBoot');
 
 describe('Extension popup', function() {
   this.timeout(20000); // default is 2 seconds and that may not be enough to boot browsers and pages.
 
   before(async function() {
-    await boot();
+    await pupBrowser.launchBrowser();
   });
   after(async function() {
-    await browser.close();
+    await pupBrowser.browser.close();
   });
 
   describe('popup content', () => {
     it('displays a number input box', async () => {
-      const inputElement = await extensionPage.$('#min-font-size');
+      const inputElement = await pupBrowser.extensionPage.$('#min-font-size');
       assert.ok(inputElement, 'Input field does not exist');
     })
 
     it('displays a submit button', async () => {
-      const submitButton = await extensionPage.$('#submit');
+      const submitButton = await pupBrowser.extensionPage.$('#submit');
       assert.ok(submitButton, 'Submit button does not exist')
+    })
+
+    it('displays the current saved font size', async() => {
+      const currentFontSize = await pupBrowser.extensionPage.$('#currSavedFontSize');
+      assert.ok(currentFontSize, 'Current-saved-font-size does not exist')
+    })
+  });
+
+  describe('submit button', () => {
+    it('stores and retrieves a number value from chrome storage', async () => {
+      const expected = '15';
+      const input = await pupBrowser.extensionPage.$('#min-font-size');
+      const submit = await pupBrowser.extensionPage.$('#submit');
+
+      await input.type(expected);
+      await submit.click;
+
+      const actual = await pupBrowser.extensionPage.$eval('#currSavedFontSize', e => e.innerText);
+      assert.equal(actual, expected);
     })
   })
 });
 
-async function boot() {
-  const args = puppeteer.defaultArgs().filter(arg => String(arg).toLowerCase() !== '--disable-extensions');
-  
-  browser = await puppeteer.launch({
-    headless: false, // extensions only allowed in head-full mode
-    devtools: true,
-    ignoreDefaultArgs: true,
-    args: [
-      // '--no-sandbox',
-      // '--disable-setuid-sandbox',
-      // '-disable-gpu',
-      // '--no-first-run',
-      // '--disable-notifications',
-      '--enable-remote-extensions',
-      `--disable-extensions-except=${extensionPath}`,
-      `--load-extension=${extensionPath}`
-    ] 
-  });
-
-  extensionPage = await browser.newPage();
-  await extensionPage.goto(`chrome-extension://${extensionId}/${extensionPopupHtml}`);
-};
