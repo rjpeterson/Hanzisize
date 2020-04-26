@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <head></head>
+  <head>
+    <script src="jquery.min.js"></script>
+  </head>
   <body>
-    <input type="number" id="min-font-size">
-    <input type="submit" id="submit">
-    <section id="currSavedFontSize">15</section>
+    <section class="input">
+      <input type="number" id="min-font-size">
+      <span id="error-message"></span>
+    </section>
+    <section class="button">
+      <input type="submit" id="submit">
+    </section>
+    <section id="notification">
+      Current Saved Font Size: <span id="curr-saved-font-size"></span>
+    </section>
+    <script src="popup.js"></script>
   </body>
 </html>
