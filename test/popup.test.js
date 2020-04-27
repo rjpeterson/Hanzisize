@@ -39,12 +39,10 @@ describe('Extension popup', function() {
       const input = await pupBrowser.extensionPage.$('#min-font-size');
       const submit = await pupBrowser.extensionPage.$('#submit');
 
-      try {
-        await input.type(expected);
-        if (await getElementText('#min-font-size') != '15') throw "input failed";
-      }
-      catch(err) {console.log(err)};
+      
+      await input.type(expected);
       await submit.click();
+      await pupBrowser.extensionPage.waitFor(10);
 
       const actual = await getElementText('#curr-saved-font-size');
       const errorMessage = await getElementText('#error-message');
