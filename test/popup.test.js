@@ -34,36 +34,39 @@ describe('Extension popup', function() {
   });
 
   describe('submit button action', () => {
-    it('stores and retrieves a number value from chrome storage', async () => {
-      const expected = '15';
-      const input = await pupBrowser.extensionPage.$('#min-font-size');
-      const submit = await pupBrowser.extensionPage.$('#submit');
-
-      
-      await input.type(expected);
-      await submit.click();
-      await pupBrowser.extensionPage.waitFor(10);
-
-      const actual = await getElementText('#curr-saved-font-size');
-      const errorMessage = await getElementText('#error-message');
-      assert.equal(actual, expected);
-      assert.equal(errorMessage, '')
-    })
-
-    it('throws an error when given a negative number', async () => {
-      const fontSize = '-4';
-      const savedFontSize = await getElementText('#curr-saved-font-size');
-      const input = await pupBrowser.extensionPage.$('#min-font-size');
-      const submit = await pupBrowser.extensionPage.$('#submit');
-      const expectedError = 'Font Size must be a positive number';
-
-      await input.type(fontSize);
-      await submit.click();
-      const returnedFontSize = await getElementText('#curr-saved-font-size');
-      const errorMessage = await getElementText('#error-message');
-
-      expect(returnedFontSize, 'Returned Font Size').to.equal(savedFontSize);
-      expect(errorMessage, '#error-message text').to.equal(expectedError)
+    describe('chrome storage changes', () => {
+      it('stores and retrieves a number value from chrome storage', async () => {
+        const expected = '15';
+        const input = await pupBrowser.extensionPage.$('#min-font-size');
+        const submit = await pupBrowser.extensionPage.$('#submit');
+  
+        
+        await input.type(expected);
+        await submit.click();
+        await pupBrowser.extensionPage.waitFor(10);
+  
+        const actual = await getElementText('#curr-saved-font-size');
+        const errorMessage = await getElementText('#error-message');
+        assert.equal(actual, expected);
+        assert.equal(errorMessage, '')
+      })
+  
+      it('errors and doesnt change chrome storage when given a negative number', async () => {
+        const fontSize = '-4';
+        const savedFontSize = await getElementText('#curr-saved-font-size');
+        const input = await pupBrowser.extensionPage.$('#min-font-size');
+        const submit = await pupBrowser.extensionPage.$('#submit');
+        const expectedError = 'Font Size must be a positive number';
+  
+        await input.type(fontSize);
+        await submit.click();
+        
+        const returnedFontSize = await getElementText('#curr-saved-font-size');
+        const errorMessage = await getElementText('#error-message');
+  
+        expect(returnedFontSize, 'Returned Font Size').to.equal(savedFontSize);
+        expect(errorMessage, '#error-message text').to.equal(expectedError)
+      })
     })
   })
 });
