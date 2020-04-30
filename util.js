@@ -53,11 +53,11 @@ const hanzisizeUtil = {
       // if element has content that is not nested
       if (el.firstChild) {
         // log the content
-        console.log(`content of element's first child : ${el.firstChild.nodeValue}`)
+        // console.log(`content of element's first child : ${el.firstChild.nodeValue}`)
         // if language of content matches input language
-        if (hasLanguage(language, el.firstChild.nodeValue)) {
+        if (this.hasLanguage(language, el.firstChild.nodeValue)) {
           // console log for debugging
-          console.log(`Element contains ${language} text`)
+          // console.log(`Element contains ${language} text`)
           langElems.push(el.firstChild.nodeValue);
           // // pass in resizeSingleElement function as callback
           // if (callback) {
@@ -65,8 +65,7 @@ const hanzisizeUtil = {
           // };
         } else {
           // console log for debugging
-          console.log(`element does not contain ${language} text`
-          )
+          // console.log(`element does not contain ${language} text`)
         }
       }
     }
