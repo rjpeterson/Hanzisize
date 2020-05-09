@@ -34,10 +34,9 @@ const hanzisizeUtil = {
         el.style.setProperty('font-size', newMinFontSize + 'px', 'important')
         // Version 1.3.0 - Change line-height for websites like nytimes.com
         const curFontSize = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('font-size'))
-        const curLineHeight = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('line-height'))
-        if (curLineHeight !== 'normal' && curLineHeight <= (curFontSize + 1)) {
-          el.style.setProperty('line-height', 'normal', 'important')
-        }
+        // const curLineHeight = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('line-height'))
+        // if (curLineHeight !== 'normal' && curLineHeight <= (curFontSize + 1)) {
+        //   el.style.setProperty('line-height', 'normal', 'important')
       }
     }
   },
@@ -73,30 +72,40 @@ const hanzisizeUtil = {
   },
 
   // input a single element, target lang, and MFS, function will perform proper resizing procedure
-  singleElementResizer(language, el, newMinFontSize) {
+  singleElementResizer(window, language, el, newMinFontSize) {
     const languageMatch = this.hasLanguage(language, el.firstChild.nodeValue);
-    const currentFontSize = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('font-size'));
-    const originalFontSize = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('original-font-size'));
+    const currentFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('font-size'));
+    console.log(`currentFontSize: ${currentFontSize}`);
+    const originalFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('original-font-size'));
+    console.log(`originalFontSize: ${originalFontSize}`);
 
     if (!languageMatch) {
+      console.log(`No text matching language "${language}" found`);
       return
     } else { // language match
       if (currentFontSize > newMinFontSize) { // big text -> small text
+        console.log(`CFS is larger than NMFS`)
         if (!originalFontSize) { // OFS not set, likely header text
+          console.log(`CFS is original. No change`)
           return
         } else if (originalFontSize > newMinFontSize) { 
           // text should never be smaller than OFS
+          console.log(`CFS is not original and larger than NMFS. FS to OFS`);
           el.style.setProperty('font-size', originalFontSize + 'px', 'important')
         } else if (originalFontSize < newMinFontSize) {
           // text size reduced to NMFS, still larger than OFS
+          console.log(`CFS is not original and less than NMFS. FS to NMFS`);
           el.style.setProperty('font-size', newMinFontSize + 'px', 'important')
         }
       } else if (currentFontSize < newMinFontSize) { // small -> big
+        console.log(`CFS is less than NMFS`)
         if (!originalFontSize) {
           // retain original font size for later use
+          console.log(`CFS is original. Save CFS as OFS`)
           el.style.setProperty('original-font-size', currentFontSize + 'px', 'important');
         }
         // enlarge text
+        console.log(`Set FS to NMFS`)
         el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
       }
     }
@@ -104,7 +113,7 @@ const hanzisizeUtil = {
 
   // primary function for extension
   main(language, minFontSize) {
-    getLangText(language, resizeSingleElement, minFontSize) 
+    getLangText(language, singleElementResizer, minFontSize) 
   }
 }
 

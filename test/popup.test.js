@@ -5,6 +5,10 @@ const getElementText = async (el) => {
   const elText = await pupBrowser.extensionPage.$eval(`${el}`, e => e.innerText);
   return elText;
 }
+const getElementValue = async (el) => {
+  const elText = await pupBrowser.extensionPage.$eval(`${el}`, e => e.value);
+  return elText;
+}
 
 describe('Extension popup', function() {
   this.timeout(20000); // default is 2 seconds and that may not be enough to boot browsers and pages.
@@ -27,7 +31,7 @@ describe('Extension popup', function() {
       assert.ok(submitButton, 'Submit button does not exist')
     })
 
-    it('displays the current saved font size', async() => {
+    it('displays the current saved font size element', async() => {
       const currentFontSize = await pupBrowser.extensionPage.$('#curr-saved-font-size');
       assert.ok(currentFontSize, 'curr-saved-font-size element does not exist')
     })
@@ -42,11 +46,14 @@ describe('Extension popup', function() {
   
         
         await input.type(expected);
+        console.log(`input field content: ${await getElementValue('#min-font-size')}`)
         await submit.click();
         await pupBrowser.extensionPage.waitFor(10);
   
         const actual = await getElementText('#curr-saved-font-size');
+        console.log(`retrieved font size: ${actual}`);
         const errorMessage = await getElementText('#error-message');
+        console.log(`error message :${errorMessage}`);
         assert.equal(actual, expected);
         assert.equal(errorMessage, '')
       })
