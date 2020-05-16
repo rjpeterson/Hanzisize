@@ -1,3 +1,5 @@
+const test_mode = true;
+
 // language regex
 const REGEX_CHINESE = /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u;
 const REGEX_ENGLISH = /^[a-zA-Z0-9$@$!%*?&#^-_. +]+$/;
@@ -17,29 +19,6 @@ const hanzisizeUtil = {
     }
   },
 
-  // inputs a single element and a minumum font size. Sets font-size attribute of  element if current size is less than minFontSize
-  resizeSingleElement(el, newMinFontSize) {
-    // get font-size of element
-    const currentFontSize = parseFloat(document.defaultView.getComputedStyle(el, null).getPropertyValue('font-size'));
-    // compare font-size of element to newMinFontSize
-    if (currentFontSize >= newMinFontSize) { 
-      // if current text is originally larger than what we need, do nothing
-      return
-    } else {
-      this.manageFontSize(el, newMinFontSize);
-    }
-
-    if (newMinFontSize > oldFontSize) {
-      if (!el.isContentEditable || (el.parentNode && !el.parentNode.isContentEditable)) { // Version 1.2.7 - Fix contentEditable (gmail etc) - Changing to bold grows bigger
-        el.style.setProperty('font-size', newMinFontSize + 'px', 'important')
-        // Version 1.3.0 - Change line-height for websites like nytimes.com
-        const curFontSize = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('font-size'))
-        // const curLineHeight = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('line-height'))
-        // if (curLineHeight !== 'normal' && curLineHeight <= (curFontSize + 1)) {
-        //   el.style.setProperty('line-height', 'normal', 'important')
-      }
-    }
-  },
 
   // returns all elements with text of chosen language with optional callback for each step of loop
   getLangText(document, language, callback, callbackParam) {
@@ -72,41 +51,53 @@ const hanzisizeUtil = {
   },
 
   // input a single element, target lang, and MFS, function will perform proper resizing procedure
-  singleElementResizer(window, language, el, newMinFontSize) {
+  singleElementResizer(window, language, el, newMinFontSizeRaw) {
+    const newMinFontSize = parseInt(newMinFontSizeRaw);
     const languageMatch = this.hasLanguage(language, el.firstChild.nodeValue);
+      if(test_mode) {console.log(`language match :${languageMatch}`)};
     const currentFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('font-size'));
-    console.log(`currentFontSize: ${currentFontSize}`);
-    const originalFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('original-font-size'));
-    console.log(`originalFontSize: ${originalFontSize}`);
+      if(test_mode) {console.log(`current font size: ${currentFontSize}`)}
+    const originalFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('data-original-font-size'));
+      if(test_mode) {
+        if(isNaN(originalFontSize)) {
+          console.log(`originalFontSize not found`);
+        } else {
+          console.log(`originalFontSize: ${originalFontSize}`);
+        };
+      }
 
     if (!languageMatch) {
-      console.log(`No text matching language "${language}" found`);
+      // case 1: !language match -> no change
+      console.log(`case 1: No text matching language "${language}" found`);
       return
     } else { // language match
-      if (currentFontSize > newMinFontSize) { // big text -> small text
+      if (currentFontSize > newMinFontSize) { // from big text to small text
         console.log(`CFS is larger than NMFS`)
-        if (!originalFontSize) { // OFS not set, likely header text
-          console.log(`CFS is original. No change`)
+        if (!originalFontSize) { 
+          // case 2: !OFS && NMFS < CFS, likely header text -> no change
+          console.log(`case 2: CFS is original. No change`)
           return
         } else if (originalFontSize > newMinFontSize) { 
-          // text should never be smaller than OFS
-          console.log(`CFS is not original and larger than NMFS. FS to OFS`);
-          el.style.setProperty('font-size', originalFontSize + 'px', 'important')
+          // case 3: NMFS < (OFS&CFS) text should never be smaller than OFS -> change
+          el.style.setProperty('font-size', originalFontSize + 'px', 'important');
+          console.log(`case 3: CFS is not original and larger than NMFS. FS to OFS`);
         } else if (originalFontSize < newMinFontSize) {
-          // text size reduced to NMFS, still larger than OFS
-          console.log(`CFS is not original and less than NMFS. FS to NMFS`);
-          el.style.setProperty('font-size', newMinFontSize + 'px', 'important')
+          // case 4: OFS < NMFS < CFS text size reduced to NMFS -> change
+          el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
+          console.log(`case 4: CFS is not original and less than NMFS. FS to NMFS`);
         }
       } else if (currentFontSize < newMinFontSize) { // small -> big
         console.log(`CFS is less than NMFS`)
         if (!originalFontSize) {
-          // retain original font size for later use
-          console.log(`CFS is original. Save CFS as OFS`)
-          el.style.setProperty('original-font-size', currentFontSize + 'px', 'important');
-        }
-        // enlarge text
-        console.log(`Set FS to NMFS`)
+          // case 5: !OFS && CFS < NMFS, retain original font size for later use -> change
+          el.style.setProperty('data-original-font-size', currentFontSize + 'px');
+          el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
+          console.log(`case 5: CFS is original. Save CFS as OFS. Set FS to NMFS`);
+        } else {
+        // case 6: OFS && CFS < NMFS, enlarge text -> change
         el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
+        console.log(`case 6: Set FS to NMFS`);
+        }
       }
     }
   },
@@ -118,3 +109,27 @@ const hanzisizeUtil = {
 }
 
 module.exports = hanzisizeUtil;
+
+  // // inputs a single element and a minumum font size. Sets font-size attribute of  element if current size is less than minFontSize
+  // resizeSingleElement(el, newMinFontSize) {
+  //   // get font-size of element
+  //   const currentFontSize = parseFloat(document.defaultView.getComputedStyle(el, null).getPropertyValue('font-size'));
+  //   // compare font-size of element to newMinFontSize
+  //   if (currentFontSize >= newMinFontSize) { 
+  //     // if current text is originally larger than what we need, do nothing
+  //     return
+  //   } else {
+  //     this.manageFontSize(el, newMinFontSize);
+  //   }
+
+  //   if (newMinFontSize > oldFontSize) {
+  //     if (!el.isContentEditable || (el.parentNode && !el.parentNode.isContentEditable)) { // Version 1.2.7 - Fix contentEditable (gmail etc) - Changing to bold grows bigger
+  //       el.style.setProperty('font-size', newMinFontSize + 'px', 'important')
+  //       // Version 1.3.0 - Change line-height for websites like nytimes.com
+  //       const curFontSize = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('font-size'))
+  //       // const curLineHeight = parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('line-height'))
+  //       // if (curLineHeight !== 'normal' && curLineHeight <= (curFontSize + 1)) {
+  //       //   el.style.setProperty('line-height', 'normal', 'important')
+  //     }
+  //   }
+  // },

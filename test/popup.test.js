@@ -48,7 +48,7 @@ describe('Extension popup', function() {
         await input.type(expected);
         console.log(`input field content: ${await getElementValue('#min-font-size')}`)
         await submit.click();
-        await pupBrowser.extensionPage.waitFor(10);
+        await pupBrowser.extensionPage.waitFor(20);
   
         const actual = await getElementText('#curr-saved-font-size');
         console.log(`retrieved font size: ${actual}`);
