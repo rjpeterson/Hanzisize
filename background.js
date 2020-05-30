@@ -6,5 +6,13 @@ chrome.runtime.onInstalled.addListener(function() {
   });
 });
 
+// chrome.runtime.onMessage.addListener(
+//   function(message, callback) {
+//     if (message == "runContentScript"){
+//       chrome.tabs.executeScript({
+//         file: 'contentScript.js'
+//       });
+//     }
+//  });
   //chrome.browserAction.setBadgeText(object details, function callback)
   //for setting badge icon to indicate current min font size

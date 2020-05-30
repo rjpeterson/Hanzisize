@@ -3,17 +3,25 @@
   "version": "0.1",
 
   "description": "An extension to control the size of chinese text on the page",
-  "permissions": ["declarativeContent", "activeTab", "storage"],
+  "permissions": [
+    "<all_urls>",
+    "declarativeContent",
+    "activeTab",
+    "storage"
+  ],
 
   "background": {
     "scripts": ["background.js"],
     "persistent": false
   },
 
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["contentScript.js"]
-  }],
+  "content_scripts": [
+    {
+      "run_at": "document_end",
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+      }
+    ],
 
   "browser_action": {
     "default_popup": "popup.html",

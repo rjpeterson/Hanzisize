@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const extensionInfo = require('../extensionInfo');
 
 // launches test browser, loads extension, and navigates to popuphtml
-const pupBrowser = {
+const pupp = {
   extensionPage: null,
   testTextPage: null,
   browser: null,
@@ -39,7 +39,7 @@ const pupBrowser = {
     await this.extensionPage.goto(`chrome-extension://${extensionInfo.id}/${extensionInfo.popupHtml}`);
 
     // focus on extension popup
-    await this.extensionPage.bringToFront();
+    // await this.extensionPage.bringToFront();
     // this.blockingWait(1);
   },
 
@@ -51,4 +51,4 @@ const pupBrowser = {
 }
 
 
-module.exports = pupBrowser;
+module.exports = pupp;

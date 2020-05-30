@@ -1,6 +1,7 @@
 const { assert, expect } = require('chai');
 const util = require('../util');
-const pupBrowser = require('./testBoot');
+const pupp = require('./testBoot');
+let page;
 // const jsdom = require('jsdom');
 // const { JSDOM } = jsdom;
 
@@ -31,16 +32,16 @@ const pupBrowser = require('./testBoot');
 // let document;
 
 const getElementText = async (el) => {
-  const elText = await pupBrowser.testTextPage.$eval(`${el}`, e => e.innerText);
+  const elText = await page.$eval(`${el}`, e => e.innerText);
   return elText;
 }
 const getElementValue = async (el) => {
-  const elText = await pupBrowser.testTextPage.$eval(`${el}`, e => e.value);
+  const elText = await page.$eval(`${el}`, e => e.value);
   return elText;
 }
 
 const getAttributeValue = async (elementId, attribute) => {
-  const attrValue = await pupBrowser.testTextPage.evaluate(() => {
+  const attrValue = await page.evaluate(() => {
     const el = document.getElementById(elementId);
     return window.getComputedStyle(el).getPropertyValue(attribute)
   })
@@ -48,7 +49,7 @@ const getAttributeValue = async (elementId, attribute) => {
 }
 
 const removeAttributeValue = async (elID, attribute) => {
-  await pupBrowser.testTextPage.evaluate(() => {
+  await page.evaluate(() => {
     const el = document.getElementById(`${elID}`);
     el.removeAttribute(`${attribute}`);
   })
@@ -58,11 +59,13 @@ describe('extension utility functions', function() {
   this.timeout(20000); // default is 2 seconds and that may not be enough to boot browsers and pages.
 
   before(async function() {
-    await pupBrowser.launchBrowser();
+    await pupp.launchBrowser();
+    await pupp.testTextPage.bringToFront();
+    page = pupp.testTextPage;
   });
 
   after(async function() {
-    await pupBrowser.browser.close();
+    await pupp.browser.close();
   });
 
   // beforeEach(() => {
@@ -100,36 +103,43 @@ describe('extension utility functions', function() {
 
       it.only("case 2: doesn't change header text when NFS is smaller", async () => {
         const expected = 24;
-        // const el = document.getElementById('chinese-header');
-        const el = pupBrowser.testTextPage.$('#chinese-header')
-        // const attr = el.attributes;
-        // for (var i = 0; i < attr.length; i++) {
-        //   console.log( attr[i].name, attr[i].value);
-        // };
-        // console.log(`starting OFS: ${parseInt(window.getComputedStyle(el, null).getPropertyValue('data-original-font-size'))}`)
-        let attrValue = await pupBrowser.testTextPage.evaluate(() => {
-          const el = document.getElementById('chinese-header');
-          return window.getComputedStyle(el).getPropertyValue('data-original-font-size')
-        })
-        console.log(`starting OFS: ${attrValue}`);
-        await pupBrowser.testTextPage.evaluate(() => {
-          const el = document.getElementById('chinese-header');
-          el.removeAttribute('data-original-font-size');
-        });
-        // console.log(`removed OFS: ${parseInt(window.getComputedStyle(el, null).getPropertyValue('data-original-font-size'))}`)
-        attrValue = await pupBrowser.testTextPage.evaluate(() => {
-          const el = document.getElementById('chinese-header');
-          return window.getComputedStyle(el).getPropertyValue('data-original-font-size')
-        })
-        console.log(`removed OFS: ${attrValue}`)
 
-        try { util.singleElementResizer(pupBrowser.testTextPage, "Chinese", el, "16")}
+        // await page.evaluate((headers) => {
+        //   console.log(`testing ${headers}`);
+        // }, headers);
+        const headerHandle = await page.evaluateHandle(() => {
+          return document.getElementById('chinese-header')
+        });
+        const header = await page.evaluate(() => {
+          return document.getElementById('chinese-header').innerHTML
+        });
+        let resultHandle = await page.evaluateHandle(headerHandle => {
+          return window.getComputedStyle(headerHandle).getPropertyValue('font-size');
+        }, headerHandle);
+        // console.log(`getting element attributes...`);
+        // pageEval = await page.evaluate(({header, attrValue}) => {
+        //   // header = document.getElementsByTagName("body");
+        //   // attrValue = window.getComputedStyle(header).getPropertyValue('data-original-font-size');
+        //   return {header, attrValue};
+        // }, {header, attrValue})
+        // console.log(`pageEval = ${JSON.stringify(pageEval)}`);
+        console.log(`header: ${header}`);
+        console.log(`headerHandle: ${headerHandle}`);
+        console.log(`starting FS: ${resultHandle}`);
+        await page.evaluateHandle(headerHandle => {
+          headerHandle.removeAttribute('font-size');
+        }, headerHandle);
+        resultHandle = await page.evaluateHandle(headerHandle => {
+          return window.getComputedStyle(headerHandle).getPropertyValue('font-size')
+        }, headerHandle)
+        console.log(`removed FS: ${resultHandle}`)
+
+        try { util.singleElementResizer(page, "Chinese", header, "16")}
         catch(err) {console.log(`element resize failed. ${err}`)};
         // const result = parseInt(window.getComputedStyle(el, null).getPropertyValue('font-size'));
-        const result = parseInt(await pupBrowser.testTextPage.evaluate(() => {
-          const el = document.getElementById('chinese-header');
-          return window.getComputedStyle(el).getPropertyValue('font-size')
-        }));
+        const result = parseInt(await page.evaluateHandle(headerHandle => {
+          return window.getComputedStyle(headerHandle).getPropertyValue('font-size')
+        }, headerHandle));
 
         expect(result).to.equal(expected);
       })
