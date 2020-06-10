@@ -1,10 +1,16 @@
 //https://developer.chrome.com/extensions/background_pages
 
-chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.sync.set({fontSize: ''}, function() {
-    console.log("font-size initialized.");
-  });
-});
+// chrome.runtime.onInstalled.addListener(function() {
+//   chrome.storage.sync.set({fontSize: ''}, function() {
+//     console.log("font-size initialized.");
+//   });
+// });
+
+// chrome.browserAction.onClicked.addListener(function(tab) {
+//   chrome.tabs.executeScript(tab.id, {
+//       file: "fontincrease.js"
+//   });
+// });
 
 // chrome.runtime.onMessage.addListener(
 //   function(message, callback) {
