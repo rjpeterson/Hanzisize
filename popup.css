@@ -1,0 +1,36 @@
+body {
+  background-color: sandybrown;
+  width: 150px;
+}
+
+.grid-container {
+  display: grid;
+  width: 100%;
+  grid-template-areas: 
+    'logo logo'
+    'tsi button'
+    'note note'
+    'error error';
+}
+
+#logo {
+  grid-area: logo;
+  height: 30px;
+}
+
+input[type=number] {
+  width: 50px;
+  grid-area: tsi;
+}
+
+.button {
+  grid-area: button;
+}
+
+.notification {
+  grid-area: note;
+}
+
+#error {
+  grid-area: error;
+}
