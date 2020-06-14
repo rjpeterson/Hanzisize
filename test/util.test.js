@@ -1,35 +1,7 @@
 const { assert, expect } = require('chai');
-const util = require('../util');
+const util = require('../contentScript');
 const pupp = require('./testBoot');
 let page;
-// const jsdom = require('jsdom');
-// const { JSDOM } = jsdom;
-
-
-// // apparently jsdom cant compute style attribute inheritance, so we have to set font-size for each element individually for testing purposes... NOT IDEAL...
-// const documentHTML = '<!DOCTYPE html><html lang="en"><head>' + 
-// '<meta charset="UTF-8">' + 
-// '<meta name="viewport" content="width=device-width, initial-scale=1.0">' + 
-// '<title>Document</title>' + 
-// '<style>' + 
-// '.test-text, #chinese-first, #english-first {font-size:12px; data-original-font-size:12px}' +
-// '#chinese-header {font-size:24px; data-original-font-size:24px}' +
-// '</style>' +
-// '</head>' + 
-// '<body>' + 
-// '<section class="test-text" id="chinese-section" font-size:12px; data-original-font-size:12px>' + 
-// '<h1 id="chinese-header" font-size:24px; data-original-font-size:24px>比較大的字</h1>' + 
-// '<p class="chinese-text" id="chinese-first" font-size:12px; data-original-font-size:12px>聲我度都，一可文行知化，演人去，北醫進方會說多員校工能廣歷學接想有國詩法今不同……象中之司呢功度。</p>' + 
-// '<p class="chinese-text">的長集走在卻實報後間曾來放官……人證思念在我為投一越間例少臉管的的房跟衣。</p>' + 
-// '</section>' + 
-// '<section class="test-text" id="english-section" font-size:12px; data-original-font-size:12px>' +
-// '<h1 id="english-header">This is an english header</h1>' +  
-// '<p class="english-text" id="english-first" font-size:12px; data-original-font-size:12px>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lobortis, velit ut varius semper. </p>' + 
-// '<p class="english-text">enim purus finibus lacus, tempor facilisis ligula dui sit amet urna. Proin in magna eget libero egestas aliquam. Nam vitae lacus turpis.</p>' + 
-// '</section></body></html>';
-
-// let window;
-// let document;
 
 const getElementText = async (el) => {
   const elText = await page.$eval(`${el}`, e => e.innerText);
@@ -126,6 +98,7 @@ describe('extension utility functions', function() {
         console.log(`header: ${header}`);
         console.log(`headerHandle: ${headerHandle}`);
         console.log(`starting FS: ${resultHandle}`);
+
         await page.evaluateHandle(headerHandle => {
           headerHandle.removeAttribute('font-size');
         }, headerHandle);
@@ -134,9 +107,10 @@ describe('extension utility functions', function() {
         }, headerHandle)
         console.log(`removed FS: ${resultHandle}`)
 
-        try { util.singleElementResizer(page, "Chinese", header, "16")}
+        try { await page.evaluate(({header, util}) => {
+          util.singleElementResizer(window, "Chinese", header, "16")}, {header, util})
+        }
         catch(err) {console.log(`element resize failed. ${err}`)};
-        // const result = parseInt(window.getComputedStyle(el, null).getPropertyValue('font-size'));
         const result = parseInt(await page.evaluateHandle(headerHandle => {
           return window.getComputedStyle(headerHandle).getPropertyValue('font-size')
         }, headerHandle));

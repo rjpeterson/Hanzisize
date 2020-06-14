@@ -1,8 +1,17 @@
+  // FEATURES STILL TO BE BUILT:
+  // 1.ON STARTUP, SET SAVED FONT SIZE MESSAGE TO EMPTY
+    // a.TIE SAVED VALUE TO TAB ID ???
+  // 2.ADD LANGUAGE SELECTION INITIAL OPTION SCREEN
+    // a.ADD 'CHANGE LANGUAGE' LINK TO MAIN POPUP MENU
+    // b.CHANGE LOGO ACCORDING TO LANGUAGE ???
+
+
 let tab_id = false;
 let test_mode = true;
 let min_font_size;
+let language;
 
-// accepts language and newMinFontSize object and sends it to content script
+// accepts object with language and newMinFontSize properties and sends it to content script
 function send_to_content(obj) {
 	if (test_mode) console.log('tab_id:' + tab_id);
 
@@ -30,20 +39,21 @@ function send_to_content(obj) {
   	});
 }
 
-// function to push submitted fontsize to chrome local storage
+// push submitted fontsize to chrome local storage
 const pushToStorage = async (newMinFontSize) => {
   await chrome.storage.local.set({minFontSize: newMinFontSize}, () => {
     if (test_mode) console.log(`New minimum font size stored as: ${newMinFontSize}`)
   })
 }
 
-// function to retrieve min font size from chrome local storage and display in popup if callback provided
-const getFromStorage = async (displayCallback, el) => {
+// retrieve min font size from chrome local storage and display in popup if callback provided
+const getFromStorage = async (callback, el) => {
   await chrome.storage.local.get('minFontSize', (result) => {
     if (test_mode) console.log(`Retrieved min font size from storage: ${result.minFontSize}`)
+
     min_font_size = result.minFontSize
-    if (displayCallback) {
-      try { displayCallback(el, min_font_size) }
+    if (callback) {
+      try { callback(min_font_size, el) }
       catch(err) {
         console.log(`Failed to retrieve new font size from storage. ${err}`)
       }
@@ -52,40 +62,56 @@ const getFromStorage = async (displayCallback, el) => {
 };
 
 // used as callback for getFromStorage to display value in popup
-const display = (el, value) => {
+const display = (value, el) => {
   el.html(value)
 };
 
+// get current tab information and produce error for pages that dont permit extensions
 chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
   var tab = tabs[0];
   // get current tab id
   tab_id = tab.id;
 
-  if (test_mode) console.log(tab.url);
+  if(test_mode) console.log(tab.url);
   
-	if (tab.url.match(/^chrome/i))
-		document.getElementById('error').innerHTML = "NOTE: Google blocks extensions and does not allow them to work on special <b>chrome://</b> pages such as the current page.";
-    else if (tab.url.match(/\/webstore/i))	
-		document.getElementById('error').innerHTML = "NOTE: For this extension to work you must leave the Chrome Webstore and go to another website. Google blocks extensions from functioning on special Google pages such as the Chrome Webstore.";
+	if(tab.url.match(/^chrome/i)) {
+		document.getElementById('error-content').innerHTML = "NOTE: Google blocks extensions and does not allow them to work on special <b>chrome://</b> pages such as the current page.";
+  } else if (tab.url.match(/\/webstore/i)) {
+    document.getElementById('error-content').innerHTML = "NOTE: For this extension to work you must leave the Chrome Webstore and go to another website. Google blocks extensions from functioning on special Google pages such as the Chrome Webstore.";
+  }
 });
 
 $(document).ready(() => {
   if (test_mode) console.log("popup.js loaded...");
+  const languageInput = $('#language');
   const newFontSizeInput = $('#min-font-size');
   const savedFontSize = $('#curr-saved-font-size');
   const errorMessage = $('#error-message');
+  const notificationLabel = $('#notification-label');
 
-  // If there is a font size saved in storage, display it
-  getFromStorage(display, savedFontSize);
+  // If chrome storage is empty, don't display notification
+  getFromStorage((min_font_size) => {
+    console.log('testing......' + min_font_size)
+    if(!Number.isInteger(min_font_size)) {
+      notificationLabel.css("visibility", "hidden");
+    } else {
+      display(min_font_size, savedFontSize)
+    }
+  });
 
-  $('#submit').on('click', async () => {
+    // If there is a font size saved in storage, display value
+  // getFromStorage(display, savedFontSize);
+
+  newFontSizeInput.on('change paste keyup', async () => {
+    language = languageInput.val();
+    const newFontSize = newFontSizeInput.val();
+    
     // validate input as positive number
-    const newFontSize = Number(newFontSizeInput.val());
-    min_font_size = newFontSize;
-    if (newFontSize <= 0) {
-      errorMessage.html('Font Size must be a positive number')
+    if (newFontSize && newFontSize <= 0) {
+      errorMessage.html('Please input a positive number')
       return;
     }
+    min_font_size = newFontSize;
 
     // error logging & storing in chrome storage
     if(test_mode) console.log(`submitted font size: ${newFontSize}`);
@@ -96,7 +122,7 @@ $(document).ready(() => {
 
     try {
       let obj = {
-        'language' : 'Chinese',
+        'language' : language,
         'newMinFontSize': min_font_size
       };
       if(test_mode) console.log('sending obj to content script:' + JSON.stringify(obj));
@@ -107,6 +133,7 @@ $(document).ready(() => {
 
     // reset form input values
     //newFontSizeInput.val('');
+    notificationLabel.css("visibility", "visible")
     errorMessage.html('');
   })
 })
