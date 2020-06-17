@@ -1,0 +1,78 @@
+body {
+  background-color: sandybrown;
+  width: 150px;
+}
+
+.grid-container {
+  display: grid;
+  width: 100%;
+  grid-template-areas: 
+    'logo'
+    'lang'
+    'tsi'
+    'note'
+    'error';
+  align-items: center;
+}
+
+.grid-box {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  grid-area: logo;
+}
+
+.box-content {
+  margin: auto;
+}
+
+.logo-content img {
+  height: 30px;
+}
+
+.language-input {
+  grid-area: lang;
+}
+
+.text-size-input {
+  grid-area: tsi;
+}
+
+.input-label {
+  display: inline-flex;
+}
+
+input[type=number] {
+  width: 50px;
+  margin: auto;
+  display: inline-flex;
+  border: 2px solid grey;
+  border-radius: 5px; 
+}
+
+#error-message {
+  font-size: 10px;
+  display: block;
+}
+
+/* .button {
+  grid-area: button;
+} */
+
+.notification {
+  grid-area: note;
+  font-size: 10px;
+  width: 90%
+}
+
+span {
+  display: inline;
+}
+
+.error {
+  grid-area: error;
+}
