@@ -1,8 +1,8 @@
 {
-  "name": "hanzisize-reboot",
+  "name": "hanzisize-reboot-react",
   "version": "0.1.0",
   "private": true,
-  "description": "A chrome extension to change Chinese font-size",
+  "description": "A React Chrome extension to change Chinese font-size",
   "main": "index.js",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -10,16 +10,21 @@
     "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-numeric-input": "^2.2.3",
+    "react-scripts": "3.4.1",
+    "react-select": "^3.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3000 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "env": {
+      "webextensions": true
+    }
   },
   "browserslist": {
     "production": [
@@ -32,14 +37,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rjpeterson/Hanzisize.git"
-  },"author": "Ryan Peterson",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rjpeterson/Hanzisize/issues"
-  },
-  "homepage": "https://github.com/rjpeterson/Hanzisize#readme"
+  }
 }

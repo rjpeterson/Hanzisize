@@ -11,6 +11,7 @@ extensionInfo.js
 
 # production
 /build
+.env.production
 
 # misc
 .DS_Store

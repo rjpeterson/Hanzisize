@@ -3,7 +3,7 @@ body {
   width: 150px;
 }
 
-.grid-container {
+.App {
   display: grid;
   width: 100%;
   grid-template-areas: 
