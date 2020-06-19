@@ -1,23 +1,43 @@
+// eslint-disable-next-line no-unused-vars
 /*global chrome*/
+
 import React from 'react';
 import logo from '../logo.png';
-import tools from '../logic/chromeStorage'
 import './App.css';
+
 import LanguageInput from './LanguageInput';
 import MinFontSize from './MinFontSize';
 import Notification from './Notification';
 import Error from './Error';
 
+import tools from '../logic/chromeTools';
+import onAppMount from '../logic/onAppMount';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
-    const storedState = tools.getFromStorage();
-    if (storedState) {this.state = {minFontSize: storedState}} else {this.state = {minFontSize: null}}
+
+    this.handleFSChange = this.handleFSChange.bind(this);
+    this.handleLangChange = this.handleLangChange.bind(this);
   }
   state = {
     language: null,
     validFontSize: false,
-    errorMessage: null
+    minFontSize: null,
+    errorMessage: null,
+    tabId: null
+  }
+
+  componentDidMount = () => {
+    if (process.env.NODE_ENV === 'production') console.log(" app.js 32 PRODUCTION MODE popup.js loaded...");
+
+    onAppMount((didMountObject) => {
+      if (process.env.NODE_ENV === 'production') console.log(`app.js 35 didMountObject: ${JSON.stringify(didMountObject)}`)
+    this.setState({
+      minFontSize: didMountObject.minFontSize,
+      tabId: didMountObject.tabId
+    })
+    });
   }
 
   handleLangChange = language => {
@@ -29,8 +49,21 @@ class App extends React.Component {
       this.setState({
         minFontSize: minFontSize,
         validFontSize: true
+      }, () => {
+        console.log('current state: ' + JSON.stringify(this.state))
+
+        try{tools.pushToStorage(minFontSize)}
+        catch(err) {console.log(`Could not push to storage: ${err}`)}
+
+        const contentObj = {
+          'language' : this.state.language,
+          'newMinFontSize': this.state._minFontSize
+        };
+        try{tools.sendToContent(this.state.tabId, contentObj)}
+        catch(err) {console.log(`Could not send to content script: ${err}`)}
+
+        this.setState({errorMessage: ''})
       });
-      tools.pushToStorage(minFontSize);
     } else {
       this.setState({validFontSize: false})
     }
@@ -50,7 +83,7 @@ class App extends React.Component {
         />
         <Notification 
         validFontSize={this.state.validFontSize}
-        minFontSize={this.state.minFontSize}
+        minFontSize={this.state._minFontSize}
         />
         <Error 
         message={this.errorMessage}

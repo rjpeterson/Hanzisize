@@ -22,6 +22,7 @@ class LanguageInput extends React.Component {
         className="react-select-container"
         classNamePrefix="react-select"
         options={options}
+        defaultValue={{value: 'Chinese', label: 'Chinese'}}
         onChange={this.handleChange} />
       </div>
     )
