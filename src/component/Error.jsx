@@ -4,7 +4,7 @@ import './Error.css';
 class Error extends React.Component {
   render() {
     return (
-      <div className="grid-box error">
+      <div className="error grid-box">
         <section class="box-content" id="error-content"></section>
       </div>
     )

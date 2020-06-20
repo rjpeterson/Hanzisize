@@ -9,6 +9,21 @@ const options = [
   {value: 'Japanese', label: 'Japanese'}
 ]
 
+const customStyles = {
+  container: (provided, state) => {
+    const width = '8rem';
+    const height = 30;
+    const padding = 2;
+
+    return {...provided, width, height, padding}
+  },
+  control: (provided, state) => {
+    const height = 25;
+
+    return {...provided, height}
+  }
+}
+
 class LanguageInput extends React.Component {
 
   handleChange = e => {
@@ -17,13 +32,13 @@ class LanguageInput extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="language-input grid-box">
         <Select 
-        className="react-select-container"
-        classNamePrefix="react-select"
+        styles={customStyles}
         options={options}
         defaultValue={{value: 'Chinese', label: 'Chinese'}}
-        onChange={this.handleChange} />
+        onChange={this.handleChange} 
+        />
       </div>
     )
   }

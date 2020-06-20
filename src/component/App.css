@@ -1,15 +1,17 @@
 body {
+  margin: .4rem;
   background-color: sandybrown;
   width: 150px;
 }
 
 .App {
   display: grid;
-  width: 100%;
+  width: 90%;
+  margin: auto;
   grid-template-areas: 
     'logo'
-    'lang'
-    'tsi'
+    'langinput'
+    'mfsinput'
     'note'
     'error';
   align-items: center;
@@ -17,12 +19,12 @@ body {
 
 .grid-box {
   width: 100%;
-  display: grid;
-  align-items: center;
+  display: flex;
   justify-content: center;
+  margin-top: .2rem;
 }
 
-.logo {
+.logo-content {
   grid-area: logo;
 }
 
@@ -31,48 +33,5 @@ body {
 }
 
 .logo-content img {
-  height: 30px;
-}
-
-.language-input {
-  grid-area: lang;
-}
-
-.text-size-input {
-  grid-area: tsi;
-}
-
-.input-label {
-  display: inline-flex;
-}
-
-input[type=number] {
-  width: 50px;
-  margin: auto;
-  display: inline-flex;
-  border: 2px solid grey;
-  border-radius: 5px; 
-}
-
-#error-message {
-  font-size: 10px;
-  display: block;
-}
-
-/* .button {
-  grid-area: button;
-} */
-
-.notification {
-  grid-area: note;
-  font-size: 10px;
-  width: 90%
-}
-
-span {
-  display: inline;
-}
-
-.error {
-  grid-area: error;
+  height: 2rem;
 }

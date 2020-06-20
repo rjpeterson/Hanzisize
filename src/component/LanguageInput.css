@@ -1,4 +1,4 @@
-.react-select-container {
-  grid-area: lang;
-  width: 100%;
+.language-input {
+  grid-area: langinput;
+  height: 40px;
 }

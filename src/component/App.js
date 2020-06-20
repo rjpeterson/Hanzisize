@@ -21,7 +21,7 @@ class App extends React.Component {
     this.handleLangChange = this.handleLangChange.bind(this);
   }
   state = {
-    language: null,
+    language: 'Chinese',
     validFontSize: false,
     minFontSize: null,
     errorMessage: null,
@@ -41,7 +41,18 @@ class App extends React.Component {
   }
 
   handleLangChange = language => {
-    this.setState({language: language})
+    this.setState({language: language}, () => {
+      console.log('current state: ' + JSON.stringify(this.state));
+      
+      const contentObj = {
+        'language' : this.state.language,
+        'newMinFontSize': this.state.minFontSize
+      };
+      try{tools.sendToContent(this.state.tabId, contentObj)}
+      catch(err) {console.log(`Could not send to content script: ${err}`)}
+
+      this.setState({errorMessage: ''})
+    })
   }
 
   handleFSChange = (valid, minFontSize) => {
@@ -57,7 +68,7 @@ class App extends React.Component {
 
         const contentObj = {
           'language' : this.state.language,
-          'newMinFontSize': this.state._minFontSize
+          'newMinFontSize': this.state.minFontSize
         };
         try{tools.sendToContent(this.state.tabId, contentObj)}
         catch(err) {console.log(`Could not send to content script: ${err}`)}
@@ -72,8 +83,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <header className="logo-content">
-          <img src={logo} className="logo" alt="logo" />
+        <header className="logo-content grid-box">
+          <img className="logo" src={logo} alt="logo" />
         </header>
         <LanguageInput 
         changeHandler={this.handleLangChange}
@@ -83,7 +94,7 @@ class App extends React.Component {
         />
         <Notification 
         validFontSize={this.state.validFontSize}
-        minFontSize={this.state._minFontSize}
+        minFontSize={this.state.minFontSize}
         />
         <Error 
         message={this.errorMessage}

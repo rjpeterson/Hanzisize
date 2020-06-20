@@ -1,0 +1,11 @@
+.notification {
+  grid-area: note;
+  font-size: 10px;
+  height: auto;
+  width: auto
+}
+
+.notification p {
+  margin-block-end: 0px;
+  margin-block-start: 0px;
+}
