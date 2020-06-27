@@ -14,6 +14,6 @@ For example, the font size of an element can never be smaller than it was when t
 
 ## Donate
 Enjoy using this extension? You can show your appreciation by donating in the following ways:
-* [Paypal](https:www.paypal.me/nolapiano)
+* Paypal: [www.paypal.me/nolapiano]
 * Bitcoin: bc1q4524l0qtj5ucjw8qvxdpd7vta7x9peyazd8ykc
-* Or check out [my Redbubble store](https:www.djmouthguard.redbubble.com)
+* Or check out my Redbubble store: [www.redbubble.com/people/djmouthguard/shop]
