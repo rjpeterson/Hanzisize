@@ -13,6 +13,27 @@ import Error from './Error';
 import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
 
+if(process.env.NODE_ENV === 'development') {
+  global.chrome = {
+    runtime: {
+      getManifest: () => {return {update_url: true}}
+    },
+    tabs: {
+      query: ()=>{}
+    },
+    storage: {
+      local: {
+        get: ()=>{},
+        set: ()=>{}
+      }
+    }
+  }
+}
+
+function isDevMode() {
+  return !('update_url' in chrome.runtime.getManifest());
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -30,10 +51,10 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    if (process.env.NODE_ENV === 'production') console.log(" app.js 33 PRODUCTION MODE popup.js loaded...");
+    if (isDevMode()) console.log(" app.js 37 PRODUCTION MODE popup.js loaded...");
 
     onAppMount.main((responseObject) => {
-      if (process.env.NODE_ENV === 'production') console.log(`app.js 36 onAppMount responseObject: ${JSON.stringify(responseObject)}`)
+      if (isDevMode()) console.log(`app.js 36 onAppMount responseObject: ${JSON.stringify(responseObject)}`)
       this.setState({
         minFontSize: responseObject.minFontSize,
         tabId: responseObject.tabId

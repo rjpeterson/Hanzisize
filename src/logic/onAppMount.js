@@ -1,5 +1,8 @@
 /*global chrome*/
 import tools from './chromeTools'
+function isDevMode() {
+  return !('update_url' in chrome.runtime.getManifest());
+}
 
 const onAppMount = {
   chromeErrorString: "NOTE: Google blocks extensions and does not allow them to work on special <b>chrome://</b> pages such as the current page.",
@@ -28,7 +31,7 @@ const onAppMount = {
     if(!tab.id) {throw new Error('tab.id not defined')};
     if(!tab.url) {throw new Error('tab.url not defined')}
 
-    if(process.env.NODE_ENV ==='production') {
+    if(isDevMode()) {
       console.log(`onAppMount.helper 32 tabId: ${tab.id}, tabUrl: ${tab.url}`)
     };
     // check for invalid urls
@@ -38,7 +41,7 @@ const onAppMount = {
     // fetch any stored values in chrome.storage
     responseObject.minFontSize = await tools.getFromStorage();
 
-    if(process.env.NODE_ENV ==='production') {
+    if(isDevMode()) {
       console.log(`onAppMount 43 didMountObject: ${JSON.stringify(responseObject)}`)
     }
 

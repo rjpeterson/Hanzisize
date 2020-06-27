@@ -9,7 +9,7 @@ const customStyles = {
     background: '#E2E2E2',
     boxShadow: '0 0 1px 1px #fff inset, 1px 1px 5px -1px #000',
     padding: '.1rem .1rem .1rem .1rem',
-    borderRadius: '.1rem .1rem .1rem .1rem',
+    borderRadius: '.3rem .3rem .3rem .3rem',
     fontSize: 15
   },
   input: {
