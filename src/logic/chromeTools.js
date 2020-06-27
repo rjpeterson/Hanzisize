@@ -8,27 +8,26 @@ const tools = {
     })
   },
 
-  // retrieve min font size from chrome local storage and display in popup if callback provided
+  // return minFontSize from chrome local storage if exists
   getFromStorage: async () => {
-    let returnVal;
-    await chrome.storage.local.get('minFontSize', (result) => {
+    const returnVal = await chrome.storage.local.get('minFontSize', (result) => {
       if(result.minFontSize) {
         if (process.env.NODE_ENV ==='production') {
           console.log(`chromeTools 16 Retrieved min font size from storage: ${result.minFontSize}`)
         };
-        returnVal = result.minFontSize;
+        return result.minFontSize;
       } else {
         if (process.env.NODE_ENV === 'production') {
           console.log('result.minFontSize not found')
         }
-        returnVal = undefined;
+        return undefined;
       }
     })
     return returnVal;
   },
 
   sendToContent: (tab_id, obj) => {
-    if (process.env.NODE_ENV ==='production') console.log('tab_id:' + tab_id);
+    if (process.env.NODE_ENV ==='production') console.log(`chromeTools.sendToContent 30 tab_id: ${tab_id}, obj: ${JSON.stringify(obj)}`);
   
     // try to send object to content script
     chrome.tabs.sendMessage(tab_id, obj, {frameId: 0}, function(response) {
@@ -51,7 +50,9 @@ const tools = {
       }
       if (process.env.NODE_ENV ==='production') console.log(JSON.stringify(response));
   
+      return true;
       });
+    return true;
   }
 }
 

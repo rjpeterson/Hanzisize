@@ -8,25 +8,24 @@ const customStyles = {
     width: '80%',
     background: '#E2E2E2',
     boxShadow: '0 0 1px 1px #fff inset, 1px 1px 5px -1px #000',
-    padding: '2px',
-    borderRadius: '3px',
+    padding: '.1rem .1rem .1rem .1rem',
+    borderRadius: '.1rem .1rem .1rem .1rem',
     fontSize: 15
   },
   input: {
-      borderRadius: '4px 2px 2px 4px',
-      color: '#988869',
-      padding: '0.1ex 1ex',
-      border: '1px solid #ccc',
-      display: 'block',
-      fontWeight: 70,
-      textShadow: '1px 1px 1px rgba(0, 0, 0, 0.1)'
+    borderRadius: '.1rem .05rem .1rem .05rem',
+    color: '#988869',
+    border: '1px solid #ccc',
+    display: 'block',
+    fontWeight: 70,
+    textShadow: '1px 1px 1px rgba(0, 0, 0, 0.1)',
+    margin: 'auto',
+    width: '100%',
+    padding: '.2rem 3.4ex .2rem 3.4ex'
   },
   'input:focus' : {
-      border: '1px inset #69C',
-      outline: 'none'
-  },
-  'input-container': {
-      width: '100%'
+    border: '1px inset #69C',
+    outline: 'none'
   }
 }
 

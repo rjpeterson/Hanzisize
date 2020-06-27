@@ -12,13 +12,17 @@ const options = [
 const customStyles = {
   container: (provided, state) => {
     const width = '8rem';
-    const height = 30;
     const padding = 2;
 
-    return {...provided, width, height, padding}
+    return {...provided, width, padding}
   },
   control: (provided, state) => {
-    const height = 25;
+    const minHeight = '1.5rem'
+
+    return {...provided, minHeight}
+  },
+  valueContainer: (provided, state) => {
+    const height = '1.5rem';
 
     return {...provided, height}
   }

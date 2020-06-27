@@ -2,6 +2,7 @@ import React from 'react';
 import './Notification.css';
 
 class Notification extends React.Component {
+
   renderNotification() {
     if (!this.props.validFontSize) {
       return 'Please enter a positive integer'

@@ -17,26 +17,35 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      language: 'Chinese',
+      validFontSize: false,
+      minFontSize: null,
+      errorMessage: null,
+      tabId: null
+    };
+
     this.handleFSChange = this.handleFSChange.bind(this);
     this.handleLangChange = this.handleLangChange.bind(this);
   }
-  state = {
-    language: 'Chinese',
-    validFontSize: false,
-    minFontSize: null,
-    errorMessage: null,
-    tabId: null
-  }
 
   componentDidMount = () => {
-    if (process.env.NODE_ENV === 'production') console.log(" app.js 32 PRODUCTION MODE popup.js loaded...");
+    if (process.env.NODE_ENV === 'production') console.log(" app.js 33 PRODUCTION MODE popup.js loaded...");
 
-    onAppMount((didMountObject) => {
-      if (process.env.NODE_ENV === 'production') console.log(`app.js 35 didMountObject: ${JSON.stringify(didMountObject)}`)
-    this.setState({
-      minFontSize: didMountObject.minFontSize,
-      tabId: didMountObject.tabId
-    })
+    onAppMount.main((responseObject) => {
+      if (process.env.NODE_ENV === 'production') console.log(`app.js 36 onAppMount responseObject: ${JSON.stringify(responseObject)}`)
+      this.setState({
+        minFontSize: responseObject.minFontSize,
+        tabId: responseObject.tabId
+      });
+
+      const contentObj = {
+        'language' : this.state.language,
+        'newMinFontSize': this.state.minFontSize
+      };
+      
+      try{tools.sendToContent(this.state.tabId, contentObj)}
+      catch(err) {console.log(`app.js 48 Could not send to content script: ${err}`)}
     });
   }
 
@@ -51,7 +60,7 @@ class App extends React.Component {
       try{tools.sendToContent(this.state.tabId, contentObj)}
       catch(err) {console.log(`Could not send to content script: ${err}`)}
 
-      this.setState({errorMessage: ''})
+      // this.setState({errorMessage: ''})
     })
   }
 
@@ -90,6 +99,7 @@ class App extends React.Component {
         changeHandler={this.handleLangChange}
         />
         <MinFontSize 
+        minFontSize={this.state.minFontSize}
         changeHandler={this.handleFSChange}
         />
         <Notification 
