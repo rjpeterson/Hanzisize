@@ -13,6 +13,7 @@ import Error from './Error';
 import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
 
+// npm start runs app in browser tab which doesn't have accesse to required chrome apis, so we provide them here for testing the UI
 if(process.env.NODE_ENV === 'development') {
   global.chrome = {
     runtime: {
