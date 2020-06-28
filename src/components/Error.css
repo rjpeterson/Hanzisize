@@ -1,0 +1,8 @@
+.error {
+  grid-area: error;
+}
+
+#error-content {
+  font-size: 10px;
+  display: block;
+}

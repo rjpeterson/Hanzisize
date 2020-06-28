@@ -1,0 +1,7 @@
+.mfs-input {
+  grid-area: mfsinput;
+}
+
+.input-label {
+  display: inline-flex;
+}

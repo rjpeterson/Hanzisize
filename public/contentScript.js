@@ -1,4 +1,4 @@
-let test_mode = true;
+var test_mode = true;
 
 const hanzisizeUtil = {
   REGEX_CHINESE: /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u,
@@ -91,7 +91,7 @@ const hanzisizeUtil = {
       }
     }
 
-    if (currentFontSize == newMinFontSize) {
+    if (currentFontSize === newMinFontSize) {
       if(test_mode) console.log('CFS equals NMFS. no change');
 
     } else if (currentFontSize > newMinFontSize) { // from big to small
@@ -139,7 +139,7 @@ const hanzisizeUtil = {
     const currentLineHeight = parseInt(window.getComputedStyle(el,null).getPropertyValue("line-height"));
 
     // if line height is too small for new text size, change line height to "normal"
-    if (currentLineHeight != "normal" && currentLineHeight <= (currentFontSize+1)) {
+    if (currentLineHeight !== "normal" && currentLineHeight <= (currentFontSize+1)) {
       if(test_mode) {console.log(`line height too small. setting line height to 'normal'`)}
 
       el.style.setProperty("line-height", "normal", "important");

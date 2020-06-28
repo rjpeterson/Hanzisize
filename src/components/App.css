@@ -1,0 +1,37 @@
+body {
+  margin: .4rem;
+  background-color: sandybrown;
+  width: 150px;
+}
+
+.App {
+  display: grid;
+  width: 90%;
+  margin: auto;
+  grid-template-areas: 
+    'logo'
+    'langinput'
+    'mfsinput'
+    'note'
+    'error';
+  align-items: center;
+}
+
+.grid-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: .2rem;
+}
+
+.logo-content {
+  grid-area: logo;
+}
+
+.box-content {
+  margin: auto;
+}
+
+.logo-content img {
+  height: 1.5rem;
+}

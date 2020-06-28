@@ -1,29 +1,48 @@
 {
-  "name": "hanzisize-reboot",
-  "version": "1.0.0",
-  "description": "A chrome extension to change Chinese font-size",
+  "name": "hanzisize-reboot-react",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A React Chrome extension to change Chinese font-size",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rjpeterson/Hanzisize.git"
-  },
-  "author": "Ryan Peterson",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rjpeterson/Hanzisize/issues"
-  },
-  "homepage": "https://github.com/rjpeterson/Hanzisize#readme",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "sinon-chrome": "^3.0.1"
-  },
   "dependencies": {
-    "jquery": "^3.5.0",
-    "jsdom": "^16.2.2",
-    "mocha": "^7.1.1",
-    "puppeteer": "^3.0.1"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^26.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-numeric-input": "^2.2.3",
+    "react-scripts": "3.4.1",
+    "react-select": "^3.1.0"
+  },
+  "scripts": {
+    "start": "set PORT=3000 && react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "env": {
+      "webextensions": true
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "jest-webextension-mock": "^3.6.0"
+  },
+  "jest": {
+    "clearMocks": true
   }
 }
