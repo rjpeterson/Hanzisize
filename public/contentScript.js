@@ -7,8 +7,8 @@ const hanzisizeUtil = {
 
   // function applies new class to all elements that contain text at first child node
   tagTextElems() {
-    $("body *").each(function(){
-      if(this.firstChild.textContent && this.firstChild.textContent.trim().length !== 0) {
+    $('body *').each(function(){
+      if(this.childNodes[0].nodeValue && this.childNodes[0].nodeValue.trim().length !== 0) {
         $( this ).addClass('text-elem')
       }
     })
@@ -17,8 +17,8 @@ const hanzisizeUtil = {
   // function applies new class to all elements with text-elem class and match selected language
   tagLangElems(language) {
     $('.text-elem').each(function(){
-      if(hanzisizeUtil.hasLanguage(language, $(this).firstChild.nodeValue)) {
-        $(this).addClass(`${language}-elem`)
+      if(hanzisizeUtil.hasLanguage(language, this.firstChild.textContent)) {
+        $( this ).addClass(`${language}-elem`)
       }
     })
   },

@@ -63,7 +63,7 @@ describe.only('hanzisizeUtil', () => {
         '<h1>Header <span>Text</span></h1>' +
         '</div>';
       })
-      test.only('Applies a new class to elements whose first child node contains text', () => {
+      test('Applies a new class to elements whose first child node contains text', () => {
         hanzisizeUtil.tagTextElems()
 
         expect($('h1').hasClass('text-elem')).toBeTruthy();
@@ -89,10 +89,7 @@ describe.only('hanzisizeUtil', () => {
         spy = jest.spyOn(hanzisizeUtil, 'hasLanguage');
         spy.mockReturnValueOnce(false)
         .mockReturnValueOnce(false)
-        .mockReturnValueOnce(false)
-        .mockReturnValueOnce(true)
-        .mockReturnValueOnce(true)
-        .mockReturnValueOnce(false);
+        .mockReturnValueOnce(true);
       })
 
       test('Applies a new class to elements with class "text-elem" whose first child node contains text of specified langauge', () => {
