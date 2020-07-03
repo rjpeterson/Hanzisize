@@ -51,7 +51,7 @@ class App extends React.Component {
     this.handleLangChange = this.handleLangChange.bind(this);
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     if (isDevMode()) console.log(" app.js 37 PRODUCTION MODE popup.js loaded...");
 
     onAppMount.main((responseObject) => {
@@ -71,7 +71,7 @@ class App extends React.Component {
     });
   }
 
-  handleLangChange = language => {
+  handleLangChange(language) {
     this.setState({language: language}, () => {
       console.log('current state: ' + JSON.stringify(this.state));
       
@@ -86,7 +86,7 @@ class App extends React.Component {
     })
   }
 
-  handleFSChange = (valid, minFontSize) => {
+  handleFSChange(valid, minFontSize) {
     if (valid) {
       this.setState({
         minFontSize: minFontSize,

@@ -1,33 +1,49 @@
-var test_mode = true;
+var test_mode = false;
 
 const hanzisizeUtil = {
   REGEX_CHINESE: /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u,
   REGEX_JAPANESE: /[\u3041-\u3096]|[\u30A0-\u30FF]/, // katakana and hiragana only
   REGEX_ENGLISH: /[a-zA-Z]+/,
 
+  // function applies new class to all elements that contain text at first child node
+  tagTextElems() {
+    $("body *").each(function(){
+      if(this.firstChild.textContent && this.firstChild.textContent.trim().length !== 0) {
+        $( this ).addClass('text-elem')
+      }
+    })
+  },
+
+  // function applies new class to all elements with text-elem class and match selected language
+  tagLangElems(language) {
+    $('.text-elem').each(function(){
+      if(hanzisizeUtil.hasLanguage(language, $(this).firstChild.nodeValue)) {
+        $(this).addClass(`${language}-elem`)
+      }
+    })
+  },
+
   // Error & function handling for language selection 
-  // 6/14/2020 LANGUAGE FUNCTIONALITY STILL IN THE WORKS
   hasLanguage(lang, str) {
     let result;
     switch (lang) {
       case 'Chinese':
         if (hanzisizeUtil.REGEX_CHINESE.test(str) && !hanzisizeUtil.REGEX_JAPANESE.test(str)) {
-          return true
+          result = true
         } else {
-          return false
+          result = false
         }
+        break;
       case 'English':
-        console.log('testing string: ' + str);
-        console.log('English REGEX: ' + hanzisizeUtil.REGEX_ENGLISH);
-        console.log('last index: ' + hanzisizeUtil.REGEX_JAPANESE.lastIndex);
-        console.log('English REGEX test result: ' + hanzisizeUtil.REGEX_ENGLISH.test(str));
         result = hanzisizeUtil.REGEX_ENGLISH.test(str);
-        return result;
+        break;
       case 'Japanese':
-        return hanzisizeUtil.REGEX_JAPANESE.test(str);
+        result = hanzisizeUtil.REGEX_JAPANESE.test(str);
+        break;
       default:
         throw new Error('Invalid language was provided')
     }
+    return result;
   },
 
   // returns all elements with text of chosen language with optional callback for each step of loop
@@ -40,7 +56,7 @@ const hanzisizeUtil = {
     }
 
     // get all elements in DOM
-    const allElems = document.getElementsByTagName('*')
+    const allElems = document.body.getElementsByTagName('*')
     for (let i = 0; i < allElems.length; i++) {
       const el = allElems[i];
       if (el.firstChild) {// if element has content that is not nested
@@ -48,11 +64,8 @@ const hanzisizeUtil = {
 
         if(test_mode) {console.log(`content of element's first child : ${elText}`)};
         
-        try { // check if content matches input language
+        // check if content matches input language
           languagePass = hanzisizeUtil.hasLanguage(language, elText)
-        } catch (error) {
-          if(test_mode) console.log('hasLanguage function error:' + error)
-        };
 
         if (languagePass) {
           if(test_mode) {console.log(`Element contains ${language} text`)};
@@ -171,7 +184,7 @@ try {
       sendResponse({farewell: "From content: I got the object."});
   });
 }
-catch(err) {console.log(err)}
+catch(err) {if(test_mode) {console.log(err)}}
 
 try { module.exports = hanzisizeUtil}
 catch(err) {console.log(err + ".  'module' only necessary for testing purposes. Not needed in production.")}

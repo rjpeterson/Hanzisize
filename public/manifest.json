@@ -1,19 +1,12 @@
 {
   "name": "Hanzisize",
-  "version": "0.0.1",
+  "version": "0.0.2",
 
   "description": "An extension to control the minimum size of chinese text on the page without changing size of other elements.",
   "permissions": [
     "activeTab",
     "storage"
   ],
-
-  "content_scripts": [
-    {
-      "run_at": "document_end",
-      "js": ["contentScript.js"]
-      }
-    ],
 
   "background": { 
     "scripts": [ "background.js" ], 

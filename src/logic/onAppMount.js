@@ -1,7 +1,8 @@
 /*global chrome*/
 import tools from './chromeTools'
 function isDevMode() {
-  return !('update_url' in chrome.runtime.getManifest());
+  if(process.env.NODE_ENV === "test") {return true}
+  else {return !('update_url' in chrome.runtime.getManifest());}  
 }
 
 const onAppMount = {
