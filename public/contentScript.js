@@ -47,41 +47,27 @@ const hanzisizeUtil = {
   },
 
   // returns all elements with text of chosen language with optional callback for each step of loop
-  getLangText(document, language, singleElementResizerCallback, newMinFontSize) {
+  getElems(document, language, _singleElemResizer, newMinFontSize) {
     let languagePass;
-    const langElems = [];
-
-    if(test_mode) {
-      console.log(`newMinFontSize: ${newMinFontSize} | initiating getLangText...`)
-    }
 
     // get all elements in DOM
     const allElems = document.body.getElementsByTagName('*')
     for (let i = 0; i < allElems.length; i++) {
       const el = allElems[i];
-      if (el.firstChild) {// if element has content that is not nested
-        const elText = el.firstChild.nodeValue;
 
-        if(test_mode) {console.log(`content of element's first child : ${elText}`)};
-        
+      const elemText = el.childNodes[0].nodeValue;
+      if (elemText) {// if element has text content that is not nested
         // check if content matches input language
-          languagePass = hanzisizeUtil.hasLanguage(language, elText)
-
-        if (languagePass) {
-          if(test_mode) {console.log(`Element contains ${language} text`)};
-          langElems.push(elText);
-
+        if (hanzisizeUtil.hasLanguage(language, elemText)) {
           // singleElementResizer function to be passed in as callback
-          if (singleElementResizerCallback) {
-            if(test_mode) {console.log(`passing element and NMFS to callback function. NMFS: ${newMinFontSize}`)}
-            singleElementResizerCallback(window, el, newMinFontSize)
+          if (_singleElemResizer) {
+            _singleElemResizer(window, el, newMinFontSize)
           };
         } else { // languagePass == false
           if(test_mode) {console.log(`case 1: element does not contain ${language} text`)}
         }
       }
-    } //end for loop
-    return langElems; //mainly for testing purposes
+    }
   },
 
   // input window, single element and NewMinFS, function will assess OFS, NMFS, CFS & perform proper resizing procedure
@@ -91,18 +77,9 @@ const hanzisizeUtil = {
   //case 4: CurrentFS is not original and less than or equal to NewMinFS. FS to NewMinFS
   //case 5: No OriginalFS. Save CurrentFS as OriginalFS. Set FS to NewMinFS
   //case 6: OriginalFS && (CurrentFS < NMFS), Set FS to NewMinFS
-  singleElementResizer(window, el, newMinFontSize) {
+  singleElemResizer(window, el, newMinFontSize) {
     const currentFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('font-size'));
     const originalFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('--data-original-font-size'));
-
-    if(test_mode) {
-      console.log(`initiating singleElementResizer. current font size: ${currentFontSize}. new min font size: ${newMinFontSize}`)
-      if(isNaN(originalFontSize)) {
-        console.log(`originalFontSize not found`);
-      } else {
-        console.log(`originalFontSize: ${originalFontSize}`);
-      }
-    }
 
     if (currentFontSize === newMinFontSize) {
       if(test_mode) console.log('CFS equals NMFS. no change');
@@ -115,7 +92,7 @@ const hanzisizeUtil = {
         return;
 
       } else if (originalFontSize > newMinFontSize) { 
-        if(test_mode) {console.log(`case 3: CurrentFS is not original and larger than NewMinFS. FS set to OriginalFS`)};
+        if(test_mode) {console.log(`case 3: CurrentFS is not original and original is larger than NewMinFS. FS set to OriginalFS`)};
 
         el.style.setProperty('font-size', originalFontSize + 'px', 'important');
         hanzisizeUtil.adjustLineHeight(el);
@@ -164,7 +141,7 @@ const hanzisizeUtil = {
     if(test_mode) console.log(`initiating main function...`);
 
     try {
-      hanzisizeUtil.getLangText(document, language, hanzisizeUtil.singleElementResizer, minFontSize)
+      hanzisizeUtil.getElems(document, language, hanzisizeUtil.singleElemResizer, minFontSize)
     }
     catch(err) {console.log(`Hanzisize failed: ${err}`)}
   }

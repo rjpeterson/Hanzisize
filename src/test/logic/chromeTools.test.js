@@ -57,8 +57,6 @@ test('sentToContent initial call', () => {
   expect(chrome.tabs.sendMessage).toHaveBeenCalledTimes(2);
   expect(chrome.tabs.sendMessage).toHaveBeenNthCalledWith(1, tab_id, obj, {frameId: 0}, expect.any(Function))
   expect(chrome.tabs.sendMessage).toHaveBeenNthCalledWith(2, tab_id, obj, {frameId: 0}, expect.any(Function))
-  // expect(chrome.tabs.sendMessage.mock.calls[0]).toEqual([tab_id, obj, {frameId: 0}, expect.any(Function)]);
-  // expect(chrome.tabs.sendMessage.mock.calls[1]).toEqual([tab_id, obj, {frameId: 0}, expect.any(Function)]);
   expect(chrome.tabs.executeScript).toHaveBeenCalledTimes(1);
   expect(chrome.tabs.executeScript).toHaveBeenCalledWith(tab_id, {file: process.env.PUBLIC_URL + '/contentScript.js'}, expect.any(Function))
 
