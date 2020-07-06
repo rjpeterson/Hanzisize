@@ -6,6 +6,10 @@ describe.only('hanzisizeUtil', () => {
   const chineseString = "聲我度都，一可文行知化，演人去，北醫進方會說多員校工能廣歷學接想有國詩法今不同";
   const japaneseString = "併メセ怖区山二やわはみ施請ざ南専のやぐ加単シネキ第朝東うた利34表ヤホセ断悪3請ハ";
 
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  })
+
   describe('regex', () => {
     describe('english regex', () => {
       test('it returns true on english text', () => {
@@ -137,156 +141,160 @@ describe.only('hanzisizeUtil', () => {
   })
 
   describe('getElems', () => {
-    document.body.innerHTML = 
-    '<div>' +
-    '<h1>Header <a href="google.com">Link</a></h1>' +
-    '<p>聲我度都 <span>演人去</span>' +
-    '</div>';
+    const { hasLanguage, singleElemResizer } = require('../../../public/contentScript')
 
-    const spyHL = jest.spyOn(hanzisizeUtil, 'hasLanguage');
-    const spySER = jest.spyOn(hanzisizeUtil, 'singleElemResizer');
+    beforeAll(() => {
+      document.body.innerHTML = 
+      '<div>' +
+      '<h1>Header <a href="google.com">Link</a></h1>' +
+      '<p>聲我度都 <span>演人去</span>' +
+      '</div>';
+  
+      hanzisizeUtil.hasLanguage = jest.fn()
+      hanzisizeUtil.singleElemResizer = jest.fn()
+  
+      hanzisizeUtil.hasLanguage.mockReturnValueOnce(false)
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+    })
 
-    spyHL.mockReturnValueOnce(false)
-    .mockReturnValueOnce(false)
-    .mockReturnValueOnce(true)
-    .mockReturnValueOnce(true)
+    afterAll(() => {
+      hanzisizeUtil.singleElemResizer = singleElemResizer;
+      hanzisizeUtil.hasLanguage = hasLanguage;
+    })
 
-    test.only('it calls singleElemResizer on Chinese text elems with "Chinese" arg', () => {
+    test('it calls singleElemResizer on Chinese text elems with "Chinese" arg', () => {
       hanzisizeUtil.getElems(document, "Chinese", hanzisizeUtil.singleElemResizer, 20);
 
-      expect(hanzisizeUtil.hasLanguage)
-      .toHaveBeenNthCalledWith(1, "Chinese", "Header ")
-      .toHaveBeenNthCalledWith(2, "Chinese", "Link")
-      .toHaveBeenNthCalledWith(3, "Chinese", "聲我度都 ")
-      .toHaveBeenNthCalledWith(4, "Chinese", "演人去");
+      expect(hanzisizeUtil.hasLanguage.mock.calls[0]).toEqual(["Chinese", "Header "]);
+      expect(hanzisizeUtil.hasLanguage.mock.calls[1]).toEqual(["Chinese", "Link"]);
+      expect(hanzisizeUtil.hasLanguage.mock.calls[2]).toEqual(["Chinese", "聲我度都 "]);
+      expect(hanzisizeUtil.hasLanguage.mock.calls[3]).toEqual(["Chinese", "演人去"]);
 
-      expect(hanzisizeUtil.singleElemResizer)
-      .toHaveBeenNthCalledWith(1, window, document.querySelector('p'), 20)
-      .toHaveBeenNthCalledWith(2, window, document.querySelector('span'), 20);
+      expect(hanzisizeUtil.singleElemResizer.mock.calls[0]).toEqual([window, document.querySelector('p'), 20])
+      expect(hanzisizeUtil.singleElemResizer.mock.calls[1]).toEqual([window, document.querySelector('span'), 20]);
     })    
   })
 
-  describe.only('singleElemResizer', () => {
-    window.getComputedStyle = jest.fn();
-    hanzisizeUtil.adjustLineHeight = jest.fn();
-    Element.style.setProperty = jest.fn();
+  describe('singleElemResizer', () => {
+    let spy;
+    let elem;
+    let originalFontSize;
+    let fontSize;
+    let newFontSize;
+
+    beforeAll(() => {
+      window.getComputedStyle = jest.fn();
+      hanzisizeUtil.adjustLineHeight = jest.fn();
+    })
 
     test('case 2', () => {
-      const originalFontSize = null;
-      const fontSize = 20;
-      const newFontSize = 15;
-      document.body.innerHTML = 
-      `<div font-size="${fontSize}">聲我度都</div>`;
-      const elem = document.querySelector('div');
+      originalFontSize = null;
+      fontSize = 20;
+      newFontSize = 15;
       window.getComputedStyle.mockReturnValue({
         getPropertyValue: jest.fn()
         .mockReturnValueOnce(fontSize)
         .mockReturnValueOnce(originalFontSize)
       });
+      document.body.innerHTML = '<div font-size="' + fontSize + '">聲我度都</div>';
+      elem = document.querySelector('div');
+      elem.style.setProperty = jest.fn()
 
       hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
 
-      expect(elem.style.setProperty)
-      .toHaveBeenCalledTimes(0);
-
-      expect(hanzisizeUtil.adjustLineHeight)
-      .toHaveBeenCalledTimes(0);
+      expect(elem.style.setProperty).toHaveBeenCalledTimes(0);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(0);
     })
 
     test('case 3', () => {
-      const originalFontSize = 15;
-      const fontSize = 20;
-      const newFontSize = 10;
-      document.body.innerHTML = 
-      `<div font-size="${fontSize}" --data-original-font-size="${originalFontSize}">聲我度都</div>`;
-      const elem = document.querySelector('div');
+      originalFontSize = 15;
+      fontSize = 20;
+      newFontSize = 10;
       window.getComputedStyle.mockReturnValue({
         getPropertyValue: jest.fn()
         .mockReturnValueOnce(fontSize)
         .mockReturnValueOnce(originalFontSize)
       });
+      document.body.innerHTML = '<div font-size="' + fontSize + '" --data-original-font-size="' + originalFontSize + '">聲我度都</div>';
+      elem = document.querySelector('div');
+      elem.style.setProperty = jest.fn()
 
       hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
 
-      expect(elem.style.setProperty)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith('font-size', `${originalFontSize}px`, 'important');
+      expect(elem.style.setProperty).toHaveBeenCalledTimes(1);
+      expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${originalFontSize}px`, 'important');
 
-      expect(hanzisizeUtil.adjustLineHeight)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith(elem);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(1);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem);
     })
 
     test('case 4', () => {
-      const originalFontSize = 15;
-      const fontSize = 20;
-      const newFontSize = 25;
-      document.body.innerHTML = 
-      `<div font-size="${fontSize}" --data-original-font-size="${originalFontSize}">聲我度都</div>`;
-      const elem = document.querySelector('div');
+      originalFontSize = 15;
+      fontSize = 20;
+      newFontSize = 25;
       window.getComputedStyle.mockReturnValue({
         getPropertyValue: jest.fn()
         .mockReturnValueOnce(fontSize)
         .mockReturnValueOnce(originalFontSize)
       });
+      document.body.innerHTML = '<div font-size="' + fontSize + '" --data-original-font-size="' + originalFontSize + '">聲我度都</div>';
+      elem = document.querySelector('div');
+      elem.style.setProperty = jest.fn()
 
       hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
 
-      expect(elem.style.setProperty)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith('font-size', `${newFontSize}px`, 'important');
+      expect(elem.style.setProperty).toHaveBeenCalledTimes(1);
+      expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${newFontSize}px`, 'important');
 
-      expect(hanzisizeUtil.adjustLineHeight)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith(elem);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(1);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem);
     })
 
     test('case 5', () => {
-      const originalFontSize = null;
-      const fontSize = 15;
-      const newFontSize = 20;
-      document.body.innerHTML = 
-      `<div font-size="${fontSize}">聲我度都</div>`;
-      const elem = document.querySelector('div');
+      originalFontSize = null;
+      fontSize = 15;
+      newFontSize = 20;
       window.getComputedStyle.mockReturnValue({
         getPropertyValue: jest.fn()
         .mockReturnValueOnce(fontSize)
         .mockReturnValueOnce(originalFontSize)
       });
+      document.body.innerHTML = '<div font-size="' + fontSize + '">聲我度都</div>';
+      elem = document.querySelector('div');
+      elem.style.setProperty = jest.fn()
 
-      hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
+      hanzisizeUtil.singleElemResizer(window, elem, newFontSize);
 
-      expect(elem.style.setProperty).toHaveBeenCalledTimes(2)
-      .toHaveBeenNthCalledWith(1, '--data-original-font-size', `${fontSize}px`)
-      .toHaveBeenNthCalledWith(2, 'font-size', `${newFontSize}px`, 'important');
+      expect(elem.style.setProperty).toHaveBeenCalledTimes(2);
+      expect(elem.style.setProperty).toHaveBeenNthCalledWith(1, '--data-original-font-size', `${fontSize}px`);
+      expect(elem.style.setProperty).toHaveBeenNthCalledWith(2, 'font-size', `${newFontSize}px`, 'important');
 
-      expect(hanzisizeUtil.adjustLineHeight)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith(elem);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(1);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem);
     })
 
     test('case 6', () => {
-      const originalFontSize = 10;
-      const fontSize = 15;
-      const newFontSize = 20;
-      document.body.innerHTML = 
-      `<div font-size="${fontSize} --data-original-font-size="${originalFontSize}">聲我度都</div>`;
-      const elem = document.querySelector('div');
+      originalFontSize = 10;
+      fontSize = 15;
+      newFontSize = 20;
+      document.body.innerHTML = '<div font-size="' + fontSize + '" --data-original-font-size="' + originalFontSize +'">聲我度都</div>';
+      elem = document.querySelector('div');
       window.getComputedStyle.mockReturnValue({
         getPropertyValue: jest.fn()
         .mockReturnValueOnce(fontSize)
         .mockReturnValueOnce(originalFontSize)
       });
+      elem.style.setProperty = jest.fn();
 
       hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
 
-      expect(elem.style.setProperty)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith('font-size', `${newFontSize}px`, 'important');
+      expect(elem.style.setProperty).toHaveBeenCalledTimes(1);
+      expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${newFontSize}px`, 'important');
 
-      expect(hanzisizeUtil.adjustLineHeight)
-      .toHaveBeenCalledTimes(1)
-      .toHaveBeenCalledWith(elem);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(1);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem);
     })
   })
 })
