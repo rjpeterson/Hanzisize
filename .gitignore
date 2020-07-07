@@ -5,6 +5,7 @@
 
 # development
 .eslintrc
+/out
 
 # testing
 /coverage
