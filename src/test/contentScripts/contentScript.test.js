@@ -178,6 +178,7 @@ describe.only('hanzisizeUtil', () => {
   })
 
   describe('singleElemResizer', () => {
+    const ALH = hanzisizeUtil.adjustLineHeight;
     let spy;
     let elem;
     let originalFontSize;
@@ -187,6 +188,10 @@ describe.only('hanzisizeUtil', () => {
     beforeAll(() => {
       window.getComputedStyle = jest.fn();
       hanzisizeUtil.adjustLineHeight = jest.fn();
+    })
+
+    afterAll(() => {
+      hanzisizeUtil.adjustLineHeight = ALH
     })
 
     test('case 2', () => {
@@ -227,7 +232,7 @@ describe.only('hanzisizeUtil', () => {
       expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${originalFontSize}px`, 'important');
 
       expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(1);
-      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem, originalFontSize);
     })
 
     test('case 4', () => {
@@ -249,7 +254,7 @@ describe.only('hanzisizeUtil', () => {
       expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${newFontSize}px`, 'important');
 
       expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(1);
-      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem, newFontSize);
     })
 
     test('case 5', () => {
@@ -272,21 +277,22 @@ describe.only('hanzisizeUtil', () => {
       expect(elem.style.setProperty).toHaveBeenNthCalledWith(2, 'font-size', `${newFontSize}px`, 'important');
 
       expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(1);
-      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem, newFontSize);
     })
 
     test('case 6', () => {
       originalFontSize = 10;
       fontSize = 15;
       newFontSize = 20;
-      document.body.innerHTML = '<div font-size="' + fontSize + '" --data-original-font-size="' + originalFontSize +'">聲我度都</div>';
-      elem = document.querySelector('div');
       window.getComputedStyle.mockReturnValue({
         getPropertyValue: jest.fn()
         .mockReturnValueOnce(fontSize)
         .mockReturnValueOnce(originalFontSize)
       });
+      document.body.innerHTML = '<div font-size="' + fontSize + '" --data-original-font-size="' + originalFontSize +'">聲我度都</div>';
+      elem = document.querySelector('div');
       elem.style.setProperty = jest.fn();
+
 
       hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
 
@@ -294,7 +300,38 @@ describe.only('hanzisizeUtil', () => {
       expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${newFontSize}px`, 'important');
 
       expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(1);
-      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem);
+      expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledWith(elem, newFontSize);
+    })
+  })
+
+  describe('adjustLineHeight', () => {
+    test('it properly adjusts lineHeight when undersized', () => {
+      const fontSize = 15;
+      window.getComputedStyle = jest.fn();
+      window.getComputedStyle.mockReturnValue({
+        getPropertyValue: jest.fn()
+        .mockReturnValueOnce(10)
+      });
+      document.body.innerHTML = '<div font-size="' + fontSize +'">聲我度都</div>';
+      const elem = document.querySelector('div');
+      elem.style.setProperty = jest.fn();
+
+      hanzisizeUtil.adjustLineHeight(elem, fontSize)
+
+      expect(elem.style.setProperty).toHaveBeenCalledTimes(1);
+      expect(elem.style.setProperty).toHaveBeenCalledWith("line-height", "normal", "important");
+    })
+  })
+
+  describe('main', () => {
+    test('it calls getElems with the proper args', () => {
+      const language = "Chinese";
+      const minFontSize = 12;
+      jest.spyOn(hanzisizeUtil, 'getElems').mockImplementation(() => {})
+  
+      hanzisizeUtil.main(language,minFontSize);
+      
+      expect(hanzisizeUtil.getElems).toHaveBeenCalledWith(document, language, hanzisizeUtil.singleElemResizer, minFontSize);
     })
   })
 })

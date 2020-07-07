@@ -95,13 +95,13 @@ const hanzisizeUtil = {
         if(test_mode) {console.log(`case 3: CurrentFS is not original and original is larger than NewMinFS. FS set to OriginalFS`)};
 
         el.style.setProperty('font-size', originalFontSize + 'px', 'important');
-        hanzisizeUtil.adjustLineHeight(el);
+        hanzisizeUtil.adjustLineHeight(el, originalFontSize);
 
       } else {
         if(test_mode) {console.log(`case 4: CurrentFS is not original and less than or equal to NewMinFS. FS to NewMinFS`)};
 
         el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
-        hanzisizeUtil.adjustLineHeight(el);
+        hanzisizeUtil.adjustLineHeight(el, newMinFontSize);
       }
     } else { // CFS < NMFS   from small to big
       if(test_mode) {console.log(`CFS is less than NMFS`)}
@@ -111,27 +111,24 @@ const hanzisizeUtil = {
 
         el.style.setProperty('--data-original-font-size', currentFontSize + 'px');
         el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
-        hanzisizeUtil.adjustLineHeight(el);
+        hanzisizeUtil.adjustLineHeight(el, newMinFontSize);
 
       } else {
         if(test_mode) {console.log(`case 6: OriginalFS && (CurrentFS < NMFS), Set FS to NewMinFS`)};
 
         el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
-        hanzisizeUtil.adjustLineHeight(el);
+        hanzisizeUtil.adjustLineHeight(el, newMinFontSize);
       }
     }
   },
 
   // This function is borrowed from APlus Font Size Changer
   // Version 1.3.0 - Change line-height for websites like nytimes.com
-  adjustLineHeight(el) {
-    const currentFontSize = parseInt(window.getComputedStyle(el,null).getPropertyValue("font-size"));
+  adjustLineHeight(el, elFontSize) {
     const currentLineHeight = parseInt(window.getComputedStyle(el,null).getPropertyValue("line-height"));
 
     // if line height is too small for new text size, change line height to "normal"
-    if (currentLineHeight !== "normal" && currentLineHeight <= (currentFontSize+1)) {
-      if(test_mode) {console.log(`line height too small. setting line height to 'normal'`)}
-
+    if (currentLineHeight !== "normal" && currentLineHeight <= (elFontSize+1)) {
       el.style.setProperty("line-height", "normal", "important");
     }
   },
