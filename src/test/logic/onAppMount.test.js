@@ -21,6 +21,10 @@ describe('urlChecking', () => {
     spy.mockReturnValue(mockElement);
   });
 
+  afterAll(() => {
+    jest.restoreAllMocks();
+  })
+
   test('it should accept a valid url', () => {
     const tab = {
       url: 'www.google.com'
@@ -47,12 +51,14 @@ describe('urlChecking', () => {
 })
 
 describe('helper', () => {
+  const URLC = onAppMount.urlChecking;
+
   beforeAll(() => {
     onAppMount.urlChecking = jest.fn()
   });
 
   afterAll(() => {
-    onAppMount.urlChecking.mockReset();
+    onAppMount.urlChecking = URLC;
   })
 
   test('it accepts a tabs object and returns a response object', async () => {
@@ -81,18 +87,22 @@ describe('helper', () => {
   // })
 })
 
-describe('main', () => {
-  test('queries chrome for tab info and passes it to a callback', () => {
-    const callback = jest.fn();
-    const responseObject = {tabId: 1, minFontSize: 12};
-    const spy = jest.spyOn(onAppMount, 'helper');
-    spy.mockReturnValue(responseObject)
+describe.only('main', () => {
+  const responseObject = {tabId: 1, minFontSize: 12};
+  const helper = onAppMount.helper;
+  onAppMount.helper = jest.fn().mockReturnValue(responseObject);
+  const mockCallback = jest.fn();
 
-    onAppMount.main(callback);
+  afterAll(() => {
+    onAppMount.helper = helper;
+  })
+
+  test('queries chrome for tab info and passes it to a callback', () => {
+    onAppMount.main();
 
     expect(chrome.tabs.query).toHaveBeenCalledTimes(1);
     expect(chrome.tabs.query).toHaveBeenCalledWith({ active: true, lastFocusedWindow: true }, expect.any(Function))
-    expect(callback).toHaveBeenCalledTimes(1);
-    expect(callback).toHaveBeenCalledWith(responseObject)
+    expect(onAppMount.helper).toHaveBeenCalledTimes(1);
+
   })
 })

@@ -8,7 +8,7 @@ const hanzisizeUtil = {
   // function applies new class to all elements that contain text at first child node
   tagTextElems() {
     $('body *').each(function(){
-      if(this.childNodes[0].nodeValue && this.childNodes[0].nodeValue.trim().length !== 0) {
+      if(!$( this ).hasClass('text-elem') && this.childNodes[0] && this.childNodes[0].nodeValue && this.childNodes[0].nodeValue.trim().length !== 0) {
         $( this ).addClass('text-elem')
       }
     })
@@ -17,8 +17,10 @@ const hanzisizeUtil = {
   // function applies new class to all elements with text-elem class and match selected language
   tagLangElems(language) {
     $('.text-elem').each(function(){
-      if(hanzisizeUtil.hasLanguage(language, this.firstChild.textContent)) {
+      if(!$( this ).hasClass(`${language}-elem`) && hanzisizeUtil.hasLanguage(language, this.firstChild.textContent)) {
         $( this ).addClass(`${language}-elem`)
+      } else {
+        if(test_mode) {console.log(`case 1: element does not contain ${language} text`)}
       }
     })
   },
@@ -47,27 +49,10 @@ const hanzisizeUtil = {
   },
 
   // returns all elements with text of chosen language with optional callback for each step of loop
-  getElems(document, language, _singleElemResizer, newMinFontSize) {
-    let languagePass;
-
-    // get all elements in DOM
-    const allElems = document.body.getElementsByTagName('*')
-    for (let i = 0; i < allElems.length; i++) {
-      const el = allElems[i];
-
-      const elemText = el.childNodes[0].nodeValue;
-      if (elemText) {// if element has text content that is not nested
-        // check if content matches input language
-        if (hanzisizeUtil.hasLanguage(language, elemText)) {
-          // singleElementResizer function to be passed in as callback
-          if (_singleElemResizer) {
-            _singleElemResizer(window, el, newMinFontSize)
-          };
-        } else { // languagePass == false
-          if(test_mode) {console.log(`case 1: element does not contain ${language} text`)}
-        }
-      }
-    }
+  resizeElems(language, _singleElemResizer, newMinFontSize) {
+    $(`.${language}-elem`).each(function() {
+      _singleElemResizer(window, this, newMinFontSize)
+    })
   },
 
   // input window, single element and NewMinFS, function will assess OFS, NMFS, CFS & perform proper resizing procedure
@@ -134,13 +119,20 @@ const hanzisizeUtil = {
   },
 
   // primary function for extension
-  main(language, minFontSize) {
+  main(language, minFontSize, initial) {
     if(test_mode) console.log(`initiating main function...`);
 
-    try {
-      hanzisizeUtil.getElems(document, language, hanzisizeUtil.singleElemResizer, minFontSize)
+    if(initial) {
+      hanzisizeUtil.tagTextElems();
+      hanzisizeUtil.tagLangElems(language);
     }
-    catch(err) {console.log(`Hanzisize failed: ${err}`)}
+
+    if (minFontSize) {
+      try {
+        hanzisizeUtil.resizeElems(language, hanzisizeUtil.singleElemResizer, minFontSize)
+      }
+      catch(err) {console.log(`Hanzisize failed: ${err}`)}
+    }
   }
 }
 
@@ -149,13 +141,11 @@ const hanzisizeUtil = {
 try {
   chrome.runtime.onMessage.addListener(
     function(obj, sender, sendResponse) {
-      if (test_mode) {
-        console.log('object received by contentScript:' + JSON.stringify(obj) + 'Resizing now...')
-      }
+      sendResponse({received: "yes"});
+      if (test_mode) {console.log('object received by contentScript:' + JSON.stringify(obj) + 'Resizing now...')}
 
       // call resizing function with object properties received from popup
-      hanzisizeUtil.main(obj.language, obj.newMinFontSize)
-      sendResponse({farewell: "From content: I got the object."});
+      hanzisizeUtil.main(obj.language, obj.newMinFontSize, obj.initial)
   });
 }
 catch(err) {if(test_mode) {console.log(err)}}

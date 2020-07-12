@@ -35,7 +35,7 @@ class MinFontSize extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = e => {
+  handleChange(e) {
     if(e <= 0) {
       this.props.changeHandler(false,e)
     } else {
@@ -51,6 +51,7 @@ class MinFontSize extends React.Component {
         mobile={true}
         size={3}
         min={1}
+        defaultValue={this.props.minFontSize}
         style={customStyles}
         onChange={valueAsNumber => {this.handleChange(valueAsNumber)}}
         />

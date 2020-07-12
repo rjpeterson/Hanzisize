@@ -24,39 +24,21 @@ const onAppMount = {
     return returnString;
   },
 
-  // Takes tab info, builds and returns object to be used in setting App state
-  helper: async (tabs) => {
-    // get active tab info
-    const tab = tabs[0];
-    // tab object validation
-    if(!tab.id) {throw new Error('tab.id not defined')};
-    if(!tab.url) {throw new Error('tab.url not defined')}
-
-    if(isDevMode()) {
-      console.log(`onAppMount.helper 32 tabId: ${tab.id}, tabUrl: ${tab.url}`)
-    };
-    // check for invalid urls
-    onAppMount.urlChecking(tab);
-    // start building responseObject
-    const responseObject = {tabId: tab.id};
-    // fetch any stored values in chrome.storage
-    responseObject.minFontSize = await tools.getFromStorage();
-
-    if(isDevMode()) {
-      console.log(`onAppMount 43 didMountObject: ${JSON.stringify(responseObject)}`)
-    }
-
-    return responseObject;
-  },
-
-  // primary function call when app is mounted
-  main: async (_callback) => {
-    await chrome.tabs.query({ active: true, lastFocusedWindow: true }, async (tabs) => {
-      const responseObject = await onAppMount.helper(tabs)
-      // callback will set App component state and send to content script
-      _callback(responseObject);
+  // gets, validates, and returns current tab id
+  main: (_callback) => {
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, (tabs) => {
+      // get active tab info
+      const tab = tabs[0];
+      if(isDevMode()) {console.log(`onAppMount.helper ${JSON.stringify(tab)}`)}
+      // tab object validation
+      if(!tab.id) {throw new Error('tab.id not defined')};
+      if(!tab.url) {throw new Error('tab.url not defined')}
+      // check for invalid urls
+      onAppMount.urlChecking(tab);
+      const tabId = tab.id;
+      if(isDevMode()) {console.log(`onAppMount.main tabId: ${tabId}`)}
+      _callback(tabId);
     });
-
   }
 }
 
