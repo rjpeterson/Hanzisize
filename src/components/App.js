@@ -40,93 +40,106 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      language: 'Chinese',
+      language: null,
       validFontSize: false,
       minFontSize: null,
       errorMessage: null,
-      tabId: null
+      tabId: null,
+      ready: false
     };
     
-    this.componentDidMount = this.componentDidMount.bind(this);
     this.handleFSChange = this.handleFSChange.bind(this);
     this.handleLangChange = this.handleLangChange.bind(this);
   }
 
   componentDidMount() {
     if (isDevMode()) console.log(" app.js 37 PRODUCTION MODE popup.js loaded...");
-    debugger;
 
-    tools.getFromStorage((storedFontSize) => {
-      if (isDevMode()) console.log(`app.componenetDidMount storedFontSize: ${storedFontSize}`)
+    tools.getFromStorage((storedObject) => {
+      if (isDevMode()) console.log(`app.componenetDidMount storedObject: ${JSON.stringify(storedObject)}`)
 
       onAppMount.main((tabId) => {
         if (isDevMode()) console.log(`app.componenetDidMount tabId: ${tabId}`)
-        this.setState({
-          minFontSize: storedFontSize,
-          tabId: tabId
-        });
-  
+
         const contentObj = {
-          'language' : this.state.language,
-          'newMinFontSize': this.state.minFontSize,
+          'language' : storedObject.language,
+          'newMinFontSize': storedObject.minFontSize,
           'initial': true
         };
         
         try{tools.sendToContent(this.state.tabId, contentObj)}
         catch(err) {console.log(`app.js 48 Could not send to content script: ${err}`)}
+
+        this.setState({
+          minFontSize: storedObject.minFontSize,
+          language: storedObject.language,
+          tabId: tabId,
+          ready: true
+        }, () => {
+          if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
+        });
+        
       });
     })
   }
 
   handleLangChange(language) {
+    try{tools.pushLangToStorage(language)}
+    catch(err) {console.log(`Could not push to storage: ${err}`)}
+
+    const contentObj = {
+      'language' : language,
+      'newMinFontSize': this.state.minFontSize,
+      'initial': false
+    };
+    try{tools.sendToContent(this.state.tabId, contentObj)}
+    catch(err) {console.log(`Could not send to content script: ${err}`)}
+
     this.setState({language: language}, () => {
       console.log('current state: ' + JSON.stringify(this.state));
-      
-      const contentObj = {
-        'language' : this.state.language,
-        'newMinFontSize': this.state.minFontSize,
-        'initial': false
-      };
-      try{tools.sendToContent(this.state.tabId, contentObj)}
-      catch(err) {console.log(`Could not send to content script: ${err}`)}
-
       // this.setState({errorMessage: ''})
     })
   }
 
   handleFSChange(valid, minFontSize) {
     if (valid) {
+      try{tools.pushFSToStorage(minFontSize)}
+      catch(err) {console.log(`Could not push to storage: ${err}`)}
+
+      const contentObj = {
+        'language' : this.state.language,
+        'newMinFontSize': minFontSize,
+        'initial': false
+      };
+      try{tools.sendToContent(this.state.tabId, contentObj)}
+      catch(err) {console.log(`Could not send to content script: ${err}`)}
+
       this.setState({
         minFontSize: minFontSize,
-        validFontSize: true
+        validFontSize: true,
+        errorMessage: ''
       }, () => {
         console.log('current state: ' + JSON.stringify(this.state))
-
-        try{tools.pushFSToStorage(minFontSize)}
-        catch(err) {console.log(`Could not push to storage: ${err}`)}
-
-        const contentObj = {
-          'language' : this.state.language,
-          'newMinFontSize': this.state.minFontSize,
-          'initial': false
-        };
-        try{tools.sendToContent(this.state.tabId, contentObj)}
-        catch(err) {console.log(`Could not send to content script: ${err}`)}
-
-        this.setState({errorMessage: ''})
       });
     } else {
-      this.setState({validFontSize: false})
+      this.setState({
+        validFontSize: false,
+        errorMessage: 'Invalid font size'
+    })
     }
   }
 
   render() {
+    if(this.state.ready !== true) {
+      return (<div>Loading...</div>)
+    }
     return (
       <div className="App">
         <header className="logo-content grid-box">
           <img className="logo" src={logo} alt="logo" />
         </header>
         <LanguageInput 
+        language={this.state.language}
         changeHandler={this.handleLangChange}
         />
         <MinFontSize 

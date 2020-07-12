@@ -32,9 +32,22 @@ const customStyles = {
 }
 
 class LanguageInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
 
   handleChange = e => {
       this.props.changeHandler(e.value);
+  }
+
+  setDefault = () => {
+    const match = options.find(element => element.value === this.props.language);
+    if (match) {
+      return match
+    } else {
+      return options[0]
+    }
   }
 
   render() {
@@ -43,7 +56,7 @@ class LanguageInput extends React.Component {
         <Select 
         styles={customStyles}
         options={options}
-        defaultValue={options[0]}
+        defaultValue={this.setDefault()}
         onChange={this.handleChange} 
         />
       </div>
