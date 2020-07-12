@@ -1,5 +1,4 @@
 /*global chrome*/
-import tools from './chromeTools'
 function isDevMode() {
   if(process.env.NODE_ENV === "test") {return true}
   else {return !('update_url' in chrome.runtime.getManifest());}  
@@ -29,7 +28,7 @@ const onAppMount = {
     chrome.tabs.query({active: true, lastFocusedWindow: true}, (tabs) => {
       // get active tab info
       const tab = tabs[0];
-      if(isDevMode()) {console.log(`onAppMount.helper ${JSON.stringify(tab)}`)}
+      if(isDevMode()) {console.log(`onAppMount.main tab ${JSON.stringify(tab)}`)}
       // tab object validation
       if(!tab.id) {throw new Error('tab.id not defined')};
       if(!tab.url) {throw new Error('tab.url not defined')}

@@ -15,22 +15,23 @@ const tools = {
   // push submitted language to chrome local storage
   pushLangToStorage: (language) => {
     chrome.storage.local.set({language: language}, () => {
-      if (isDevMode()) console.log(`New minimum font size stored as: ${minFontSize}`)
+      if (isDevMode()) console.log(`New language stored as: ${language}`)
     })
   },
 
   // return minFontSize from chrome local storage if exists
   getFromStorage: (_callback) => {
-    chrome.storage.local.get('minFontSize', (result) => {
-      if(result.minFontSize) {
+    chrome.storage.local.get(['minFontSize', 'language'], (result) => {
+      if(result.minFontSize && result.language) {
         if (isDevMode()) {
-          console.log(`chromeTools.getFromStorage 19 Retrieved min font size from storage: ${result.minFontSize}`)
+          console.log(`chromeTools.getFromStorage 19 Retrieved object from storage: ${JSON.stringify(result)}`)
         };
-        _callback(result.minFontSize);
-      } else {
+      } else if(!result.minFontSize) {
         if (isDevMode()) console.log('result.minFontSize not found');
-        throw new Error('chrome.storage.local.get("minFontSize") returned undefined');
+      } else {
+        if (isDevMode()) console.log('result.language not found');
       }
+      _callback(result);
     })
   },
 
