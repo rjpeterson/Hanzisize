@@ -46,29 +46,36 @@ class App extends React.Component {
       errorMessage: null,
       tabId: null
     };
-
+    
+    this.componentDidMount = this.componentDidMount.bind(this);
     this.handleFSChange = this.handleFSChange.bind(this);
     this.handleLangChange = this.handleLangChange.bind(this);
   }
 
   componentDidMount() {
     if (isDevMode()) console.log(" app.js 37 PRODUCTION MODE popup.js loaded...");
+    debugger;
 
-    onAppMount.main((responseObject) => {
-      if (isDevMode()) console.log(`app.js 36 onAppMount responseObject: ${JSON.stringify(responseObject)}`)
-      this.setState({
-        minFontSize: responseObject.minFontSize,
-        tabId: responseObject.tabId
+    tools.getFromStorage((storedFontSize) => {
+      if (isDevMode()) console.log(`app.componenetDidMount storedFontSize: ${storedFontSize}`)
+
+      onAppMount.main((tabId) => {
+        if (isDevMode()) console.log(`app.componenetDidMount tabId: ${tabId}`)
+        this.setState({
+          minFontSize: storedFontSize,
+          tabId: tabId
+        });
+  
+        const contentObj = {
+          'language' : this.state.language,
+          'newMinFontSize': this.state.minFontSize,
+          'initial': true
+        };
+        
+        try{tools.sendToContent(this.state.tabId, contentObj)}
+        catch(err) {console.log(`app.js 48 Could not send to content script: ${err}`)}
       });
-
-      const contentObj = {
-        'language' : this.state.language,
-        'newMinFontSize': this.state.minFontSize
-      };
-      
-      try{tools.sendToContent(this.state.tabId, contentObj)}
-      catch(err) {console.log(`app.js 48 Could not send to content script: ${err}`)}
-    });
+    })
   }
 
   handleLangChange(language) {
@@ -77,7 +84,8 @@ class App extends React.Component {
       
       const contentObj = {
         'language' : this.state.language,
-        'newMinFontSize': this.state.minFontSize
+        'newMinFontSize': this.state.minFontSize,
+        'initial': false
       };
       try{tools.sendToContent(this.state.tabId, contentObj)}
       catch(err) {console.log(`Could not send to content script: ${err}`)}
@@ -94,12 +102,13 @@ class App extends React.Component {
       }, () => {
         console.log('current state: ' + JSON.stringify(this.state))
 
-        try{tools.pushToStorage(minFontSize)}
+        try{tools.pushFSToStorage(minFontSize)}
         catch(err) {console.log(`Could not push to storage: ${err}`)}
 
         const contentObj = {
           'language' : this.state.language,
-          'newMinFontSize': this.state.minFontSize
+          'newMinFontSize': this.state.minFontSize,
+          'initial': false
         };
         try{tools.sendToContent(this.state.tabId, contentObj)}
         catch(err) {console.log(`Could not send to content script: ${err}`)}
