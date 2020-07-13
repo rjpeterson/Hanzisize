@@ -64,11 +64,11 @@ class App extends React.Component {
         const contentObj = {
           'language' : storedObject.language,
           'newMinFontSize': storedObject.minFontSize,
-          'initial': true
+          'mode': 'initial'
         };
         
-        try{tools.sendToContent(this.state.tabId, contentObj)}
-        catch(err) {console.log(`app.js 48 Could not send to content script: ${err}`)}
+        try{tools.sendToContent(tabId, contentObj)}
+        catch(err) {console.log(`app componentDidMount Could not send to content script: ${err}`)}
 
         this.setState({
           minFontSize: storedObject.minFontSize,
@@ -90,7 +90,7 @@ class App extends React.Component {
     const contentObj = {
       'language' : language,
       'newMinFontSize': this.state.minFontSize,
-      'initial': false
+      'mode': 'lang-change'
     };
     try{tools.sendToContent(this.state.tabId, contentObj)}
     catch(err) {console.log(`Could not send to content script: ${err}`)}
@@ -109,7 +109,7 @@ class App extends React.Component {
       const contentObj = {
         'language' : this.state.language,
         'newMinFontSize': minFontSize,
-        'initial': false
+        'mode': 'fontsize-change'
       };
       try{tools.sendToContent(this.state.tabId, contentObj)}
       catch(err) {console.log(`Could not send to content script: ${err}`)}

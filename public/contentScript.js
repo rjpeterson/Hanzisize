@@ -119,11 +119,13 @@ const hanzisizeUtil = {
   },
 
   // primary function for extension
-  main(language, minFontSize, initial) {
+  main(language, minFontSize, mode) {
     if(test_mode) console.log(`initiating main function...`);
 
-    if(initial) {
+    if(mode === 'initial') {
       hanzisizeUtil.tagTextElems();
+      hanzisizeUtil.tagLangElems(language);
+    } else if(mode === 'lang-change') {
       hanzisizeUtil.tagLangElems(language);
     }
 
@@ -145,7 +147,7 @@ try {
       if (test_mode) {console.log('object received by contentScript:' + JSON.stringify(obj) + 'Resizing now...')}
 
       // call resizing function with object properties received from popup
-      hanzisizeUtil.main(obj.language, obj.newMinFontSize, obj.initial)
+      hanzisizeUtil.main(obj.language, obj.newMinFontSize, obj.mode)
   });
 }
 catch(err) {if(test_mode) {console.log(err)}}
