@@ -18,11 +18,11 @@ For example, the font size of an element can never be smaller than it was when t
 Go to https://chrome.google.com/webstore/detail/hanzisize/jcljolcajgicemckjlgndbmoaeoobodk to install the extension.
 
 ### Development
-1.Clone repository OR download and extract ZIP file from github.com/rjpeterson/Hanzisize
-2.Install Node Package Manager and run 'npm install' from the Hanzisize root directory you just extracted/cloned to
-3.Run 'npm run build' from the Hanzisize root directory
-4.Open Chrome and go to this address: chrome://extensions/ (or the applicable extensions page if using other Chrome-based browsers)
-5.Click 'Load Unpacked' and select the 'build' folder in the Hanzisize root directory
+1. Clone repository OR download and extract ZIP file from github.com/rjpeterson/Hanzisize
+2. Install Node Package Manager and run 'npm install' from the Hanzisize root directory you just extracted/cloned to
+3. Run 'npm run build' from the Hanzisize root directory
+4. Open Chrome and go to this address: chrome://extensions/ (or the applicable extensions page if using other Chrome-based browsers)
+5. Click 'Load Unpacked' and select the 'build' folder in the Hanzisize root directory
 
 ## Donate
 Enjoy using this extension? You can show your appreciation by donating in the following ways:
