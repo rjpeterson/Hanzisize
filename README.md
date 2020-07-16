@@ -15,7 +15,7 @@ For example, the font size of an element can never be smaller than it was when t
 ## How do I install it?
 
 ### Production
-Go to https://chrome.google.com/webstore/detail/hanzisize/jcljolcajgicemckjlgndbmoaeoobodk to install the extention.
+Go to https://chrome.google.com/webstore/detail/hanzisize/jcljolcajgicemckjlgndbmoaeoobodk to install the extension.
 
 ### Development
 1.Clone repository OR download and extract ZIP file from github.com/rjpeterson/Hanzisize
