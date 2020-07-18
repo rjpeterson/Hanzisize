@@ -14,7 +14,7 @@ class Notification extends React.Component {
   render() {
     return (
       <div className="notification grid-box">
-        <p className="notification-content">{this.renderNotification()}</p>
+        {/* <p className="notification-content">{this.renderNotification()}</p> */}
     </div>
     )
   }
