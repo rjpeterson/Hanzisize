@@ -36,10 +36,10 @@ class MinFontSize extends React.Component {
   }
 
   handleChange(e) {
-    if(e <= 0) {
-      this.props.changeHandler(false,e)
+    if(e > 0) {
+      this.props.changeHandler(true, e)
     } else {
-      this.props.changeHandler(true, e);
+      this.props.changeHandler(false, e);
     }
   }
 
