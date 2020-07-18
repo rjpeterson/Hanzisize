@@ -41,9 +41,9 @@ class App extends React.Component {
 
     this.state = {
       language: null,
-      validFontSize: false,
-      minFontSize: null,
-      errorMessage: null,
+      // validFontSize: false,
+      minFontSize: 0,
+      errorMessage: 'Font Size must be a positive integer',
       tabId: null,
       ready: false
     };
@@ -61,18 +61,23 @@ class App extends React.Component {
       onAppMount.main((tabId) => {
         if (isDevMode()) console.log(`app.componenetDidMount tabId: ${tabId}`)
 
+        // first time loading extension = no set fontsize or language
+        // so we submit default values in order for content script to inject properly
         const contentObj = {
-          'language' : storedObject.language,
-          'newMinFontSize': storedObject.minFontSize,
+          'language' : ('language' in storedObject) ? storedObject.language : 'Chinese',
+          'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
           'mode': 'initial'
         };
         
+        // if(Number.isInteger(storedObject.minFontSize)) {
+        //   this.setState({validFontSize:true});
+        // }
         try{tools.sendToContent(tabId, contentObj)}
         catch(err) {console.log(`app componentDidMount Could not send to content script: ${err}`)}
 
         this.setState({
-          minFontSize: storedObject.minFontSize,
-          language: storedObject.language,
+          language : ('language' in storedObject) ? storedObject.language : 'Chinese',
+          minFontSize: ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
           tabId: tabId,
           ready: true
         }, () => {
@@ -116,15 +121,15 @@ class App extends React.Component {
 
       this.setState({
         minFontSize: minFontSize,
-        validFontSize: true,
+        // validFontSize: true,
         errorMessage: ''
       }, () => {
         console.log('current state: ' + JSON.stringify(this.state))
       });
     } else {
       this.setState({
-        validFontSize: false,
-        errorMessage: 'Invalid font size'
+        // validFontSize: false,
+        errorMessage: 'Font Size must be a positive integer'
     })
     }
   }

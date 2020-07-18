@@ -5,7 +5,7 @@ class Error extends React.Component {
   render() {
     return (
       <div className="error grid-box">
-        <section className="box-content" id="error-content"></section>
+        <p className="box-content" id="error-content">{this.props.message}</p>
       </div>
     )
   }
