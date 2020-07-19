@@ -129,7 +129,7 @@ class App extends React.Component {
     } else {
       this.setState({
         // validFontSize: false,
-        errorMessage: 'Font Size must be a positive integer'
+        errorMessage: 'Please input a positive integer'
     })
     }
   }
@@ -156,7 +156,7 @@ class App extends React.Component {
         minFontSize={this.state.minFontSize}
         />
         <Error 
-        message={this.errorMessage}
+        errorMessage={this.state.errorMessage}
         />      
       </div>
     )
