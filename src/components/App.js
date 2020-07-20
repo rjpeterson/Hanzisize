@@ -7,7 +7,7 @@ import './App.css';
 
 import LanguageInput from './LanguageInput';
 import MinFontSize from './MinFontSize';
-import Notification from './Notification';
+import MoreInfo from './MoreInfo';
 import Error from './Error';
 
 import tools from '../logic/chromeTools';
@@ -43,7 +43,7 @@ class App extends React.Component {
       language: null,
       // validFontSize: false,
       minFontSize: 0,
-      errorMessage: 'Font Size must be a positive integer',
+      errorMessage: 'Please input a positive integer',
       tabId: null,
       ready: false
     };
@@ -151,13 +151,10 @@ class App extends React.Component {
         minFontSize={this.state.minFontSize}
         changeHandler={this.handleFSChange}
         />
-        <Notification 
-        validFontSize={this.state.validFontSize}
-        minFontSize={this.state.minFontSize}
-        />
         <Error 
         errorMessage={this.state.errorMessage}
-        />      
+        />
+        <MoreInfo />      
       </div>
     )
   };

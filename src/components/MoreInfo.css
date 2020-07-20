@@ -1,0 +1,31 @@
+.more-info-container {
+  grid-area: more-info;
+  height: auto;
+  width: auto;
+}
+
+.show-more {
+  margin: .5rem auto 0;
+  font-size: .7rem;
+  text-align: center;
+}
+
+.show-more:hover {
+  text-decoration: underline;
+  color: cadetblue;
+  cursor: pointer;
+}
+
+.info {
+  font-size: .7rem;
+  margin-top: .5rem;
+}
+
+.inactive {
+  display: none;
+}
+
+.active {
+  display: block;
+
+}
