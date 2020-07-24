@@ -45,7 +45,7 @@ class MinFontSize extends React.Component {
 
   render() {
     return (
-      <div className="mfs-input grid-box">
+      <div className={this.props.seeMore ? 'inactive' : 'mfs-input grid-box'}>
         <NumericInput
         className="react-numeric-input-container"
         mobile={true}

@@ -7,6 +7,10 @@
   margin-right: auto;
 }
 
+.inactive {
+  display: none;
+}
+
 .error-content {
   text-align: center;
 }

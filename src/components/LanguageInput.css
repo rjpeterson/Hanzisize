@@ -2,3 +2,7 @@
   grid-area: langinput;
   height: 40px;
 }
+
+.inactive {
+  display: none;
+}

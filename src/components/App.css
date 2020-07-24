@@ -1,18 +1,25 @@
 body {
   margin: .4rem;
   background-color: sandybrown;
-  width: 150px;
 }
 
 .App {
   display: grid;
-  width: 90%;
-  margin: auto;
+  width: 10rem;
   grid-template-areas: 
     'logo'
     'langinput'
     'mfsinput'
     'error'
+    'more-info';
+  align-items: center;
+}
+
+.see-more {
+  display: grid;
+  width: 13rem;
+  grid-template-areas: 
+    'logo'
     'more-info';
   align-items: center;
 }

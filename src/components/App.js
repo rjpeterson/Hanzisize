@@ -45,11 +45,13 @@ class App extends React.Component {
       minFontSize: 0,
       errorMessage: 'Please input a positive integer',
       tabId: null,
-      ready: false
+      ready: false,
+      seeMore: false
     };
     
     this.handleFSChange = this.handleFSChange.bind(this);
     this.handleLangChange = this.handleLangChange.bind(this);
+    this.handleMoreInfoClick = this.handleMoreInfoClick.bind(this);
   }
 
   componentDidMount() {
@@ -134,27 +136,37 @@ class App extends React.Component {
     }
   }
 
+  handleMoreInfoClick() {
+    const currentState = this.state.seeMore;
+    this.setState({ seeMore: !currentState });
+  }
+
   render() {
     if(this.state.ready !== true) {
       return (<div>Loading...</div>)
     }
     return (
-      <div className="App">
+      <div className={this.state.seeMore ? 'see-more': 'App'}>
         <header className="logo-content grid-box">
           <img className="logo" src={logo} alt="logo" />
         </header>
         <LanguageInput 
         language={this.state.language}
         changeHandler={this.handleLangChange}
+        seeMore={this.state.seeMore}
         />
         <MinFontSize 
         minFontSize={this.state.minFontSize}
         changeHandler={this.handleFSChange}
+        seeMore={this.state.seeMore}
         />
         <Error 
         errorMessage={this.state.errorMessage}
+        seeMore={this.state.seeMore}
         />
-        <MoreInfo />      
+        <MoreInfo 
+        clickHandler={this.handleMoreInfoClick}
+        seeMore={this.state.seeMore}/>      
       </div>
     )
   };
