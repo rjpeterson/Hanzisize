@@ -1,8 +1,16 @@
 .error {
   grid-area: error;
+  font-size: .8rem;
+  height: auto;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#error-content {
-  font-size: 10px;
-  display: block;
+.inactive {
+  display: none;
+}
+
+.error-content {
+  text-align: center;
 }

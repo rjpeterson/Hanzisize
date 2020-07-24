@@ -4,8 +4,10 @@ import './Error.css';
 class Error extends React.Component {
   render() {
     return (
-      <div className="error grid-box">
-        <p className="box-content" id="error-content">{this.props.errorMessage}</p>
+      <div className={this.props.seeMore ? 'inactive' : 'error grid-box'}>
+        <div className="box-content error-content">
+          {this.props.errorMessage}
+        </div>
       </div>
     )
   }

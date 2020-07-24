@@ -13,14 +13,14 @@ const customStyles = {
   container: (provided, state) => {
     const fontSize = '.75rem';
     const width = '8rem';
-    const padding = 2;
+    const padding = '.15rem';
 
     return {...provided, fontSize, width, padding}
   },
   control: (provided, state) => {
     const minHeight = '1.5rem';
     const boxShadow = '0 0 1px 1px #fff inset, 1px 1px 5px -1px #000';
-    const borderRadius = '.3rem'
+    const borderRadius = '.3rem';
 
     return {...provided, minHeight, boxShadow, borderRadius}
   },
@@ -52,7 +52,7 @@ class LanguageInput extends React.Component {
 
   render() {
     return (
-      <div className="language-input grid-box">
+      <div className={this.props.seeMore ? 'inactive' : 'language-input grid-box'}>
         <Select 
         styles={customStyles}
         options={options}
