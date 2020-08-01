@@ -24,6 +24,7 @@ extensionInfo.js
 .env.test.local
 .env.production.local
 README(originalReact).md
+build.zip
 
 npm-debug.log*
 yarn-debug.log*

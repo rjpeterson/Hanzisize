@@ -3,6 +3,10 @@ body {
   background-color: sandybrown;
 }
 
+.loading {
+  width: 10rem;
+}
+
 .App {
   display: grid;
   width: 10rem;
