@@ -5,18 +5,20 @@ function isDevMode() {
 }
 
 const onAppMount = {
-  chromeErrorString: "NOTE: Google blocks extensions and does not allow them to work on special <b>chrome://</b> pages such as the current page.",
+  chromeErrorString: "NOTE: Google blocks extensions and does not allow them to work on special <chrome://> pages such as the current page.",
   webstoreErrorString: "NOTE: For this extension to work you must leave the Chrome Webstore and go to another website. Google blocks extensions from functioning on special Google pages such as the Chrome Webstore.",
 
   urlChecking: (tab) => {
     let returnString;
     // Extensions are not allowed in chrome settings pages or in the webstore. This function checks for these urls
     if(tab.url.match(/^chrome/i)) {
-      document.getElementById('error-content').innerHTML = onAppMount.chromeErrorString;
-      returnString = 'invalid URL';
+      // $('.error-content').text(onAppMount.chromeErrorString);
+      // document.getElementById('error-content').innerHTML = onAppMount.chromeErrorString;
+      returnString = onAppMount.chromeErrorString;
     } else if (tab.url.match(/\/webstore/i)) {
-      document.getElementById('error-content').innerHTML = onAppMount.webstoreErrorString;
-      returnString = 'invalid URL';
+      // $('.error-content').text(onAppMount.webstoreErrorString)
+      // document.getElementById('error-content').innerHTML = onAppMount.webstoreErrorString;
+      returnString = onAppMount.webstoreErrorString;
     } else {
       returnString = 'valid URL'
     }
@@ -33,10 +35,10 @@ const onAppMount = {
       if(!tab.id) {throw new Error('tab.id not defined')};
       if(!tab.url) {throw new Error('tab.url not defined')}
       // check for invalid urls
-      onAppMount.urlChecking(tab);
+      const urlValidityMessage = onAppMount.urlChecking(tab);
       const tabId = tab.id;
       if(isDevMode()) {console.log(`onAppMount.main tabId: ${tabId}`)}
-      _callback(tabId);
+      _callback(tabId, urlValidityMessage);
     });
   }
 }

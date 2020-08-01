@@ -46,6 +46,7 @@ class App extends React.Component {
       errorMessage: 'Please input a positive integer',
       tabId: null,
       ready: false,
+      loading: 'Loading...',
       seeMore: false
     };
     
@@ -60,32 +61,35 @@ class App extends React.Component {
     tools.getFromStorage((storedObject) => {
       if (isDevMode()) console.log(`app.componenetDidMount storedObject: ${JSON.stringify(storedObject)}`)
 
-      onAppMount.main((tabId) => {
+      onAppMount.main((tabId, urlValidityMessage) => {
         if (isDevMode()) console.log(`app.componenetDidMount tabId: ${tabId}`)
 
-        // first time loading extension = no set fontsize or language
-        // so we submit default values in order for content script to inject properly
-        const contentObj = {
-          'language' : ('language' in storedObject) ? storedObject.language : 'Chinese',
-          'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
-          'mode': 'initial'
-        };
-        
-        // if(Number.isInteger(storedObject.minFontSize)) {
-        //   this.setState({validFontSize:true});
-        // }
-        try{tools.sendToContent(tabId, contentObj)}
-        catch(err) {console.log(`app componentDidMount Could not send to content script: ${err}`)}
+        if (urlValidityMessage !== 'valid URL') {
+          this.setState({loading: urlValidityMessage})
+        } else {
+          // first time loading extension = no set fontsize or language
+          // so we submit default values in order for content script to inject properly
+          const contentObj = {
+            'language' : ('language' in storedObject) ? storedObject.language : 'Chinese',
+            'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
+            'mode': 'initial'
+          };
+          
+          // if(Number.isInteger(storedObject.minFontSize)) {
+          //   this.setState({validFontSize:true});
+          // }
+          try{tools.sendToContent(tabId, contentObj)}
+          catch(err) {console.log(`app componentDidMount Could not send to content script: ${err}`)}
 
-        this.setState({
-          language : ('language' in storedObject) ? storedObject.language : 'Chinese',
-          minFontSize: ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
-          tabId: tabId,
-          ready: true
-        }, () => {
-          if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
-        });
-        
+          this.setState({
+            language : ('language' in storedObject) ? storedObject.language : 'Chinese',
+            minFontSize: ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
+            tabId: tabId,
+            ready: true
+          }, () => {
+            if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
+          });
+        }
       });
     })
   }
@@ -143,7 +147,7 @@ class App extends React.Component {
 
   render() {
     if(this.state.ready !== true) {
-      return (<div>Loading...</div>)
+      return (<div className="loading">{this.state.loading}</div>)
     }
     return (
       <div className={this.state.seeMore ? 'see-more': 'App'}>
