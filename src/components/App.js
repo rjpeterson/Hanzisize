@@ -151,8 +151,10 @@ class App extends React.Component {
     }
     return (
       <div className={this.state.seeMore ? 'see-more': 'App'}>
-        <header className="logo-content grid-box">
-          <img className="logo" src={logo} alt="logo" />
+        <header className="logo-container grid-box">
+          <div className="logo-background">
+            <img src={logo} alt="logo" />
+          </div>
         </header>
         <LanguageInput 
         language={this.state.language}

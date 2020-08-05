@@ -37,15 +37,20 @@ body {
   align-items: center;
 }
 
-.logo-content {
+.logo-container {
   grid-area: logo;
 }
 
-.box-content {
-  margin: auto;
+.logo-background {
+  display: flex;
+  justify-content: center;
+  width: 8.5rem;
+  padding: 0.3rem;
+  background-color: whitesmoke;
+  border-radius: .3rem;
 }
 
-.logo-content img {
+.logo-container img {
   height: 1.5rem;
 }
 

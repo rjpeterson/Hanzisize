@@ -5,7 +5,7 @@ import './MinFontSize.css'
 
 const customStyles = {
   wrap: {
-    width: '80%',
+    width: '7.5rem',
     background: '#E2E2E2',
     boxShadow: '0 0 1px 1px #fff inset, 1px 1px 5px -1px #000',
     padding: '.1rem .1rem .1rem .1rem',
@@ -24,7 +24,7 @@ const customStyles = {
     padding: '.2rem 3.4ex .2rem 3.4ex'
   },
   'input:focus' : {
-    border: '1px inset #69C',
+    border: '1px solid #ccc',
     outline: 'none'
   }
 }
