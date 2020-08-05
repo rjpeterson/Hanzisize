@@ -183,6 +183,7 @@ const callback = function(mutationsList, observer) {
 
   const obj = mostRecentSettings;
   // the below works but is pretty ineffiecient. Better solution should exist.
+  // maybe add parent node of each mutation to an array, remove non-uniques, and send each array item through .main?
   hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', 'body *')
     // Use traditional 'for loops' for IE 11
   // for(let mutation of mutationsList) {
