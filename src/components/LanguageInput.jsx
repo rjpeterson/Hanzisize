@@ -53,7 +53,7 @@ class LanguageInput extends React.Component {
   render() {
     return (
       <div className={this.props.seeMore ? 'inactive' : 'language-input grid-box'}>
-        <label class="input-label" for="langinput">Select a Language to resize</label>
+        <label class="input-label" for="langinput">Select a language to resize</label>
         <Select 
         id="langinput"
         styles={customStyles}

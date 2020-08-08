@@ -207,7 +207,7 @@ describe.only('hanzisizeUtil', () => {
       elem = document.querySelector('div');
       elem.style.setProperty = jest.fn()
 
-      hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
+      hanzisizeUtil.singleElemResizer(elem, newFontSize)
 
       expect(elem.style.setProperty).toHaveBeenCalledTimes(0);
       expect(hanzisizeUtil.adjustLineHeight).toHaveBeenCalledTimes(0);
@@ -226,7 +226,7 @@ describe.only('hanzisizeUtil', () => {
       elem = document.querySelector('div');
       elem.style.setProperty = jest.fn()
 
-      hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
+      hanzisizeUtil.singleElemResizer(elem, newFontSize)
 
       expect(elem.style.setProperty).toHaveBeenCalledTimes(1);
       expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${originalFontSize}px`, 'important');
@@ -248,7 +248,7 @@ describe.only('hanzisizeUtil', () => {
       elem = document.querySelector('div');
       elem.style.setProperty = jest.fn()
 
-      hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
+      hanzisizeUtil.singleElemResizer(elem, newFontSize)
 
       expect(elem.style.setProperty).toHaveBeenCalledTimes(1);
       expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${newFontSize}px`, 'important');
@@ -270,7 +270,7 @@ describe.only('hanzisizeUtil', () => {
       elem = document.querySelector('div');
       elem.style.setProperty = jest.fn()
 
-      hanzisizeUtil.singleElemResizer(window, elem, newFontSize);
+      hanzisizeUtil.singleElemResizer(elem, newFontSize);
 
       expect(elem.style.setProperty).toHaveBeenCalledTimes(2);
       expect(elem.style.setProperty).toHaveBeenNthCalledWith(1, '--data-original-font-size', `${fontSize}px`);
@@ -294,7 +294,7 @@ describe.only('hanzisizeUtil', () => {
       elem.style.setProperty = jest.fn();
 
 
-      hanzisizeUtil.singleElemResizer(window, elem, newFontSize)
+      hanzisizeUtil.singleElemResizer(elem, newFontSize)
 
       expect(elem.style.setProperty).toHaveBeenCalledTimes(1);
       expect(elem.style.setProperty).toHaveBeenCalledWith('font-size', `${newFontSize}px`, 'important');

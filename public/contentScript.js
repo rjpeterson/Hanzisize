@@ -1,4 +1,5 @@
 var test_mode = false;
+let mostRecentSettings;
 
 const hanzisizeUtil = {
   REGEX_CHINESE: /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u,
@@ -6,18 +7,26 @@ const hanzisizeUtil = {
   REGEX_ENGLISH: /[a-zA-Z]+/,
 
   // function applies new class to all elements that contain text at first child node
-  tagTextElems() {
-    $('body *').each(function(){
+  tagTextElems(nodeSelector) {
+    const queryString = `${nodeSelector}`;
+    // loop through selected nodes and tag ones that contain text
+    $(queryString).each(function(){
+      // if element does not have text-elem class and contains unnested text
       if(!$( this ).hasClass('text-elem') && this.childNodes[0] && this.childNodes[0].nodeValue && this.childNodes[0].nodeValue.trim().length !== 0) {
+        // apply text-elem class
         $( this ).addClass('text-elem')
       }
     })
   },
 
   // function applies new class to all elements with text-elem class and match selected language
-  tagLangElems(language) {
-    $('.text-elem').each(function(){
-      if(!$( this ).hasClass(`${language}-elem`) && hanzisizeUtil.hasLanguage(language, this.firstChild.textContent)) {
+  tagLangElems(nodeSelector, language) {
+    // loop through nodes labeled as text that are a child of nodeSelector and apply language specific class
+    const queryString = `${nodeSelector} .text-elem`;
+    $(queryString).each(function(){
+        // if element does not have language-elem class and unnested text is of the correct language
+      if(!$( this ).hasClass(`${language}-elem`) && this.firstChild.textContent && hanzisizeUtil.hasLanguage(language, this.firstChild.textContent)) {
+        // apply language-elem class
         $( this ).addClass(`${language}-elem`)
       } else {
         if(test_mode) {console.log(`case 1: element does not contain ${language} text`)}
@@ -49,9 +58,10 @@ const hanzisizeUtil = {
   },
 
   // returns all elements with text of chosen language with optional callback for each step of loop
-  resizeElems(language, _singleElemResizer, newMinFontSize) {
-    $(`.${language}-elem`).each(function() {
-      _singleElemResizer(window, this, newMinFontSize)
+  resizeElems(nodeSelector, language, _singleElemResizer, newMinFontSize) {
+    const queryString = `${nodeSelector} .${language}-elem`;
+    $(queryString).each(function() {
+      _singleElemResizer(this, newMinFontSize)
     })
   },
 
@@ -62,7 +72,7 @@ const hanzisizeUtil = {
   //case 4: CurrentFS is not original and less than or equal to NewMinFS. FS to NewMinFS
   //case 5: No OriginalFS. Save CurrentFS as OriginalFS. Set FS to NewMinFS
   //case 6: OriginalFS && (CurrentFS < NMFS), Set FS to NewMinFS
-  singleElemResizer(window, el, newMinFontSize) {
+  singleElemResizer(el, newMinFontSize) {
     const currentFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('font-size'));
     const originalFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('--data-original-font-size'));
 
@@ -119,19 +129,26 @@ const hanzisizeUtil = {
   },
 
   // primary function for extension
-  main(language, minFontSize, mode) {
+  main(language, minFontSize, mode, nodeSelector) {
     if(test_mode) console.log(`initiating main function...`);
 
     if(mode === 'initial') {
-      hanzisizeUtil.tagTextElems();
-      hanzisizeUtil.tagLangElems(language);
+      hanzisizeUtil.tagTextElems('body *');
+      hanzisizeUtil.tagLangElems('body *', language);
     } else if(mode === 'lang-change') {
-      hanzisizeUtil.tagLangElems(language);
+      hanzisizeUtil.tagLangElems('body *', language);
+    } else if(mode === 'mutation') {
+      hanzisizeUtil.tagTextElems(nodeSelector);
+      hanzisizeUtil.tagLangElems(nodeSelector, language);
     }
 
     if (minFontSize) {
       try {
-        hanzisizeUtil.resizeElems(language, hanzisizeUtil.singleElemResizer, minFontSize)
+        if(mode === 'initial' || 'lang-change') {
+          hanzisizeUtil.resizeElems('body', language, hanzisizeUtil.singleElemResizer, minFontSize)
+        } else if (mode === 'mutation') {
+          hanzisizeUtil.resizeElems(nodeSelector, language, hanzisizeUtil.singleElemResizer, minFontSize)
+        }
       }
       catch(err) {console.log(`Hanzisize failed: ${err}`)}
     }
@@ -143,6 +160,7 @@ const hanzisizeUtil = {
 try {
   chrome.runtime.onMessage.addListener(
     function(obj, sender, sendResponse) {
+      mostRecentSettings = obj;
       sendResponse({received: "yes"});
       if (test_mode) {console.log('object received by contentScript:' + JSON.stringify(obj) + 'Resizing now...')}
 
@@ -151,6 +169,42 @@ try {
   });
 }
 catch(err) {if(test_mode) {console.log(err)}}
+
+// add mutation observer to fire new DOM scan if new element nodes have been added. This fixes the problem of the user having to manuall resize dynamically loaded content.
+// Select the node that will be observed for mutations
+const targetNode = document.documentElement || document.body;
+
+// Options for the observer (which mutations to observe)
+const config = {childList: true, subtree: true};
+
+// Callback function to execute when mutations are observed
+const callback = function(mutationsList, observer) {
+  console.log('mutation observer triggered')
+
+  const obj = mostRecentSettings;
+  // the below works but is pretty ineffiecient. Better solution should exist.
+  // maybe add parent node of each mutation to an array, remove non-uniques, and send each array item through .main?
+  hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', 'body *')
+    // Use traditional 'for loops' for IE 11
+  // for(let mutation of mutationsList) {
+  //   if(mutation.addedNodes.length) {
+  //     // somehow get a querySelector out of this mutation object?? 
+  //     let nodeSelector = "";
+  //     mutation.addedNodes[0].classList.forEach(element => {
+  //       nodeSelector = nodeSelector.concat('.' + element)
+  //     });
+  //     // --> getElementsByClassName()
+  //     console.log('mutation observer - nodes have been added')
+  //     hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', nodeSelector)
+  //   }
+  // }
+};
+
+// Create an observer instance linked to the callback function
+const observer = new MutationObserver(callback);
+
+// Start observing the target node for configured mutations
+observer.observe(targetNode, config);
 
 try { module.exports = hanzisizeUtil}
 catch(err) {console.log(err + ".  'module' only necessary for testing purposes. Not needed in production.")}
