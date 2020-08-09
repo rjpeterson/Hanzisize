@@ -8,9 +8,8 @@ const hanzisizeUtil = {
 
   // function applies new class to all elements that contain text at first child node
   tagTextElems(nodeSelector) {
-    const queryString = `${nodeSelector}`;
     // loop through selected nodes and tag ones that contain text
-    $(queryString).each(function(){
+    $(nodeSelector).each(function(){
       // if element does not have text-elem class and contains unnested text
       if(!$( this ).hasClass('text-elem') && this.childNodes[0] && this.childNodes[0].nodeValue && this.childNodes[0].nodeValue.trim().length !== 0) {
         // apply text-elem class
@@ -22,10 +21,13 @@ const hanzisizeUtil = {
   // function applies new class to all elements with text-elem class and match selected language
   tagLangElems(nodeSelector, language) {
     // loop through nodes labeled as text that are a child of nodeSelector and apply language specific class
-    const queryString = `${nodeSelector} .text-elem`;
-    $(queryString).each(function(){
+    $(nodeSelector).each(function(){
         // if element does not have language-elem class and unnested text is of the correct language
-      if(!$( this ).hasClass(`${language}-elem`) && this.firstChild.textContent && hanzisizeUtil.hasLanguage(language, this.firstChild.textContent)) {
+      if($( this ).hasClass('text-elem') &&
+       !$( this ).hasClass(`${language}-elem`) && 
+       this.firstChild.textContent && 
+       hanzisizeUtil.hasLanguage(language, this.firstChild.textContent)) 
+      {
         // apply language-elem class
         $( this ).addClass(`${language}-elem`)
       } else {
@@ -183,20 +185,24 @@ const callback = function(mutationsList, observer) {
 
   const obj = mostRecentSettings;
   // the below works but is pretty ineffiecient. Better solution should exist.
-  // maybe add parent node of each mutation to an array, remove non-uniques, and send each array item through .main?
   hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', 'body *')
+
+    // maybe add parent node of each mutation to an array, remove non-uniques, and send each array item through .main?
     // Use traditional 'for loops' for IE 11
   // for(let mutation of mutationsList) {
-  //   if(mutation.addedNodes.length) {
+  //   // for(let node of mutation.addedNodes) {
+  //     hanzisizeUtil.main(obj.language,obj.newMinFontSize, 'mutation', mutation.addedNodes)
+    // }
+    // if(mutation.addedNodes.length) {
   //     // somehow get a querySelector out of this mutation object?? 
-  //     let nodeSelector = "";
+      // let nodesArray = [];
   //     mutation.addedNodes[0].classList.forEach(element => {
   //       nodeSelector = nodeSelector.concat('.' + element)
   //     });
   //     // --> getElementsByClassName()
-  //     console.log('mutation observer - nodes have been added')
+      console.log('mutation observer - nodes have been added')
   //     hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', nodeSelector)
-  //   }
+    // }
   // }
 };
 
