@@ -41,7 +41,8 @@
     ]
   },
   "jest": {
-    "clearMocks": true
+    "clearMocks": true,
+    "restoreMocks": true
   },
   "devDependencies": {
     "eslint-plugin-jquery": "^1.5.1",
