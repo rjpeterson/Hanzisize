@@ -11,7 +11,12 @@ const hanzisizeUtil = {
     // loop through selected nodes and tag ones that contain text
     $(nodeSelector).each(function(){
       // if element does not have text-elem class and contains unnested text
-      if(!$( this ).hasClass('text-elem') && this.childNodes[0] && this.childNodes[0].nodeValue && this.childNodes[0].nodeValue.trim().length !== 0) {
+      const textContent = $( this ).contents().filter(function() {
+        return this.nodeType == Node.TEXT_NODE;
+      }).text();
+
+      if(!$( this ).hasClass('text-elem') && textContent.length !== 0) {
+      // if(!$( this ).hasClass('text-elem') && this.childNodes[0] && this.childNodes[0].nodeValue && this.childNodes[0].nodeValue.trim().length !== 0) {
         // apply text-elem class
         $( this ).addClass('text-elem')
       }
@@ -22,11 +27,13 @@ const hanzisizeUtil = {
   tagLangElems(nodeSelector, language) {
     // loop through nodes labeled as text that are a child of nodeSelector and apply language specific class
     $(nodeSelector).each(function(){
+      const textContent = $( this ).contents().filter(function() {
+        return this.nodeType == Node.TEXT_NODE;
+      }).text();
         // if element does not have language-elem class and unnested text is of the correct language
       if($( this ).hasClass('text-elem') &&
        !$( this ).hasClass(`${language}-elem`) && 
-       this.firstChild.textContent && 
-       hanzisizeUtil.hasLanguage(language, this.firstChild.textContent)) 
+       hanzisizeUtil.hasLanguage(language, textContent)) 
       {
         // apply language-elem class
         $( this ).addClass(`${language}-elem`)
