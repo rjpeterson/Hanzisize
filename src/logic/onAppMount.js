@@ -12,12 +12,8 @@ const onAppMount = {
     let returnString;
     // Extensions are not allowed in chrome settings pages or in the webstore. This function checks for these urls
     if(tab.url.match(/^chrome/i)) {
-      // $('.error-content').text(onAppMount.chromeErrorString);
-      // document.getElementById('error-content').innerHTML = onAppMount.chromeErrorString;
       returnString = onAppMount.chromeErrorString;
     } else if (tab.url.match(/\/webstore/i)) {
-      // $('.error-content').text(onAppMount.webstoreErrorString)
-      // document.getElementById('error-content').innerHTML = onAppMount.webstoreErrorString;
       returnString = onAppMount.webstoreErrorString;
     } else {
       returnString = 'valid URL'
@@ -25,7 +21,7 @@ const onAppMount = {
     return returnString;
   },
 
-  // gets, validates, and returns current tab id
+  // gets and validates current tab.id and gets url validity string, sends both to callback
   main: (_callback) => {
     chrome.tabs.query({active: true, lastFocusedWindow: true}, (tabs) => {
       // get active tab info

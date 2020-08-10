@@ -153,7 +153,7 @@ const hanzisizeUtil = {
 
     if (minFontSize) {
       try {
-        if(mode === 'initial' || 'lang-change') {
+        if(mode === 'initial' || mode === 'lang-change') {
           hanzisizeUtil.resizeElems('body', language, hanzisizeUtil.singleElemResizer, minFontSize)
         } else if (mode === 'mutation') {
           hanzisizeUtil.resizeElems(nodeSelector, language, hanzisizeUtil.singleElemResizer, minFontSize)
@@ -176,48 +176,45 @@ try {
       // call resizing function with object properties received from popup
       hanzisizeUtil.main(obj.language, obj.newMinFontSize, obj.mode)
   });
+
+  // add mutation observer to fire new DOM scan if new element nodes have been added. This fixes the problem of the user having to manuall resize dynamically loaded content.
+  // Select the node that will be observed for mutations
+  const targetNode = document.documentElement || document.body;
+
+  // Options for the observer (which mutations to observe)
+  const config = {childList: true, subtree: true};
+
+  // Callback function to execute when mutations are observed
+  const callback = function(mutationsList, observer) {
+    console.log('mutation observer triggered')
+    const obj = mostRecentSettings;
+    // the below works but is pretty ineffiecient. Better solution should exist. should at least wrap in 'if(mutation.addedNodes)'
+    hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', 'body *')
+
+      // maybe add parent node of each mutation to an array, remove non-uniques, and send each array item through .main?
+      // Use traditional 'for loops' for IE 11
+    // for(let mutation of mutationsList) {
+    //   // for(let node of mutation.addedNodes) {
+    //     hanzisizeUtil.main(obj.language,obj.newMinFontSize, 'mutation', mutation.addedNodes)
+      // }
+      // if(mutation.addedNodes.length) {
+    //     // somehow get a querySelector out of this mutation object?? 
+        // let nodesArray = [];
+    //     mutation.addedNodes[0].classList.forEach(element => {
+    //       nodeSelector = nodeSelector.concat('.' + element)
+    //     });
+    //     // --> getElementsByClassName()
+        // console.log('mutation observer - nodes have been added')
+    //     hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', nodeSelector)
+      // }
+    // }
+  };
+  // Create an observer instance linked to the callback function
+  const observer = new MutationObserver(callback);
+  // Start observing the target node for configured mutations
+  observer.observe(targetNode, config);
 }
 catch(err) {if(test_mode) {console.log(err)}}
 
-// add mutation observer to fire new DOM scan if new element nodes have been added. This fixes the problem of the user having to manuall resize dynamically loaded content.
-// Select the node that will be observed for mutations
-const targetNode = document.documentElement || document.body;
-
-// Options for the observer (which mutations to observe)
-const config = {childList: true, subtree: true};
-
-// Callback function to execute when mutations are observed
-const callback = function(mutationsList, observer) {
-  console.log('mutation observer triggered')
-
-  const obj = mostRecentSettings;
-  // the below works but is pretty ineffiecient. Better solution should exist.
-  hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', 'body *')
-
-    // maybe add parent node of each mutation to an array, remove non-uniques, and send each array item through .main?
-    // Use traditional 'for loops' for IE 11
-  // for(let mutation of mutationsList) {
-  //   // for(let node of mutation.addedNodes) {
-  //     hanzisizeUtil.main(obj.language,obj.newMinFontSize, 'mutation', mutation.addedNodes)
-    // }
-    // if(mutation.addedNodes.length) {
-  //     // somehow get a querySelector out of this mutation object?? 
-      // let nodesArray = [];
-  //     mutation.addedNodes[0].classList.forEach(element => {
-  //       nodeSelector = nodeSelector.concat('.' + element)
-  //     });
-  //     // --> getElementsByClassName()
-      console.log('mutation observer - nodes have been added')
-  //     hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', nodeSelector)
-    // }
-  // }
-};
-
-// Create an observer instance linked to the callback function
-const observer = new MutationObserver(callback);
-
-// Start observing the target node for configured mutations
-observer.observe(targetNode, config);
-
 try { module.exports = hanzisizeUtil}
-catch(err) {console.log(err + ".  'module' only necessary for testing purposes. Not needed in production.")}
+catch(err) {if(test_mode) {console.log(err + ".  'module' only necessary for testing purposes. Not needed in production.")}}
