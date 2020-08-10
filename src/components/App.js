@@ -127,14 +127,12 @@ class App extends React.Component {
 
       this.setState({
         minFontSize: minFontSize,
-        // validFontSize: true,
         errorMessage: ''
       }, () => {
         console.log('current state: ' + JSON.stringify(this.state))
       });
     } else {
       this.setState({
-        // validFontSize: false,
         errorMessage: 'Please input a positive integer'
     })
     }
@@ -143,6 +141,10 @@ class App extends React.Component {
   handleMoreInfoClick() {
     const currentState = this.state.seeMore;
     this.setState({ seeMore: !currentState });
+  }
+
+  readyup() {
+    this.setState({ ready: true })
   }
 
   render() {
