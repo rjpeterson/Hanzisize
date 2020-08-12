@@ -115,8 +115,8 @@ describe('hanzisizeUtil', () => {
       spyJP.mockReturnValueOnce(false)
       spyJP.mockReturnValueOnce(true);
 
-      const result1 = hanzisizeUtil.hasLanguage('Chinese', chineseString);
-      const result2 = hanzisizeUtil.hasLanguage('Chinese', japaneseString);
+      const result1 = hanzisizeUtil.hasLanguage('chinese', chineseString);
+      const result2 = hanzisizeUtil.hasLanguage('chinese', japaneseString);
       
       expect(result1).toBeTruthy();
       expect(result2).toBeFalsy();
@@ -125,8 +125,8 @@ describe('hanzisizeUtil', () => {
       spyEN.mockReturnValueOnce(true);
       spyEN.mockReturnValueOnce(false);
 
-      const result1 = hanzisizeUtil.hasLanguage('English', englishString);
-      const result2 = hanzisizeUtil.hasLanguage('English', japaneseString);
+      const result1 = hanzisizeUtil.hasLanguage('english', englishString);
+      const result2 = hanzisizeUtil.hasLanguage('english', japaneseString);
       
       expect(result1).toBeTruthy();
       expect(result2).toBeFalsy();
@@ -135,8 +135,8 @@ describe('hanzisizeUtil', () => {
       spyJP.mockReturnValueOnce(true);
       spyJP.mockReturnValueOnce(false);
 
-      const result1 = hanzisizeUtil.hasLanguage('Japanese', japaneseString);
-      const result2 = hanzisizeUtil.hasLanguage('Japanese', chineseString);
+      const result1 = hanzisizeUtil.hasLanguage('japanese', japaneseString);
+      const result2 = hanzisizeUtil.hasLanguage('japanese', chineseString);
       
       expect(result1).toBeTruthy();
       expect(result2).toBeFalsy();
@@ -317,12 +317,16 @@ describe('hanzisizeUtil', () => {
       hanzisizeUtil.resizeElems = jest.fn();
     })
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     afterAll(() => {
       hanzisizeUtil = originalHU;
     })
 
     test('it calls tagTextElems, tagLangElems, and resizeElems with the proper args in "initial" mode', () => {
-      const language = "Chinese";
+      const language = "chinese";
       const minFontSize = 12;
       const mode = "initial";
   
@@ -334,18 +338,32 @@ describe('hanzisizeUtil', () => {
     })
     
     test('it calls tagLangElems and resizeElems with the proper args in "lang-change" mode', () => {
-      const language = "Chinese";
+      const language = "chinese";
       const minFontSize = 12;
-      const mode = "initial";
+      const mode = "lang-change";
   
       hanzisizeUtil.main(language, minFontSize, mode);
       
+      expect(hanzisizeUtil.tagTextElems).toHaveBeenCalledTimes(0);
       expect(hanzisizeUtil.tagLangElems).toHaveBeenCalledWith('body *', language);
+      expect(hanzisizeUtil.resizeElems).toHaveBeenCalledWith('body', language, hanzisizeUtil.singleElemResizer, minFontSize);
+    })
+    
+    test('it calls tagLangElems and resizeElems with the proper args in "fontsize-change" mode', () => {
+      const language = "chinese";
+      const minFontSize = 12;
+      const mode = "fontsize-change";
+  
+      hanzisizeUtil.main(language, minFontSize, mode);
+      
+      expect(hanzisizeUtil.tagTextElems).toHaveBeenCalledTimes(0);
+      expect(hanzisizeUtil.tagLangElems).toHaveBeenCalledTimes(0);
       expect(hanzisizeUtil.resizeElems).toHaveBeenCalledWith('body', language, hanzisizeUtil.singleElemResizer, minFontSize);
     })
 
     test('it calls tagTextElems, tagLangElems, and resizeElems with the proper args in "mutation" mode', () => {
-      const language = "Chinese";
+    
+      const language = "chinese";
       const minFontSize = 12;
       const mode = "mutation";
   

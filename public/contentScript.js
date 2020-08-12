@@ -153,10 +153,10 @@ const hanzisizeUtil = {
 
     if (minFontSize) {
       try {
-        if(mode === 'initial' || 'lang-change' || 'fontsize-change') {
-          hanzisizeUtil.resizeElems('body', language, hanzisizeUtil.singleElemResizer, minFontSize)
-        } else if (mode === 'mutation') {
+        if(mode === 'mutation') {
           hanzisizeUtil.resizeElems(nodeSelector, language, hanzisizeUtil.singleElemResizer, minFontSize)
+        } else {
+          hanzisizeUtil.resizeElems('body', language, hanzisizeUtil.singleElemResizer, minFontSize)
         }
       }
       catch(err) {console.log(`Hanzisize failed: ${err}`)}
