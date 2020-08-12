@@ -4,9 +4,9 @@ import Select from 'react-select';
 import './LanguageInput.css';
 
 const options = [
-  {value: 'Chinese', label: '中文 Chinese'},
-  {value: 'English', label: 'English'},
-  {value: 'Japanese', label: '日本語 Japanese'}
+  {value: 'chinese', label: '中文 Chinese'},
+  {value: 'english', label: 'English'},
+  {value: 'japanese', label: '日本語 Japanese'}
 ]
 
 const customStyles = {

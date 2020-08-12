@@ -47,17 +47,17 @@ const hanzisizeUtil = {
   hasLanguage(lang, str) {
     let result;
     switch (lang) {
-      case 'Chinese':
+      case 'chinese':
         if (hanzisizeUtil.REGEX_CHINESE.test(str) && !hanzisizeUtil.REGEX_JAPANESE.test(str)) {
           result = true
         } else {
           result = false
         }
         break;
-      case 'English':
+      case 'english':
         result = hanzisizeUtil.REGEX_ENGLISH.test(str);
         break;
-      case 'Japanese':
+      case 'japanese':
         result = hanzisizeUtil.REGEX_JAPANESE.test(str);
         break;
       default:
@@ -153,7 +153,7 @@ const hanzisizeUtil = {
 
     if (minFontSize) {
       try {
-        if(mode === 'initial' || mode === 'lang-change') {
+        if(mode === 'initial' || 'lang-change' || 'fontsize-change') {
           hanzisizeUtil.resizeElems('body', language, hanzisizeUtil.singleElemResizer, minFontSize)
         } else if (mode === 'mutation') {
           hanzisizeUtil.resizeElems(nodeSelector, language, hanzisizeUtil.singleElemResizer, minFontSize)
