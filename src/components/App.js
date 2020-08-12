@@ -70,7 +70,7 @@ class App extends React.Component {
           // first time loading extension = no set fontsize or language
           // so we submit default values in order for content script to inject properly
           const contentObj = {
-            'language' : ('language' in storedObject) ? storedObject.language : 'Chinese',
+            'language' : ('language' in storedObject) ? storedObject.language : 'chinese',
             'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
             'mode': 'initial'
           };
@@ -82,7 +82,7 @@ class App extends React.Component {
           catch(err) {console.log(`app componentDidMount Could not send to content script: ${err}`)}
 
           this.setState({
-            language : ('language' in storedObject) ? storedObject.language : 'Chinese',
+            language : ('language' in storedObject) ? storedObject.language : 'chinese',
             minFontSize: ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
             tabId: tabId,
             ready: true
