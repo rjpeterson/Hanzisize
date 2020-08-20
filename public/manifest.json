@@ -2,7 +2,7 @@
   "name": "Hanzisize",
   "version": "0.1.1",
 
-  "description": "An extension to control the minimum size of chinese text on the page without changing size of other elements.",
+  "description": "Selectively adjust text-size without changing other elements",
   "permissions": [
     "activeTab",
     "storage"
@@ -20,5 +20,10 @@
    "128": "icons/icon128.png" 
   },
   "offline_enabled": true,
-  "manifest_version": 2
+  "manifest_version": 2,
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "hanzisizeextension@gmail.com"
+    }
+  }
 }

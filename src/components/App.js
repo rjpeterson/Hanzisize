@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 /*global chrome*/
 
 import React from 'react';
@@ -13,7 +12,7 @@ import Error from './Error';
 import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
 
-// npm start runs app in browser tab which doesn't have accesse to required chrome apis, so we provide them here for testing the UI
+// npm start runs app in browser tab which doesn't have accesse to required chrome apis, so we provide them here for UI testing purposes
 if(process.env.NODE_ENV === 'development') {
   global.chrome = {
     runtime: {
@@ -31,6 +30,7 @@ if(process.env.NODE_ENV === 'development') {
   }
 }
 
+// update_url is set by chrome webstore on submit. If it doesn't exist, the extension was loaded locally rather than installed from webstore
 function isDevMode() {
   return !('update_url' in chrome.runtime.getManifest());
 }
@@ -40,14 +40,13 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      language: null,
-      // validFontSize: false,
-      minFontSize: 0,
-      errorMessage: 'Please input a positive integer',
       tabId: null,
+      language: null,
+      minFontSize: 0,
+      seeMore: false,
       ready: false,
-      loading: 'Loading...',
-      seeMore: false
+      errorMessage: 'Please input a positive integer',
+      loading: 'Loading...'
     };
     
     this.handleFSChange = this.handleFSChange.bind(this);
@@ -56,34 +55,35 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // react run build compiles and compresses everything into one line of code which makes debugging difficult so console.log is the best way I know to debug the popup at the moment
     if (isDevMode()) console.log(" app.js 37 PRODUCTION MODE popup.js loaded...");
 
+    // retrieve stored language and minfontsize values from chrome storage if they exist
     tools.getFromStorage((storedObject) => {
       if (isDevMode()) console.log(`app.componenetDidMount storedObject: ${JSON.stringify(storedObject)}`)
 
+      // get and validate active tab info
       onAppMount.main((tabId, urlValidityMessage) => {
         if (isDevMode()) console.log(`app.componenetDidMount tabId: ${tabId}`)
 
         if (urlValidityMessage !== 'valid URL') {
           this.setState({loading: urlValidityMessage})
         } else {
-          // first time loading extension = no set fontsize or language
-          // so we submit default values in order for content script to inject properly
+          // first time loading extension fontsize & language wont have stored values
+          // if null we submit default values in order for content script to inject properly
           const contentObj = {
             'language' : ('language' in storedObject) ? storedObject.language : 'chinese',
             'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
             'mode': 'initial'
           };
           
-          // if(Number.isInteger(storedObject.minFontSize)) {
-          //   this.setState({validFontSize:true});
-          // }
+          // inject content script on initial click of browser action or send content object if already injected
           try{tools.sendToContent(tabId, contentObj)}
           catch(err) {console.log(`app componentDidMount Could not send to content script: ${err}`)}
 
           this.setState({
-            language : ('language' in storedObject) ? storedObject.language : 'chinese',
-            minFontSize: ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
+            language : contentObj.language,
+            minFontSize: contentObj.newMinFontSize,
             tabId: tabId,
             ready: true
           }, () => {
@@ -95,6 +95,7 @@ class App extends React.Component {
   }
 
   handleLangChange(language) {
+    // first store new language
     try{tools.pushLangToStorage(language)}
     catch(err) {console.log(`Could not push to storage: ${err}`)}
 
@@ -103,17 +104,19 @@ class App extends React.Component {
       'newMinFontSize': this.state.minFontSize,
       'mode': 'lang-change'
     };
+    // then send to content script
     try{tools.sendToContent(this.state.tabId, contentObj)}
     catch(err) {console.log(`Could not send to content script: ${err}`)}
 
     this.setState({language: language}, () => {
       console.log('current state: ' + JSON.stringify(this.state));
-      // this.setState({errorMessage: ''})
     })
   }
 
   handleFSChange(valid, minFontSize) {
+    // validity is determined by component
     if (valid) {
+      // first store new minfontsize
       try{tools.pushFSToStorage(minFontSize)}
       catch(err) {console.log(`Could not push to storage: ${err}`)}
 
@@ -122,6 +125,7 @@ class App extends React.Component {
         'newMinFontSize': minFontSize,
         'mode': 'fontsize-change'
       };
+      // then send to content script
       try{tools.sendToContent(this.state.tabId, contentObj)}
       catch(err) {console.log(`Could not send to content script: ${err}`)}
 
@@ -131,23 +135,26 @@ class App extends React.Component {
       }, () => {
         console.log('current state: ' + JSON.stringify(this.state))
       });
-    } else {
+    } else { // if fontsize is invalid
       this.setState({
         errorMessage: 'Please input a positive integer'
     })
     }
   }
 
+  // toggle more-info section display
   handleMoreInfoClick() {
     const currentState = this.state.seeMore;
     this.setState({ seeMore: !currentState });
   }
 
+  // this function is used in snapshot testing only
   readyup() {
     this.setState({ ready: true })
   }
 
   render() {
+    // show loading page until response from chrome.tabs.query is receieved
     if(this.state.ready !== true) {
       return (<div className="loading">{this.state.loading}</div>)
     }
