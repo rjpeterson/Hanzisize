@@ -9,7 +9,6 @@
 
 # testing
 /coverage
-extensionInfo.js
 
 # debugging
 /.vscode
@@ -23,7 +22,6 @@ extensionInfo.js
 .env.development.local
 .env.test.local
 .env.production.local
-README(originalReact).md
 build.zip
 
 npm-debug.log*

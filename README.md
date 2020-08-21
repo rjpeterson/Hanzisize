@@ -26,6 +26,6 @@ Go to https://chrome.google.com/webstore/detail/hanzisize/jcljolcajgicemckjlgndb
 
 ## Donate
 Enjoy using this extension? You can show your appreciation by donating in the following ways:
-* Paypal: [www.paypal.me/nolapiano]
+* buymeacoffee.com/djmouthguard
 * Bitcoin: bc1q4524l0qtj5ucjw8qvxdpd7vta7x9peyazd8ykc
 * Or check out my Redbubble store: [www.redbubble.com/people/djmouthguard/shop]
