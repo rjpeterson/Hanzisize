@@ -46,7 +46,7 @@ class MinFontSize extends React.Component {
   render() {
     return (
       <div className={this.props.seeMore ? 'inactive' : 'mfs-input grid-box'}>
-        <label class="input-label" for="mfsinput">Min Font-Size</label>
+        <label className="input-label" htmlFor="mfsinput">Min Font-Size</label>
         <NumericInput
         id="mfsinput"
         className="react-numeric-input-container"
