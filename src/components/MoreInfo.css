@@ -93,3 +93,13 @@
 .btc-code {
   display: inline-flex;
 }
+
+.github-info a {
+  color:black;
+}
+
+.github-info span:hover{
+  text-decoration: underline;
+  color: cadetblue;
+  cursor: pointer;
+}
