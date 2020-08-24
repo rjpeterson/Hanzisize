@@ -1,6 +1,7 @@
 body {
   margin: .4rem;
   background-color: sandybrown;
+  padding-bottom: 1rem;
 }
 
 .loading {
@@ -21,7 +22,7 @@ body {
 
 .see-more {
   display: grid;
-  width: 13rem;
+  width: 10rem;
   grid-template-areas: 
     'logo'
     'more-info';

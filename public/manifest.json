@@ -1,6 +1,6 @@
 {
   "name": "Hanzisize",
-  "version": "0.1.2",
+  "version": "0.1.3",
 
   "description": "Selectively adjust text-size without changing other elements",
   "permissions": [

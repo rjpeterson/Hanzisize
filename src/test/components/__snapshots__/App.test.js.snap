@@ -20,8 +20,8 @@ exports[`App renders 1`] = `
     className="language-input grid-box"
   >
     <label
-      class="input-label"
-      for="langinput"
+      className="input-label"
+      htmlFor="langinput"
     >
       Select a language to resize
     </label>
@@ -134,8 +134,8 @@ exports[`App renders 1`] = `
     className="mfs-input grid-box"
   >
     <label
-      class="input-label"
-      for="mfsinput"
+      className="input-label"
+      htmlFor="mfsinput"
     >
       Min Font-Size
     </label>
@@ -301,7 +301,7 @@ exports[`App renders 1`] = `
       className="show-more"
       onClick={[Function]}
     >
-      &lt;Show More Info&gt;
+      Show More Info
     </div>
     <div
       className="inactive"
@@ -309,23 +309,52 @@ exports[`App renders 1`] = `
       <p>
         Hi there. I'm Ryan, the developer behind Hanzisize. I've developed this extension and made it available for anyone to use for free. If you appreciate my work, please consider donating so I can continue to improve this tool for all of us.
       </p>
+      <div
+        className="coffee-button"
+      >
+        <a
+          className="bmc-button"
+          href="https://www.buymeacoffee.com/djmouthguard"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <img
+            alt="Buy me a matcha latte"
+            src="bmc-new-btn-logo.svg"
+          />
+          <span>
+            Buy me a matcha latte
+          </span>
+        </a>
+      </div>
+      <div
+        className="bitcoin-info"
+      >
+        <p>
+          or donate 
+          <span
+            onClick={[Function]}
+          >
+            Bitcoin
+          </span>
+        </p>
+        <img
+          alt="a bitcoin qr code"
+          className="inactive"
+          height="100"
+          src="btcdonation.jpeg"
+          width="100"
+        />
+      </div>
       <p>
-        Donate here: paypal.me/nolapiano
-      </p>
-      <p>
-        or with bitcoin:
-      </p>
-      <img
-        alt="a bitcoin qr code"
-        height="100"
-        src="btcdonation.jpeg"
-        width="100"
-      />
-      <p>
-        You can contribute code or report bugs here:
-      </p>
-      <p>
-        https://github.com/rjpeterson/Hanzisize
+        You can also contribute code or report bugs on 
+        <a
+          href="https://github.com/rjpeterson/Hanzisize"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Github
+        </a>
       </p>
     </div>
   </div>
