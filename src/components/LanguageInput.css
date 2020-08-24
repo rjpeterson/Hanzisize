@@ -1,3 +1,7 @@
 .language-input {
   grid-area: langinput;
 }
+
+.language-input label {
+  font-size: .75rem;
+}

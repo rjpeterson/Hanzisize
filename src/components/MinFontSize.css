@@ -1,3 +1,7 @@
 .mfs-input {
   grid-area: mfsinput;
 }
+
+.mfs-input label {
+  font-size: .75rem;
+}

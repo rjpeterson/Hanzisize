@@ -28,6 +28,12 @@ const customStyles = {
     const height = '1.5rem';
 
     return {...provided, height}
+  },
+  menu: (provided, state) => {
+    const marginTop = '0px';
+    const width = '7.7rem';
+
+    return {...provided, marginTop, width}
   }
 }
 
