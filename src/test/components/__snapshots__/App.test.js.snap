@@ -307,7 +307,7 @@ exports[`App renders 1`] = `
       className="inactive"
     >
       <p>
-        Hi there. I'm Ryan, the developer behind Hanzisize. I've developed this extension and made it available for anyone to use for free. If you appreciate my work, please consider donating so I can continue to improve this tool for all of us.
+        Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hours working on Hanzisize while making it available for anyone to use for free. If you are able, please consider donating so I can continue to improve this tool for all of us. If you're not able to donate, please leave a review of this extension so more people can find it. Thanks for your support!
       </p>
       <div
         className="coffee-button"
@@ -346,7 +346,9 @@ exports[`App renders 1`] = `
           width="100"
         />
       </div>
-      <p>
+      <p
+        className="github-info"
+      >
         You can also contribute code or report bugs on 
         <a
           href="https://github.com/rjpeterson/Hanzisize"
