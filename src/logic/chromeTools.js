@@ -40,20 +40,27 @@ const tools = {
     // try to send object to content script
     chrome.tabs.sendMessage(tab_id, obj, {frameId: 0}, function(response) {
       if(chrome.runtime.lastError && !response) {
-        // Inject jquery into active tab
-        chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js'}, function() {
-          // Inject content.js in active tab. Need "permissions": ["activeTab"] in manifest.json to work
-            chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + '/contentScript.js'}, function() {
-              if (chrome.runtime.lastError) {
-                if (isDevMode()) console.error(chrome.runtime.lastError.message);
-              } else {
-                setTimeout(function(){ 
-                  // call send_to_content(obj) again after content.js injected
-                  tools.sendToContent(tab_id, obj); 
-                }, 200);
-              }
-            });		
+        // Try to inject jquery into active tab, if this returns an error, the user is probably trying to use the extension on a page that the browser doesn't allow (e.g. chrome webstore, addons.mozilla.org, etc.)
+          chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js'}, function() {
+            if(chrome.runtime.lastError) {
+              if (isDevMode()) console.error(chrome.runtime.lastError.message);
+              return new Error('script cannot be injected. likely missing host permission')
+            } else {
+              // Inject content.js in active tab. Need "permissions": ["activeTab"] in manifest.json to work
+              chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + '/contentScript.js'}, function() {
+                if (chrome.runtime.lastError) {
+                  if (isDevMode()) console.error(chrome.runtime.lastError.message);
+                } else {
+                  setTimeout(function(){ 
+                    // call send_to_content(obj) again after content.js injected
+                    tools.sendToContent(tab_id, obj); 
+                  }, 200);
+                }
+              });		
+            }
+
           })
+        
       }
       // // if fails to send, inject script and send again
       // if (chrome.runtime.lastError) {
@@ -61,9 +68,9 @@ const tools = {
       // }
       if (isDevMode()) console.log(`recieved response: ${JSON.stringify(response)}`);
   
-      return true;
+      // return true;
       });
-    return true;
+    // return true;
   }
 }
 

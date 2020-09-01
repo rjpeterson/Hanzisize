@@ -6,6 +6,7 @@ body {
 
 .loading {
   width: 10rem;
+  font-size: .9rem;
 }
 
 .App {

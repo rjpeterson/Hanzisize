@@ -78,17 +78,23 @@ class App extends React.Component {
           };
           
           // inject content script on initial click of browser action or send content object if already injected
-          try{tools.sendToContent(tabId, contentObj)}
-          catch(err) {console.log(`app componentDidMount Could not send to content script: ${err}`)}
+          try{
+            tools.sendToContent(tabId, contentObj); // errors might be thrown here
 
-          this.setState({
-            language : contentObj.language,
-            minFontSize: contentObj.newMinFontSize,
-            tabId: tabId,
-            ready: true
-          }, () => {
-            if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
-          });
+            this.setState({
+              language : contentObj.language,
+              minFontSize: contentObj.newMinFontSize,
+              tabId: tabId,
+              ready: true
+            }, () => {
+              if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
+            });
+          }
+          catch(err) {
+            this.setState({
+              loading: `cannot load extension on this page ${err}`
+            })
+          }
         }
       });
     })
