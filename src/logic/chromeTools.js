@@ -44,7 +44,7 @@ const tools = {
           chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js'}, function() {
             if(chrome.runtime.lastError) {
               if (isDevMode()) console.error(chrome.runtime.lastError.message);
-              return new Error('script cannot be injected. likely missing host permission')
+              throw new Error('script cannot be injected. likely missing host permission')
             } else {
               // Inject content.js in active tab. Need "permissions": ["activeTab"] in manifest.json to work
               chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + '/contentScript.js'}, function() {

@@ -30,9 +30,9 @@ const onAppMount = {
     webstoreErrorString: "NOTE: For this extension to work you must leave the Chrome Webstore and go to another website. Google blocks extensions from functioning on special Google pages such as the Chrome Webstore.",
 
     chromeInfo: () => {
-      try {
-        return /Chrome\/([0-9.]+)/.exec(navigator.userAgent)[0];
-      } catch (error) {
+      try { // returns null if no match
+        return /Chrome\/([0-9.]+)/.exec(window.navigator.userAgent)[0];
+      } catch (error) { // returns false if navigator.userAgent is not found
         return null;
       }
     },
@@ -58,14 +58,17 @@ const onAppMount = {
       }
     } else if (onAppMount.browserChrome.chromeInfo() !== null) { // user is on chrome
       return 'chrome';
+    } else {
+      return 'none'
     }
   },
 
   urlChecking: (tab) => {
     let returnString;
-    if (onAppMount.userBrowser() === 'firefox') {
+    const userBrowser = onAppMount.userBrowser();
+    if (userBrowser === 'firefox') {
       returnString = onAppMount.browserFirefox.urlChecking(tab);
-    } else if (onAppMount.userBrowser() === 'chrome') {
+    } else if (userBrowser === 'chrome') {
       returnString = onAppMount.browserChrome.urlChecking(tab);
     }
     return returnString;
