@@ -40,12 +40,12 @@ describe('hanzisizeUtil', () => {
 
     describe('japanese regex', () => {
       test('it returns true on japanese text', () => {
-        const result = hanzisizeUtil.REGEX_JAPANESE.test(japaneseString);
+        const result = hanzisizeUtil.REGEX_CN_JP.test(japaneseString);
 
         expect(result).toBeTruthy()
       })    
-      test('it returns false on chinese text', () => {
-        const result = hanzisizeUtil.REGEX_JAPANESE.test(chineseString);
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_CN_JP.test(englishString);
 
         expect(result).toBeFalsy()
       })
@@ -108,7 +108,7 @@ describe('hanzisizeUtil', () => {
   describe('hasLanguage', () => {
     const spyCN = jest.spyOn(hanzisizeUtil.REGEX_CHINESE, 'test');
     const spyEN = jest.spyOn(hanzisizeUtil.REGEX_ENGLISH, 'test');
-    const spyJP = jest.spyOn(hanzisizeUtil.REGEX_JAPANESE, 'test');
+    const spyJP = jest.spyOn(hanzisizeUtil.REGEX_CN_JP, 'test');
     test('it correctly tests for Chinese', () => {
       spyCN.mockReturnValueOnce(true);
       spyCN.mockReturnValueOnce(false);
@@ -116,7 +116,7 @@ describe('hanzisizeUtil', () => {
       spyJP.mockReturnValueOnce(true);
 
       const result1 = hanzisizeUtil.hasLanguage('chinese', chineseString);
-      const result2 = hanzisizeUtil.hasLanguage('chinese', japaneseString);
+      const result2 = hanzisizeUtil.hasLanguage('chinese', englishString);
       
       expect(result1).toBeTruthy();
       expect(result2).toBeFalsy();
@@ -136,7 +136,7 @@ describe('hanzisizeUtil', () => {
       spyJP.mockReturnValueOnce(false);
 
       const result1 = hanzisizeUtil.hasLanguage('japanese', japaneseString);
-      const result2 = hanzisizeUtil.hasLanguage('japanese', chineseString);
+      const result2 = hanzisizeUtil.hasLanguage('japanese', englishString);
       
       expect(result1).toBeTruthy();
       expect(result2).toBeFalsy();
