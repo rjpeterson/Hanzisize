@@ -2,7 +2,8 @@ var test_mode = false;
 let mostRecentSettings;
 
 const hanzisizeUtil = {
-  REGEX_CHINESE: /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u,
+  REGEX_CN_JP: /[\u{3000}-\u{303F}]|[\u{3040}-\u{309F}]|[\u{30A0}-\u{30FF}]|[\u{FF00}-\u{FFEF}]|[\u{4E00}-\u{9FAF}]|[\u{2605}-\u{2606}]|[\u{2190}-\u{2195}]|\u{203B}/u,
+  REGEX_CHINESE: /[\u{4e00}-\u{9fff}]|[\u{3400}-\u{4dbf}]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\u{f900}-\u{faff}]|[\u{3300}-\u{33ff}]|[\u{fe30}-\u{fe4f}]|[\u{f900}-\u{faff}]|[\u{2f800}-\u{2fa1f}]/u,
   REGEX_JAPANESE: /[\u3041-\u3096]|[\u30A0-\u30FF]/, // katakana and hiragana only
   REGEX_ENGLISH: /[a-zA-Z]+/,
 
@@ -57,17 +58,13 @@ const hanzisizeUtil = {
     let result;
     switch (lang) {
       case 'chinese':
-        if (hanzisizeUtil.REGEX_CHINESE.test(str) && !hanzisizeUtil.REGEX_JAPANESE.test(str)) {
-          result = true
-        } else {
-          result = false
-        }
+        result = hanzisizeUtil.REGEX_CHINESE.test(str);
         break;
       case 'english':
         result = hanzisizeUtil.REGEX_ENGLISH.test(str);
         break;
       case 'japanese':
-        result = hanzisizeUtil.REGEX_JAPANESE.test(str);
+        result = hanzisizeUtil.REGEX_CN_JP.test(str);
         break;
       default:
         throw new Error('Invalid language was provided')
