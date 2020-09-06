@@ -1,28 +1,26 @@
 import onAppMount from "../../logic/onAppMount";
+
 jest.mock('../../logic/chromeTools', () => ({
   getFromStorage: jest.fn().mockReturnValue(12)
 }))
+
 const mockTab = {url: 'google.com', id: 1};
 global.chrome = {
   tabs: {
-    query: jest.fn((obj, callback) => {
-      callback([mockTab])
-    })
+    query: jest.fn((obj, callback) => {callback([mockTab])})
   }
 }
 
 describe('onAppMount', () => {
   describe('browserFirefox', () => {
     describe('urlChecking', () => {
-      test('a valid url should return string "valid URL"', () => {
-        const tab = {url: 'www.google.com'}
-    
-        const result = onAppMount.browserFirefox.urlChecking(tab)
+      test('a valid url should return string "valid URL"', () => {    
+        const result = onAppMount.browserFirefox.urlChecking(mockTab)
     
         expect(result).toEqual('valid URL');
       })
     
-      test('an addons url should return appropriate error text', () => {
+      test('an addons url should return addons error text', () => {
         const tab = {url: 'https://addons.mozilla.org/en-US/firefox/'}
         
         const result = onAppMount.browserFirefox.urlChecking(tab)
@@ -37,10 +35,11 @@ describe('onAppMount', () => {
       let userAgentGetter;
       
       beforeEach(() => {
+        // navigator object cannot be directly modified so we mock it here
         userAgentGetter = jest.spyOn(window.navigator, 'userAgent', 'get')
       })
 
-      test('it returns a value when navigator.userAgent contains the word "Chrome"', () => {
+      test('it returns a truthy string when navigator.userAgent contains the word "Chrome"', () => {
         userAgentGetter.mockReturnValue('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36 OPR/70.0.3728.154')
 
         const result = onAppMount.browserChrome.chromeInfo();
@@ -59,14 +58,12 @@ describe('onAppMount', () => {
 
     describe('urlChecking', () => {
       test('a valid url should return string "valid URL"', () => {
-        const tab = {url: 'www.google.com'}
-    
-        const result = onAppMount.browserChrome.urlChecking(tab)
+        const result = onAppMount.browserChrome.urlChecking(mockTab)
     
         expect(result).toEqual('valid URL');
       })
     
-      test('a webstore url should return matching error text', () => {
+      test('a webstore url should return webstore error text', () => {
         const tab = {url: 'https://chrome.google.com/webstore/category/extensions'}
         
         const result = onAppMount.browserChrome.urlChecking(tab)
@@ -104,11 +101,10 @@ describe('onAppMount', () => {
 
   describe('urlChecking', () => {
     test('it calls firefox urlchecking if userBrowser returns firefox', () => {
-      const tab = {};
       onAppMount.userBrowser = jest.fn().mockReturnValue('firefox');
       onAppMount.browserFirefox.urlChecking = jest.fn().mockReturnValue(true);
 
-      const result = onAppMount.urlChecking(tab)
+      const result = onAppMount.urlChecking(mockTab)
 
       expect(result).toBeTruthy;
       expect(onAppMount.userBrowser).toHaveBeenCalledTimes(1);
@@ -116,11 +112,10 @@ describe('onAppMount', () => {
     })
     
     test('it calls chrome urlchecking if userBrowser returns chrome', () => {
-      const tab = {};
       onAppMount.userBrowser = jest.fn().mockReturnValue('chrome');
       onAppMount.browserChrome.urlChecking = jest.fn().mockReturnValue(true);
 
-      const result = onAppMount.urlChecking(tab)
+      const result = onAppMount.urlChecking(mockTab)
 
       expect(result).toBeTruthy;
       expect(onAppMount.userBrowser).toHaveBeenCalledTimes(1);
