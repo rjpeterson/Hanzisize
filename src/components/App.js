@@ -49,14 +49,15 @@ class App extends React.Component {
       loading: 'Loading...'
     };
     
+    // bind event handlers to App
     this.handleFSChange = this.handleFSChange.bind(this);
     this.handleLangChange = this.handleLangChange.bind(this);
     this.handleMoreInfoClick = this.handleMoreInfoClick.bind(this);
   }
 
   componentDidMount() {
-    // react run build compiles and compresses everything into one line of code which makes debugging difficult so console.log is the best way I know to debug the popup at the moment
-    if (isDevMode()) console.log(" app.js 37 PRODUCTION MODE popup.js loaded...");
+    // react run build compiles and compresses everything into one line of code so we provide console.log statements for debugging
+    if (isDevMode()) console.log(" app.componentDidMount PRODUCTION MODE popup.js loaded...");
 
     // retrieve stored language and minfontsize values from chrome storage if they exist
     tools.getFromStorage((storedObject) => {
@@ -66,20 +67,22 @@ class App extends React.Component {
       onAppMount.main((tabId, urlValidityMessage) => {
         if (isDevMode()) console.log(`app.componenetDidMount tabId: ${tabId}`)
 
+        // if url is invalid, inform the user why
         if (urlValidityMessage !== 'valid URL') {
           this.setState({loading: urlValidityMessage})
         } else {
-          // first time loading extension fontsize & language wont have stored values
-          // if null we submit default values in order for content script to inject properly
+          // if this is the first time loading the extension, fontsize & language wont have stored values
+          // so, we submit default values "chinese" and "0" in order for content script to inject properly
+          // otherwise, submit values retrieved from storage
           const contentObj = {
             'language' : ('language' in storedObject) ? storedObject.language : 'chinese',
             'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
             'mode': 'initial'
           };
           
-          // inject content script on initial click of browser action or send content object if already injected
+          // inject content script on browser action click or send content object if already injected
           try{
-            tools.sendToContent(tabId, contentObj); // errors might be thrown here
+            tools.sendToContent(tabId, contentObj); // errors might be thrown here if on non-allowed url
 
             this.setState({
               language : contentObj.language,
@@ -92,7 +95,7 @@ class App extends React.Component {
           }
           catch(err) {
             this.setState({
-              loading: `cannot load extension on this page ${err}`
+              loading: `cannot load extension on this page: ${err}`
             })
           }
         }
@@ -100,10 +103,11 @@ class App extends React.Component {
     })
   }
 
+  // fire resizing when user selects a new language from dropdown
   handleLangChange(language) {
     // first store new language
     try{tools.pushLangToStorage(language)}
-    catch(err) {console.log(`Could not push to storage: ${err}`)}
+    catch(err) {console.log(`app.handleLangChange Could not push to storage: ${err}`)}
 
     const contentObj = {
       'language' : language,
@@ -112,19 +116,21 @@ class App extends React.Component {
     };
     // then send to content script
     try{tools.sendToContent(this.state.tabId, contentObj)}
-    catch(err) {console.log(`Could not send to content script: ${err}`)}
+    catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err}`)}
 
+    // finally update state
     this.setState({language: language}, () => {
-      console.log('current state: ' + JSON.stringify(this.state));
+      console.log('app.handleLangChange current state: ' + JSON.stringify(this.state));
     })
   }
 
+  // fire resizing when user inputs a new minimum font size
   handleFSChange(valid, minFontSize) {
-    // validity is determined by component
+    // validity is determined by MinFontSize component
     if (valid) {
       // first store new minfontsize
       try{tools.pushFSToStorage(minFontSize)}
-      catch(err) {console.log(`Could not push to storage: ${err}`)}
+      catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}
 
       const contentObj = {
         'language' : this.state.language,
@@ -133,13 +139,14 @@ class App extends React.Component {
       };
       // then send to content script
       try{tools.sendToContent(this.state.tabId, contentObj)}
-      catch(err) {console.log(`Could not send to content script: ${err}`)}
+      catch(err) {console.log(`app.handleFSChange Could not send to content script: ${err}`)}
 
+      // finally update state
       this.setState({
         minFontSize: minFontSize,
         errorMessage: ''
       }, () => {
-        console.log('current state: ' + JSON.stringify(this.state))
+        console.log('app.handleFSChange current state: ' + JSON.stringify(this.state))
       });
     } else { // if fontsize is invalid
       this.setState({
@@ -148,13 +155,13 @@ class App extends React.Component {
     }
   }
 
-  // toggle more-info section display
+  // toggle more-info section display when use clicks "more info" button
   handleMoreInfoClick() {
     const currentState = this.state.seeMore;
     this.setState({ seeMore: !currentState });
   }
 
-  // this function is used in snapshot testing only
+  // this function is used in snapshot testing only to bypass the loading state
   readyup() {
     this.setState({ ready: true })
   }

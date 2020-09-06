@@ -6,37 +6,46 @@ const hanzisizeUtil = {
   REGEX_JAPANESE: /[\u3041-\u3096]|[\u30A0-\u30FF]/, // katakana and hiragana only
   REGEX_ENGLISH: /[a-zA-Z]+/,
 
-  // function applies new class to all elements that contain text at first child node
+  // apply new class to elements that contain a text_node 
   tagTextElems(nodeSelector) {
+
     // loop through selected nodes and tag ones that contain text
     $(nodeSelector).each(function(){
-      // if element does not have text-elem class and contains unnested text
+
+      // get content of TEXT_NODE
       const textContent = $( this ).contents().filter(function() {
         return this.nodeType == Node.TEXT_NODE;
       }).text();
 
+      // find nodes that have unnested text and dont already have text-elem class
       if(!$( this ).hasClass('text-elem') && textContent.length !== 0) {
-      // if(!$( this ).hasClass('text-elem') && this.childNodes[0] && this.childNodes[0].nodeValue && this.childNodes[0].nodeValue.trim().length !== 0) {
+   
         // apply text-elem class
         $( this ).addClass('text-elem')
       }
     })
   },
 
-  // function applies new class to all elements with text-elem class and match selected language
+  // apply new class to all elements with text-elem class and TEXT_NODE content matches the selected language
   tagLangElems(nodeSelector, language) {
-    // loop through nodes labeled as text that are a child of nodeSelector and apply language specific class
+
+    // loop through text-elem nodes that are a child of nodeSelector and apply language specific class
     $(nodeSelector).each(function(){
+
+      // get content of TEXT_NODE
       const textContent = $( this ).contents().filter(function() {
         return this.nodeType == Node.TEXT_NODE;
       }).text();
-        // if element does not have language-elem class and unnested text is of the correct language
+
+        // if element has class text-elem, does not have class {language}-elem, and content of TEXT_NODE is of the correct language
       if($( this ).hasClass('text-elem') &&
        !$( this ).hasClass(`${language}-elem`) && 
        hanzisizeUtil.hasLanguage(language, textContent)) 
       {
-        // apply language-elem class
+
+        // apply corresponding {language}-elem class
         $( this ).addClass(`${language}-elem`)
+
       } else {
         if(test_mode) {console.log(`case 1: element does not contain ${language} text`)}
       }
@@ -66,21 +75,25 @@ const hanzisizeUtil = {
     return result;
   },
 
-  // returns all elements with text of chosen language with optional callback for each step of loop
+  // call singleElemeResizer on each child of {nodeSelector} that has class {language}-elem
   resizeElems(nodeSelector, language, _singleElemResizer, newMinFontSize) {
+
+    // build query string
     const queryString = `${nodeSelector} .${language}-elem`;
+
+    // loop through all elems with singleElemResizer callback func
     $(queryString).each(function() {
       _singleElemResizer(this, newMinFontSize)
     })
   },
 
-  // input window, single element and NewMinFS, function will assess OFS, NMFS, CFS & perform proper resizing procedure
-  //case 1: element does not contain ${language} text (getLangText function)
-  //case 2: CurrentFS is original. No change
-  //case 3: CurrentFS is not original and larger than NewMinFS. FS set to OriginalFS
-  //case 4: CurrentFS is not original and less than or equal to NewMinFS. FS to NewMinFS
-  //case 5: No OriginalFS. Save CurrentFS as OriginalFS. Set FS to NewMinFS
-  //case 6: OriginalFS && (CurrentFS < NMFS), Set FS to NewMinFS
+  // function takes single element and NewMinFS, function will assess Original Font Size (OFS), New Minimum Font Size (NMFS), and Current Font Size (CFS) & then perform proper Font Size (FS) resizing procedure according to the six cases below
+  //case 1: element does not contain {language} text. No change to FS (returned by getLangText function)
+  //case 2: OFS does not exist. CFS > NMFS. No change to FS
+  //case 3: OFS exists and > NMFS. Set FS to OFS
+  //case 4: OFS exists and <= NMFS. Set FS to NMFS
+  //case 5: OFS does not exist. CFS < NMFS Save CFS as OFS. Set FS to NMFS
+  //case 6: OFS exists && CFS < NMFS, Set FS to NMFS
   singleElemResizer(el, newMinFontSize) {
     const currentFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('font-size'));
     const originalFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('--data-original-font-size'));
@@ -92,17 +105,17 @@ const hanzisizeUtil = {
       if(test_mode) {console.log(`CurentFS is larger than NewMinFS`)}
 
       if (!originalFontSize) { 
-        if(test_mode) {console.log(`case 2: CurrentFS is original. No change`)}
+        if(test_mode) {console.log(`case 2: CurrentFS is intial. No change`)}
         return;
 
       } else if (originalFontSize > newMinFontSize) { 
-        if(test_mode) {console.log(`case 3: CurrentFS is not original and original is larger than NewMinFS. FS set to OriginalFS`)};
+        if(test_mode) {console.log(`case 3: CurrentFS is not intial and originalFS is larger than NewMinFS. FS set to OriginalFS`)};
 
         el.style.setProperty('font-size', originalFontSize + 'px', 'important');
         hanzisizeUtil.adjustLineHeight(el, originalFontSize);
 
       } else {
-        if(test_mode) {console.log(`case 4: CurrentFS is not original and less than or equal to NewMinFS. FS to NewMinFS`)};
+        if(test_mode) {console.log(`case 4: CurrentFS is not initial and less than or equal to NewMinFS. FS to NewMinFS`)};
 
         el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
         hanzisizeUtil.adjustLineHeight(el, newMinFontSize);
@@ -127,11 +140,11 @@ const hanzisizeUtil = {
   },
 
   // This function is borrowed from APlus Font Size Changer
-  // Version 1.3.0 - Change line-height for websites like nytimes.com
+  // Version 1.3.0 - Adjust line-height for websites like nytimes.com
   adjustLineHeight(el, elFontSize) {
     const currentLineHeight = parseInt(window.getComputedStyle(el,null).getPropertyValue("line-height"));
 
-    // if line height is too small for new text size, change line height to "normal"
+    // if line height is too small for new text size, set line height to "normal"
     if (currentLineHeight !== "normal" && currentLineHeight <= (elFontSize+1)) {
       el.style.setProperty("line-height", "normal", "important");
     }
@@ -141,12 +154,12 @@ const hanzisizeUtil = {
   main(language, minFontSize, mode, nodeSelector) {
     if(test_mode) console.log(`initiating main function...`);
 
-    if(mode === 'initial') {
+    if(mode === 'initial') { // initial resize call
       hanzisizeUtil.tagTextElems('body *');
       hanzisizeUtil.tagLangElems('body *', language);
-    } else if(mode === 'lang-change') {
+    } else if(mode === 'lang-change') { // resize call after language change doesn't require retagging text-elems
       hanzisizeUtil.tagLangElems('body *', language);
-    } else if(mode === 'mutation') {
+    } else if(mode === 'mutation') { // resize call after dynamic content is loaded
       hanzisizeUtil.tagTextElems(nodeSelector);
       hanzisizeUtil.tagLangElems(nodeSelector, language);
     }
@@ -154,8 +167,10 @@ const hanzisizeUtil = {
     if (minFontSize) {
       try {
         if(mode === 'mutation') {
+          // if mutation mode, only resize elements nested inside {nodeSelector}
           hanzisizeUtil.resizeElems(nodeSelector, language, hanzisizeUtil.singleElemResizer, minFontSize)
         } else {
+          // otherwise, scan and resize the full html body
           hanzisizeUtil.resizeElems('body', language, hanzisizeUtil.singleElemResizer, minFontSize)
         }
       }
@@ -164,11 +179,12 @@ const hanzisizeUtil = {
   }
 }
 
-// add listener for message from extension popup
-// this fails during testing, so we wrap it in a try catch block
+// add listener for message sent by extension popup
+// this fails during testing, so we wrap it in a try-catch block
 try {
   chrome.runtime.onMessage.addListener(
     function(obj, sender, sendResponse) {
+      // save object send from popup
       mostRecentSettings = obj;
       sendResponse({received: "yes"});
       if (test_mode) {console.log('object received by contentScript:' + JSON.stringify(obj) + 'Resizing now...')}
@@ -177,7 +193,9 @@ try {
       hanzisizeUtil.main(obj.language, obj.newMinFontSize, obj.mode)
   });
 
-  // add mutation observer to fire new DOM scan if new element nodes have been added. This fixes the problem of the user having to manuall resize dynamically loaded content.
+  // add mutation observer to fire new DOM scan if new element nodes have been added. This fixes the problem of the user having to manually resize everytime new content is dynamically loaded.
+  // current implementation is to rescan entire DOM
+  // should modify in the future to only scan newly loaded content
   // Select the node that will be observed for mutations
   const targetNode = document.documentElement || document.body;
 
