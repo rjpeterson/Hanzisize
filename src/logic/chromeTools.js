@@ -7,6 +7,11 @@ function isDevMode() {
 }
 
 const tools = {
+  operaErrors: {
+    extensionSettings: 'This page cannot be scripted due to an ExtensionsSettings policy.',
+    popupWarning: 'You must enable "Allow access to search page results" in Hanzisize extension settings for Hanzisize to work on this page'
+  },
+
   // push submitted fontsize to chrome local storage
   pushFSToStorage: (minFontSize) => {
     chrome.storage.local.set({minFontSize: minFontSize}, () => {
@@ -55,9 +60,9 @@ const tools = {
             if (isDevMode()) console.error(`jquery injection error: ${chrome.runtime.lastError.message}`);
 
             // Opera throws the following error if extension is used on google search results without first given permission
-            if (chrome.runtime.lastError.message === 'This page cannot be scripted due to an ExtensionsSettings policy.') {
+            if (chrome.runtime.lastError.message === tools.operaErrors.extensionSettings) {
               console.log('extension called on google search results with setting disabled')
-              injectionError = "You must enable 'Allow access to search page results' in Hanzisize settings for Hanzisize to work on this page";
+              injectionError = tools.operaErrors.popupWarning;
 
               // callback for initial injection of scripts, error produced
               if (_callback) {
@@ -68,13 +73,17 @@ const tools = {
 
             // If jquery injects properly, inject contentScript.js in active tab. Requires "permissions": ["activeTab"] in manifest.json
             chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + '/contentScript.js'}, function() {
+              console.log(`executeScript: ${chrome.runtime.lastError}`)
               if (chrome.runtime.lastError) {
                 if (isDevMode()) console.error(`content script injection error ${chrome.runtime.lastError.message}`);
               } else {
                 // if contentScript.js has been successfully injected, call sendToContent a second time to finally send the object to the active tab with the initial call to sendMessage
-                setTimeout(function(){ 
-                  tools.sendToContent(tab_id, obj); 
-                }, 200);
+                // setTimeout(function(){ 
+                  // tools.sendToContent(tab_id, obj); 
+                  chrome.tabs.sendMessage(tab_id, obj, {frameId: 0}, function(response) {
+                    if (isDevMode()) console.log(`tools.sendToContent (2nd try) recieved response: ${JSON.stringify(response)}`);
+                  })
+                // }, 200);
               }
             });		
 
