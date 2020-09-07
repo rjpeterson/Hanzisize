@@ -80,24 +80,24 @@ class App extends React.Component {
             'mode': 'initial'
           };
           
-          // inject content script on browser action click or send content object if already injected
-          try{
-            tools.sendToContent(tabId, contentObj); // errors might be thrown here if on non-allowed url
-
-            this.setState({
-              language : contentObj.language,
-              minFontSize: contentObj.newMinFontSize,
-              tabId: tabId,
-              ready: true
-            }, () => {
-              if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
-            });
-          }
-          catch(err) {
-            this.setState({
-              loading: `cannot load extension on this page: ${err}`
-            })
-          }
+        // inject content script on browser action click or send content object if already injected
+          tools.sendToContent(tabId, contentObj, (injectionErr) => {
+            if (injectionErr !== null) {
+              console.log(`app caught error: ${injectionErr}`)
+              this.setState({
+                loading: injectionErr
+              })
+            } else {
+              this.setState({
+                language : contentObj.language,
+                minFontSize: contentObj.newMinFontSize,
+                tabId: tabId,
+                ready: true
+              }, () => {
+                if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
+              });
+            }
+          });
         }
       });
     })
