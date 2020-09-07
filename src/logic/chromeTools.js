@@ -77,7 +77,9 @@ const tools = {
               if (chrome.runtime.lastError) {
                 if (isDevMode()) console.error(`content script injection error ${chrome.runtime.lastError.message}`);
               } else {
-                // if contentScript.js has been successfully injected, call sendToContent a second time to finally send the object to the active tab with the initial call to sendMessage
+                
+                // if contentScript.js has been successfully injected, call sendMessage a second time to finally send the object to the active tab
+                // 9/7/20 THIS STILL NEEDS ERROR HANDLING
                 // setTimeout(function(){ 
                   // tools.sendToContent(tab_id, obj); 
                   chrome.tabs.sendMessage(tab_id, obj, {frameId: 0}, function(response) {
