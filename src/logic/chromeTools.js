@@ -38,7 +38,8 @@ const tools = {
   },
 
   // this function gets called on initial load of the extension as well as every time the user selects a new language or changes minFontSize
-  sendToContent: (tab_id, obj) => {
+  sendToContent:  (tab_id, obj, _callback) => {
+    let injectionError = null;
 
     // attempt to send object to content script
     chrome.tabs.sendMessage(tab_id, obj, {frameId: 0}, function(response) {
@@ -46,19 +47,29 @@ const tools = {
       // if tab does not send back a response, the content script hasn't been injected yet
       if(chrome.runtime.lastError && !response) {
 
-        // First try to inject jquery into active tab
+        // First try to inject jquery into active tab. Requires "permissions": ["activeTab"] in manifest.json
         chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js'}, function() {
 
           // if an error is returned, the user is probably trying to use the extension on a page that the browser doesn't allow (e.g. chrome webstore, addons.mozilla.org, etc.)
           if(chrome.runtime.lastError) {
-            if (isDevMode()) console.error(chrome.runtime.lastError.message);
-            throw new Error('script cannot be injected. likely missing host permission')
+            if (isDevMode()) console.error(`jquery injection error: ${chrome.runtime.lastError.message}`);
+
+            // Opera throws the following error if extension is used on google search results without first given permission
+            if (chrome.runtime.lastError.message === 'This page cannot be scripted due to an ExtensionsSettings policy.') {
+              console.log('extension called on google search results with setting disabled')
+              injectionError = "You must enable 'Allow access to search page results' in Hanzisize settings for Hanzisize to work on this page";
+
+              // callback for initial injection of scripts, error produced
+              if (_callback) {
+                _callback(injectionError);
+              }
+            }
           } else {
 
-            // Inject contentScript.js in active tab. Requires "permissions": ["activeTab"] in manifest.json
+            // If jquery injects properly, inject contentScript.js in active tab. Requires "permissions": ["activeTab"] in manifest.json
             chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + '/contentScript.js'}, function() {
               if (chrome.runtime.lastError) {
-                if (isDevMode()) console.error(chrome.runtime.lastError.message);
+                if (isDevMode()) console.error(`content script injection error ${chrome.runtime.lastError.message}`);
               } else {
                 // if contentScript.js has been successfully injected, call sendToContent a second time to finally send the object to the active tab with the initial call to sendMessage
                 setTimeout(function(){ 
@@ -66,10 +77,19 @@ const tools = {
                 }, 200);
               }
             });		
+
+            // callback for initial injection of scripts, no errors
+            if (_callback) {
+              _callback(injectionError);
+            }
           }
         })
+      } else {  // callback for scripts already succesfully injected, popup reopened
+        if (_callback) {
+          _callback(injectionError)
+        }
       }
-
+    
       if (isDevMode()) console.log(`tools.sendToContent recieved response: ${JSON.stringify(response)}`);
     });
   }

@@ -64,6 +64,7 @@ describe('chromeTools', () => {
   })
   
   describe('sendToContent', () => {
+    // need to write test for Opera google search result injection error
     beforeEach(() => {
       chrome.runtime.lastError = true;
     })
