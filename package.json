@@ -1,6 +1,6 @@
 {
   "name": "hanzisize-reboot-react",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "A React Chrome extension to change Chinese font-size",
   "main": "index.js",
