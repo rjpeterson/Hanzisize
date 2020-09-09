@@ -31,23 +31,23 @@ exports[`App renders 1`] = `
       onKeyDown={[Function]}
     >
       <div
-        className=" css-10k5ixo-control"
+        className="language-input__control css-10k5ixo-control"
         onMouseDown={[Function]}
         onTouchEnd={[Function]}
       >
         <div
-          className=" css-1j36x9m-ValueContainer"
+          className="language-input__value-container language-input__value-container--has-value css-1j36x9m-ValueContainer"
         >
           <div
-            className=" css-1uccc91-singleValue"
+            className="language-input__single-value css-1uccc91-singleValue"
           >
-            中文 Chinese
+            中文
           </div>
           <div
             className="css-b8ldur-Input"
           >
             <div
-              className=""
+              className="language-input__input"
               style={
                 Object {
                   "display": "inline-block",
@@ -102,14 +102,14 @@ exports[`App renders 1`] = `
           </div>
         </div>
         <div
-          className=" css-1hb7zxy-IndicatorsContainer"
+          className="language-input__indicators css-1hb7zxy-IndicatorsContainer"
         >
           <span
-            className=" css-1okebmr-indicatorSeparator"
+            className="language-input__indicator-separator css-1okebmr-indicatorSeparator"
           />
           <div
             aria-hidden="true"
-            className=" css-tlfecz-indicatorContainer"
+            className="language-input__indicator language-input__dropdown-indicator css-tlfecz-indicatorContainer"
             onMouseDown={[Function]}
             onTouchEnd={[Function]}
           >

@@ -3,15 +3,47 @@ global.$ = require('jquery');
 const originalHU = hanzisizeUtil;
 
 describe('hanzisizeUtil', () => {
-  const englishString = "Morbi leo ex, vulputate id tortor sit amet, finibus pulvinar velit. ";
+  const arabicString = "لكن لا بد أن أوضح لك أن كل هذه الأفكار المغلوطة حول استنكار  النشوة وتمجيد الألم نشأت بالفعل، وسأعرض لك التفاصيل لتكتشف حقيقة وأساس تلك السعادة البشر";
   const chineseString = "聲我度都，一可文行知化，演人去，北醫進方會說多員校工能廣歷學接想有國詩法今不同";
+  const englishString = "Morbi leo ex, vulputate id tortor sit amet, finibus pulvinar velit. ";
+  const georgianString = "ლორემ იფსუმ დოლორ სით ამეთ, ლაორეეთ ფრობათუს ველ ცუ, ეხ ველ უნუმ მუნდი ევერთი. იმფედით";
+  const hangulString = "그들은 찬미를 위하여서. 오직 있다. 같은 영원히 용감하고 얼음과 인생에 청춘의 전인 ? 고행을 열락의 때까지 불어 이상, ";
+  const hebrewString = "הגרפים קודמות שתי אל, קבלו בחירות הקנאים אם זאת. ויש דת כלים פיסול, בקר והוא טכניים אחרונים דת. אם סדר תרבות קהילה לערוך, מה עוד לשון צרפתית לאחרונה";
+  const hindiString = "उनके खरिदे आधुनिक वास्तविक तकनिकल व्रुद्धि समाज संदेश सादगि भारत वर्तमान अमितकुमार पहोच। हुआआदी व्रुद्धि भाषए कैसे";
   const japaneseString = "併メセ怖区山二やわはみ施請ざ南専のやぐ加単シネキ第朝東うた利34表ヤホセ断悪3請ハ";
+  const thaiString = "เป็นข้อความแทนที่ ใช้เพื่อลดความสนใจต่อข้อความที่นำมาแสดง สำหรับการแสดงลักษณะของ";
 
   beforeEach(() => {
     jest.restoreAllMocks();
   })
 
   describe('regex', () => {
+    describe('arabic regex', () => {
+      test('it returns true on arabic text', () => {
+        const result = hanzisizeUtil.REGEX_ARABIC.test(arabicString);
+
+        expect(result).toBeTruthy()
+      })    
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_ARABIC.test(englishString);
+
+        expect(result).toBeFalsy()
+      })
+    })
+
+    describe('chinese regex', () => {
+      test('it returns true on chinese text', () => {
+        const result = hanzisizeUtil.REGEX_CHINESE.test(chineseString);
+
+        expect(result).toBeTruthy()
+      })    
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_CHINESE.test(englishString);
+
+        expect(result).toBeFalsy()
+      })
+    })
+
     describe('english regex', () => {
       test('it returns true on english text', () => {
         const result = hanzisizeUtil.REGEX_ENGLISH.test(englishString);
@@ -25,17 +57,56 @@ describe('hanzisizeUtil', () => {
       })
     })
 
-    describe('chinese regex', () => {
-      test('it returns true on chinese text', () => {
-        const result = hanzisizeUtil.REGEX_CHINESE.test(chineseString);
+    describe('georgian regex', () => {
+      test('it returns true on georgian text', () => {
+        const result = hanzisizeUtil.REGEX_GEORGIAN.test(georgianString);
 
         expect(result).toBeTruthy()
       })    
-      // test('it returns false on japanese text', () => {
-      //   const result = hanzisizeUtil.REGEX_CHINESE.test(japaneseString);
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_GEORGIAN.test(englishString);
 
-      //   expect(result).toBeFalsy()
-      // })
+        expect(result).toBeFalsy()
+      })
+    })
+
+    describe('hangul regex', () => {
+      test('it returns true on hangul text', () => {
+        const result = hanzisizeUtil.REGEX_HANGUL.test(hangulString);
+
+        expect(result).toBeTruthy()
+      })    
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_HANGUL.test(englishString);
+
+        expect(result).toBeFalsy()
+      })
+    })
+
+    describe('hebrew regex', () => {
+      test('it returns true on hebrew text', () => {
+        const result = hanzisizeUtil.REGEX_HEBREW.test(hebrewString);
+
+        expect(result).toBeTruthy()
+      })    
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_HEBREW.test(englishString);
+
+        expect(result).toBeFalsy()
+      })
+    })
+
+    describe('hindi regex', () => {
+      test('it returns true on hindi text', () => {
+        const result = hanzisizeUtil.REGEX_HINDI.test(hindiString);
+
+        expect(result).toBeTruthy()
+      })    
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_HINDI.test(englishString);
+
+        expect(result).toBeFalsy()
+      })
     })
 
     describe('japanese regex', () => {
@@ -46,6 +117,19 @@ describe('hanzisizeUtil', () => {
       })    
       test('it returns false on english text', () => {
         const result = hanzisizeUtil.REGEX_CN_JP.test(englishString);
+
+        expect(result).toBeFalsy()
+      })
+    })
+
+    describe('thai regex', () => {
+      test('it returns true on thai text', () => {
+        const result = hanzisizeUtil.REGEX_THAI.test(thaiString);
+
+        expect(result).toBeTruthy()
+      })    
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_THAI.test(englishString);
 
         expect(result).toBeFalsy()
       })

@@ -19,16 +19,6 @@ describe('chromeTools', () => {
           } else {
             callback(true)
           }
-
-          // if(chrome.runtime.lastError) {
-          //   chrome.tabs.executeScript(tab_id, {
-          //     file: process.env.PUBLIC_URL + '/contentScript.js'
-          //   }, () => {
-          //     tools.sendToContent(tab_id, obj);
-          //   })
-          // } else {
-          //   return undefined
-          // }
         }),
         executeScript: jest.fn((tab_id, object, callback) => {
           chrome.runtime.lastError = false;
@@ -109,7 +99,6 @@ describe('chromeTools', () => {
       })
     })
 
-    // 9/7/20 need to write test for Opera google search result injection error
     describe('opera allow search page results setting', () => {
       test('it fires callback with correct error message when setting is disabled', () => {
         global.chrome.tabs.executeScript = jest.fn((tab_id, object, callback) => {

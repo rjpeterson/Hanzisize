@@ -168,7 +168,7 @@ class App extends React.Component {
 
   render() {
     // show loading page until response from chrome.tabs.query is receieved
-    if(this.state.ready !== true) {
+    if(this.state.ready !== true && process.env.NODE_ENV !== 'development' ) {
       return (<div className="loading">{this.state.loading}</div>)
     }
     return (
