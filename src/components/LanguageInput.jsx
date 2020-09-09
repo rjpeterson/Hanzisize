@@ -3,10 +3,26 @@ import Select from 'react-select';
 // https://react-select.com/home
 import './LanguageInput.css';
 
+// const options = [
+//   {value: 'arabic', label: 'العربيةArabic'},
+//   {value: 'chinese', label: '中文Chinese'},
+//   {value: 'english', label: 'English'},
+//   {value: 'georgian', label: 'ქართულიGeorgian'},
+//   {value: 'hangul', label: '한국어Hangul'},
+//   {value: 'hebrew', label: 'עבריתHebrew'},
+//   {value: 'japanese', label: '日本語Japanese'},
+//   {value: 'thai', label: 'ไทยThai'}
+// ]
 const options = [
-  {value: 'chinese', label: '中文 Chinese'},
+  {value: 'arabic', label: 'العربية'},
+  {value: 'chinese', label: '中文'},
   {value: 'english', label: 'English'},
-  {value: 'japanese', label: '日本語 Japanese'}
+  {value: 'georgian', label: 'ქართული'},
+  {value: 'hangul', label: '한국어'},
+  {value: 'hebrew', label: 'עברית'},
+  {value: 'hindi', label: 'हिन्दी'},
+  {value: 'japanese', label: '日本語'},
+  {value: 'thai', label: 'ไทย'}
 ]
 
 const customStyles = {
@@ -32,8 +48,14 @@ const customStyles = {
   menu: (provided, state) => {
     const marginTop = '0px';
     const width = '7.7rem';
+    const overflowY = 'auto';
 
-    return {...provided, marginTop, width}
+    return {...provided, marginTop, width, overflowY}
+  },
+  option: (provided, state) => {
+    const padding = '4px 12px';
+
+    return {...provided, padding}
   }
 }
 
@@ -52,7 +74,7 @@ class LanguageInput extends React.Component {
     if (match) {
       return match
     } else {
-      return options[0]
+      return options[1]
     }
   }
 
@@ -61,9 +83,12 @@ class LanguageInput extends React.Component {
       <div className={this.props.seeMore ? 'inactive' : 'language-input grid-box'}>
         <label className="input-label" htmlFor="langinput">Select a language to resize</label>
         <Select 
+        // menuIsOpen="true"
+        classNamePrefix="language-input"
         id="langinput"
         styles={customStyles}
         options={options}
+        maxMenuHeight='6.5rem'
         defaultValue={this.setDefault()}
         onChange={this.handleChange} 
         />
