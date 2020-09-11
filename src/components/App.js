@@ -69,6 +69,7 @@ class App extends React.Component {
 
         // if url is invalid, inform the user why
         if (urlValidityMessage !== 'valid URL') {
+          if (isDevMode()) console.log(`app.componenetDidMount urlValidityMessage: ${urlValidityMessage}`)
           this.setState({loading: urlValidityMessage})
         } else {
           // if this is the first time loading the extension, fontsize & language wont have stored values
@@ -79,7 +80,7 @@ class App extends React.Component {
             'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
             'mode': 'initial'
           };
-          
+          if (isDevMode()) console.log(`app.componenetDidMount contentObj: ${contentObj}`)
         // inject content script on browser action click or send content object if already injected
           tools.sendToContent(tabId, contentObj, (injectionErr) => {
             if (injectionErr !== null) {

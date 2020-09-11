@@ -73,6 +73,49 @@ describe('onAppMount', () => {
     })
   })
 
+  describe('browserOpera', () => {
+    describe('operaInfo', () => {
+      let userAgentGetter;
+      
+      beforeEach(() => {
+        // navigator object cannot be directly modified so we mock it here
+        userAgentGetter = jest.spyOn(window.navigator, 'userAgent', 'get')
+      })
+
+      test('it returns a truthy string when navigator.userAgent contains the word "Opera" or the string "OPR"', () => {
+        userAgentGetter.mockReturnValue('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36 OPR/70.0.3728.154')
+
+        const result = onAppMount.browserOpera.operaInfo();
+
+        expect(result).toBeTruthy();
+      })
+
+      test('it returns null when navigator.userAgent does not contain the word "Opera" or the string "OPR"', () => {
+        userAgentGetter.mockReturnValue('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0');
+
+        const result = onAppMount.browserOpera.operaInfo();
+
+        expect(result).toBeFalsy();
+      })
+    })
+
+    describe('urlChecking', () => {
+      test('a valid url should return string "valid URL"', () => {
+        const result = onAppMount.browserOpera.urlChecking(mockTab)
+    
+        expect(result).toEqual('valid URL');
+      })
+    
+      test('a opera addons url should return addons error text', () => {
+        const tab = {url: 'https://addons.opera.com'}
+        
+        const result = onAppMount.browserOpera.urlChecking(tab)
+    
+        expect(result).toEqual(onAppMount.browserOpera.addonsErrorString);
+      })
+    })
+  })
+
   describe('userBrowser', () => {
     test('it correctly identifies Firefox', () => {
       const expected = 'firefox';
@@ -97,6 +140,16 @@ describe('onAppMount', () => {
       expect(onAppMount.browserChrome.chromeInfo).toHaveBeenCalledTimes(1);
       expect(result).toEqual(expected);
     })
+
+    test('it correctly identifies Opera', () => {
+      const expected = 'opera';
+      onAppMount.browserOpera.operaInfo = jest.fn().mockReturnValue(true)
+
+      const result = onAppMount.userBrowser();
+
+      expect(onAppMount.browserOpera.operaInfo).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(expected);
+    })
   })
 
   describe('urlChecking', () => {
@@ -110,7 +163,7 @@ describe('onAppMount', () => {
       expect(onAppMount.userBrowser).toHaveBeenCalledTimes(1);
       expect(onAppMount.browserFirefox.urlChecking).toHaveBeenCalledTimes(1);
     })
-    
+
     test('it calls chrome urlchecking if userBrowser returns chrome', () => {
       onAppMount.userBrowser = jest.fn().mockReturnValue('chrome');
       onAppMount.browserChrome.urlChecking = jest.fn().mockReturnValue(true);
@@ -121,13 +174,24 @@ describe('onAppMount', () => {
       expect(onAppMount.userBrowser).toHaveBeenCalledTimes(1);
       expect(onAppMount.browserChrome.urlChecking).toHaveBeenCalledTimes(1);
     })
+
+    test('it calls opera urlchecking if userBrowser returns opera', () => {
+      onAppMount.userBrowser = jest.fn().mockReturnValue('opera');
+      onAppMount.browserOpera.urlChecking = jest.fn().mockReturnValue(true);
+
+      const result = onAppMount.urlChecking(mockTab)
+
+      expect(result).toBeTruthy;
+      expect(onAppMount.userBrowser).toHaveBeenCalledTimes(1);
+      expect(onAppMount.browserOpera.urlChecking).toHaveBeenCalledTimes(1);
+    })
   })
   
   describe('main', () => {
     const mockCallback = jest.fn();
     const mockUrlvaliditiyMessage = 'valid';
   
-    test('queries chrome for tab info, gets url validity string and passes it to a callback', () => {
+    test('queries chrome api for tab info, gets url validity string and passes it to a callback', () => {
       onAppMount.urlChecking = jest.fn().mockReturnValue(mockUrlvaliditiyMessage);
 
       onAppMount.main(mockCallback);

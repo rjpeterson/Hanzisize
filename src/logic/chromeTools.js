@@ -52,16 +52,22 @@ const tools = {
       // if tab does not send back a response, the content script hasn't been injected yet
       if(chrome.runtime.lastError && !response) {
 
+        if (isDevMode()) console.log(`tools.sendToContent initial message send failed. injecting jquery...`)
         // First try to inject jquery into active tab. Requires "permissions": ["activeTab"] in manifest.json
         chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js'}, function() {
 
           // if an error is returned, the user is probably trying to use the extension on a page that the browser doesn't allow (e.g. chrome webstore, addons.mozilla.org, etc.)
           if(chrome.runtime.lastError) {
-            if (isDevMode()) console.error(`jquery injection error: ${chrome.runtime.lastError.message}`);
+            if (isDevMode()) {
+              console.error(`jquery injection error: ${chrome.runtime.lastError.message}`);
+            }
 
             // Opera throws the following error if extension is used on google search results without first given permission
             if (chrome.runtime.lastError.message === tools.operaErrors.extensionSettings) {
-              console.log('extension called on google search results with setting disabled')
+              if (isDevMode()) {
+                console.log('extension called on google search results with setting disabled')
+              }
+
               injectionError = tools.operaErrors.popupWarning;
 
               // callback for initial injection of scripts, error produced
@@ -70,7 +76,9 @@ const tools = {
               }
             }
           } else {
-
+            if (isDevMode()) {
+              console.log('jquery injected. injecting content script...')
+            }
             // If jquery injects properly, inject contentScript.js in active tab. Requires "permissions": ["activeTab"] in manifest.json
             chrome.tabs.executeScript(tab_id, {file: process.env.PUBLIC_URL + '/contentScript.js'}, function() {
               console.log(`executeScript: ${chrome.runtime.lastError}`)
