@@ -21,16 +21,18 @@ const hanzisizeUtil = {
     // loop through selected nodes and tag ones that contain text
     $(nodeSelector).each(function(){
 
-      // get content of TEXT_NODE
-      const textContent = $( this ).contents().filter(function() {
-        return this.nodeType == Node.TEXT_NODE;
-      }).text();
+      if (this.tagName !== 'SCRIPT') { // skip script tags
+        // get content of TEXT_NODE
+        const textContent = $( this ).contents().filter(function() {
+          return this.nodeType == Node.TEXT_NODE;
+        }).text().trim();
 
-      // find nodes that have unnested text and dont already have text-elem class
-      if(!$( this ).hasClass('text-elem') && textContent.length !== 0) {
-   
-        // apply text-elem class
-        $( this ).addClass('text-elem')
+        // find nodes that have unnested text and dont already have text-elem class
+        if(!$( this ).hasClass('text-elem') && textContent.length !== 0) {
+    
+          // apply text-elem class
+          $( this ).addClass('text-elem')
+        }
       }
     })
   },
