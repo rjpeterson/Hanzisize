@@ -15,16 +15,17 @@ const onAppMount = {
 
     // addons are not allowed on addons.mozilla.org or settings pages. This function checks for these urls
     urlChecking: (tab) => {
-      let returnString;
-
-      if (tab.url.match(/\/addons\.mozilla\.org/i)) {
-        returnString = onAppMount.browserFirefox.addonsErrorString;
-      } else if (tab.url.match(/^about:/i)) {
-        returnString = onAppMount.browserFirefox.aboutErrorString;
+      if ('url' in tab) {
+        if (tab.url.match(/\/addons\.mozilla\.org/i)) {
+          return onAppMount.browserFirefox.addonsErrorString;
+        } else if (tab.url.match(/^about:/i)) {
+          return onAppMount.browserFirefox.aboutErrorString;
+        } else {
+          return 'valid URL'
+        }
       } else {
-        returnString = 'valid URL'
+        throw new Error('Active tab has no url value')
       }
-      return returnString;
     }
   },
 
@@ -35,24 +36,53 @@ const onAppMount = {
     // determines if the user is on Chrome or not
     chromeInfo: () => {
       try { // if no regex match = user not on Chrome
-        return /Chrome\/([0-9.]+)/.exec(window.navigator.userAgent)[0];
+        // return /Chrome\/([0-9.]+)/.exec(window.navigator.userAgent)[0];
+        return (navigator.userAgent.match(/Chrome\//) ? true : false);
       } catch (error) { // returns false if navigator.userAgent is not found
         return null;
       }
     },
   
     urlChecking: (tab) => {
-      let returnString;
       // Extensions are not allowed in chrome settings pages or in the webstore. This function checks for these urls
-      if(tab.url.match(/^chrome/i)) {
-        returnString = onAppMount.browserChrome.chromeErrorString;
-      } else if (tab.url.match(/\/webstore/i)) {
-        returnString = onAppMount.browserChrome.webstoreErrorString;
+      if ('url' in tab) {
+        if(tab.url.match(/^chrome/i)) {
+          return onAppMount.browserChrome.chromeErrorString;
+        } else if (tab.url.match(/\/webstore/i)) {
+          return onAppMount.browserChrome.webstoreErrorString;
+        } else {
+          return 'valid URL'
+        }
       } else {
-        returnString = 'valid URL'
+        throw new Error('Active tab has no url value')
       }
-      return returnString;
     },
+  },
+
+  browserOpera: {// opera specific url checking
+    addonsErrorString: "NOTE: For this addon to work you must leave addons.opera.com and go to another website. Opera blocks addons from functioning on special pages such as this one.",
+
+    // determines if the user is on Opera or not
+    operaInfo: () => {
+      try { // if no regex match = user not on Chrome
+        return (navigator.userAgent.match(/Opera|OPR\//) ? true : false);
+      } catch (error) { // returns false if navigator.userAgent is not found
+        return null;
+      }
+    },
+
+    // addons are not allowed on addons.mozilla.org or settings pages. This function checks for these urls
+    urlChecking: (tab) => {
+      if ('url' in tab) {
+        if (tab.url.match(/\/addons\.opera\.com/i)) {
+          return onAppMount.browserOpera.addonsErrorString;
+        } else {
+          return 'valid URL'
+        }
+      } else {
+        throw new Error('Active tab has no url value')
+      }
+    }
   },
 
   // determine user's browser
@@ -61,23 +91,30 @@ const onAppMount = {
       if(typeof browser.runtime.getBrowserInfo === 'function') { // user is on firefox
       return 'firefox';
       }
-    } else if (onAppMount.browserChrome.chromeInfo() !== null) { // user is on chrome
+    } else if (onAppMount.browserOpera.operaInfo() === true) { // user is on opera
+      return 'opera';
+    } else if (onAppMount.browserChrome.chromeInfo() === true) { // user is on chrome
       return 'chrome';
     } else {
-      return 'none'
+      throw new Error("User's browser cannot be determined.")
     }
   },
 
   // check for disallowed urls by browser
   urlChecking: (tab) => {
-    let returnString;
     const userBrowser = onAppMount.userBrowser();
-    if (userBrowser === 'firefox') {
-      returnString = onAppMount.browserFirefox.urlChecking(tab);
-    } else if (userBrowser === 'chrome') {
-      returnString = onAppMount.browserChrome.urlChecking(tab);
+    if (isDevMode()) {
+      console.log(`onAppMount.urlChecking userBrowser is: ${userBrowser}`)
     }
-    return returnString;
+    if (userBrowser === 'firefox') {
+      return onAppMount.browserFirefox.urlChecking(tab);
+    } else if (userBrowser === 'opera') {
+      return onAppMount.browserOpera.urlChecking(tab);
+    } else if (userBrowser === 'chrome') {
+      return onAppMount.browserChrome.urlChecking(tab);
+    } else {
+      throw new Error('user browser is not compatible. urlChecking failed')
+    }
   },
 
   // gets and validates current tab.id and gets url validity string, sends both to callback
