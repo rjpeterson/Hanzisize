@@ -121,7 +121,7 @@ const onAppMount = {
   main: (_callback) => {
 
     // get active tab info
-    chrome.tabs.query({active: true, lastFocusedWindow: true}, (tabs) => {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
       const tab = tabs[0];
       if(isDevMode()) {console.log(`onAppMount.main tab ${JSON.stringify(tab)}`)}
 
