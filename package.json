@@ -1,10 +1,11 @@
 {
   "name": "hanzisize-reboot-react",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
-  "description": "A React Chrome extension to change Chinese font-size",
+  "description": "A React web extension for changing text font-size based on language",
   "main": "index.js",
   "dependencies": {
+    "@atlaskit/tooltip": "^17.0.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -14,7 +15,8 @@
     "react-dom": "^16.13.1",
     "react-numeric-input": "^2.2.3",
     "react-scripts": "3.4.1",
-    "react-select": "^3.1.0"
+    "react-select": "^3.1.0",
+    "styled-components": "^5.2.0"
   },
   "scripts": {
     "start": "set PORT=3000 && react-scripts start",
