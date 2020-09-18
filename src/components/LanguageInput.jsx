@@ -16,8 +16,9 @@ import './LanguageInput.css';
 // ]
 const selectOptions = [
   {value: 'arabic', label: 'العربية', tooltip: 'Arabic'},
+  {value: 'burmese', label: 'မြန်မာဘာသာ', tooltip: 'Burmese'},
   {value: 'chinese', label: '中文', tooltip: 'Chinese'},
-  {value: 'english', label: 'English', tooltip: 'English'},
+  {value: 'english', label: 'English', tooltip: '(Any Roman alphabet)'},
   {value: 'georgian', label: 'ქართული', tooltip: 'Georgian'},
   {value: 'hangul', label: '한국어', tooltip: 'Korean'},
   {value: 'hebrew', label: 'עברית', tooltip: 'Hebrew'},
@@ -31,7 +32,7 @@ const Option = props => {
   return (
     <Tooltip content={
       selectOptions.find(element => element.value === props.value).tooltip
-      } truncateText>
+      }>
       <components.Option {...props} />
     </Tooltip>
   );

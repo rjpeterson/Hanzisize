@@ -14,6 +14,7 @@ const hanzisizeUtil = {
   REGEX_HEBREW: /\p{Script=Hebrew}+/u,
   REGEX_GEORGIAN: /\p{Script=Georgian}+/u,
   REGEX_HINDI: /[\u0900-\u097F]/,
+  REGEX_BURMESE: /[\u1000-\u109F]/,
 
   // apply new class to elements that contain a text_node 
   tagTextElems(nodeSelector) {
@@ -91,9 +92,12 @@ const hanzisizeUtil = {
       case 'georgian':
         result = hanzisizeUtil.REGEX_GEORGIAN.test(str);
         break;
-        case 'hindi':
-          result = hanzisizeUtil.REGEX_HINDI.test(str);
-          break;
+      case 'hindi':
+        result = hanzisizeUtil.REGEX_HINDI.test(str);
+        break;
+      case 'burmese':
+        result = hanzisizeUtil.REGEX_BURMESE.test(str);
+        break;
       default:
         throw new Error('Invalid language was provided')
     }

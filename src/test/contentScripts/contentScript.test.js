@@ -4,6 +4,7 @@ const originalHU = hanzisizeUtil;
 
 describe('hanzisizeUtil', () => {
   const arabicString = "لكن لا بد أن أوضح لك أن كل هذه الأفكار المغلوطة حول استنكار  النشوة وتمجيد الألم نشأت بالفعل، وسأعرض لك التفاصيل لتكتشف حقيقة وأساس تلك السعادة البشر";
+  const burmeseString = "သီးခြားသတ်မှတ်ပေးထားသည့် နံပါတ်များဖြစ်သည်။ ယူနီကုဒ် ဆိုသည်မှာ ကမ္ဘာသုံးစကား အားလုံးမှ အက္ခရာစာလုံး တစ်လုံးတိုင်းအတွက် တိကျသော နံပါတ် တစ်လုံးတည်းသာ သတ်မှတ်ပေးသော ဘုံသုံးစနစ်ဟူ၍လည်း ခေါ်ဆိုကြသည်။"
   const chineseString = "聲我度都，一可文行知化，演人去，北醫進方會說多員校工能廣歷學接想有國詩法今不同";
   const englishString = "Morbi leo ex, vulputate id tortor sit amet, finibus pulvinar velit. ";
   const georgianString = "ლორემ იფსუმ დოლორ სით ამეთ, ლაორეეთ ფრობათუს ველ ცუ, ეხ ველ უნუმ მუნდი ევერთი. იმფედით";
@@ -26,6 +27,19 @@ describe('hanzisizeUtil', () => {
       })    
       test('it returns false on english text', () => {
         const result = hanzisizeUtil.REGEX_ARABIC.test(englishString);
+
+        expect(result).toBeFalsy()
+      })
+    })
+
+    describe('burmese regex', () => {
+      test('it returns true on burmese text', () => {
+        const result = hanzisizeUtil.REGEX_BURMESE.test(burmeseString);
+
+        expect(result).toBeTruthy()
+      })    
+      test('it returns false on english text', () => {
+        const result = hanzisizeUtil.REGEX_BURMESE.test(englishString);
 
         expect(result).toBeFalsy()
       })
