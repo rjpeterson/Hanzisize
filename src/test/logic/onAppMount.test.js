@@ -197,7 +197,7 @@ describe('onAppMount', () => {
       onAppMount.main(mockCallback);
   
       expect(chrome.tabs.query).toHaveBeenCalledTimes(1);
-      expect(chrome.tabs.query).toHaveBeenCalledWith({ active: true, lastFocusedWindow: true }, expect.any(Function))
+      expect(chrome.tabs.query).toHaveBeenCalledWith({ active: true, currentWindow: true }, expect.any(Function))
       expect(onAppMount.urlChecking).toHaveBeenCalledTimes(1);
       expect(onAppMount.urlChecking).toHaveBeenCalledWith(mockTab);
       expect(mockCallback).toHaveBeenCalledWith(mockTab.id, mockUrlvaliditiyMessage)

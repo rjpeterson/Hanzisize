@@ -41,7 +41,7 @@ exports[`App renders 1`] = `
           <div
             className="language-input__single-value css-1uccc91-singleValue"
           >
-            中文
+            မြန်မာဘာသာ
           </div>
           <div
             className="css-b8ldur-Input"
