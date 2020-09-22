@@ -2,17 +2,22 @@ var test_mode = false;
 let mostRecentSettings;
 
 const hanzisizeUtil = {
+  // combined Chinese/Japanese
   REGEX_CN_JP: /[\u{3000}-\u{303F}]|[\u{3040}-\u{309F}]|[\u{30A0}-\u{30FF}]|[\u{FF00}-\u{FFEF}]|[\u{4E00}-\u{9FAF}]|[\u{2605}-\u{2606}]|[\u{2190}-\u{2195}]|\u{203B}/u,
   REGEX_CHINESE: /[\u{4e00}-\u{9fff}]|[\u{3400}-\u{4dbf}]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\u{f900}-\u{faff}]|[\u{3300}-\u{33ff}]|[\u{fe30}-\u{fe4f}]|[\u{f900}-\u{faff}]|[\u{2f800}-\u{2fa1f}]/u,
   REGEX_JAPANESE: /[\u3041-\u3096]|[\u30A0-\u30FF]/, // katakana and hiragana only
   REGEX_ENGLISH: /[a-zA-Z]+/,
   // REGEX_HANGUL: /[\uac00-\ud7af]|[\u1100-\u11ff]|[\u3130-\u318f]|[\ua960-\ua97f]|[\ud7b0-\ud7ff]/,
-  REGEX_HANGUL: /\p{Script=Hangul}+/u,
-  // REGEX_THAI: /[\u0E00-\u0E7F]/,
-  REGEX_THAI: /\p{Script=Thai}+/u,
-  REGEX_ARABIC: /\p{Script=Arabic}+/u,
-  REGEX_HEBREW: /\p{Script=Hebrew}+/u,
-  REGEX_GEORGIAN: /\p{Script=Georgian}+/u,
+  REGEX_HANGUL: /[\u3131-\uD79D]/,
+  // REGEX_HANGUL: /\p{Script=Hangul}+/u,
+  REGEX_THAI: /[\u0E00-\u0E7F]/,
+  // REGEX_THAI: /\p{Script=Thai}+/u,
+  REGEX_ARABIC: /[\u0600-\u06FF]|[\u0750-\u077F]|[\u08a0-\u08ff]|[\uFB50-\uFDFF]|[\uFE70-\uFEFF]/,
+  // REGEX_ARABIC: /\p{Script=Arabic}+/u,
+  REGEX_HEBREW: /[\u0590-\u05FF]/,
+  // REGEX_HEBREW: /\p{Script=Hebrew}+/u,
+  REGEX_GEORGIAN: /[\u10A0-\u10FF]/,
+  // REGEX_GEORGIAN: /\p{Script=Georgian}+/u,
   REGEX_HINDI: /[\u0900-\u097F]/,
   REGEX_BURMESE: /[\u1000-\u109F]/,
 
