@@ -1,6 +1,6 @@
 {
   "name": "Hanzisize",
-  "version": "0.1.5",
+  "version": "0.1.6",
 
   "description": "A React web extension for changing text font-size based on language",
   "permissions": [
