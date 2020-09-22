@@ -7,8 +7,8 @@ const hanzisizeUtil = {
   REGEX_CHINESE: /[\u{4e00}-\u{9fff}]|[\u{3400}-\u{4dbf}]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\u{f900}-\u{faff}]|[\u{3300}-\u{33ff}]|[\u{fe30}-\u{fe4f}]|[\u{f900}-\u{faff}]|[\u{2f800}-\u{2fa1f}]/u,
   REGEX_JAPANESE: /[\u3041-\u3096]|[\u30A0-\u30FF]/, // katakana and hiragana only
   REGEX_ENGLISH: /[a-zA-Z]+/,
-  // REGEX_HANGUL: /[\uac00-\ud7af]|[\u1100-\u11ff]|[\u3130-\u318f]|[\ua960-\ua97f]|[\ud7b0-\ud7ff]/,
-  REGEX_HANGUL: /[\u3131-\uD79D]/,
+  REGEX_HANGUL: /[\uac00-\ud7af]|[\u1100-\u11ff]|[\u3130-\u318f]|[\ua960-\ua97f]|[\ud7b0-\ud7ff]/,
+  // REGEX_HANGUL: /[\u3131-\uD79D]/,
   // REGEX_HANGUL: /\p{Script=Hangul}+/u,
   REGEX_THAI: /[\u0E00-\u0E7F]/,
   // REGEX_THAI: /\p{Script=Thai}+/u,
