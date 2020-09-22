@@ -1,0 +1,27 @@
+const opera = {// opera specific url checking
+  addonsErrorString: "NOTE: For this addon to work you must leave addons.opera.com and go to another website. Opera blocks addons from functioning on special pages such as this one.",
+
+  // determines if the user is on Opera or not
+  operaInfo: () => {
+    try { // if no regex match = user not on Chrome
+      return (navigator.userAgent.match(/Opera|OPR\//) ? true : false);
+    } catch (error) { // returns false if navigator.userAgent is not found
+      return null;
+    }
+  },
+
+  // addons are not allowed on addons.mozilla.org or settings pages. This function checks for these urls
+  urlChecking: (tab) => {
+    if ('url' in tab) {
+      if (tab.url.match(/\/addons\.opera\.com/i)) {
+        return opera.addonsErrorString;
+      } else {
+        return 'valid URL'
+      }
+    } else {
+      throw new Error('Active tab has no url value')
+    }
+  }
+}
+
+export default opera;
