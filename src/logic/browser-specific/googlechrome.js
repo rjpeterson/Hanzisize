@@ -17,7 +17,7 @@ const googlechrome = {// chrome specific url checking
     if ('url' in tab) {
       if(tab.url.match(/^chrome/i)) {
         return googlechrome.chromeErrorString;
-      } else if (tab.url.match(/\/webstore/i)) {
+      } else if (tab.url.match(/chrome\.google.com\/webstore/i)) {
         return googlechrome.webstoreErrorString;
       } else {
         return 'valid URL'

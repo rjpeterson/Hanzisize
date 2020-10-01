@@ -4,6 +4,7 @@
 import googlechrome from './browser-specific/googlechrome';
 import firefox from './browser-specific/firefox';
 import opera from './browser-specific/opera';
+import edge from './browser-specific/edge';
 
 // update_url is set by chrome webstore on submit. If it doesn't exist, the extension was loaded locally rather than installed from webstore
 function isDevMode() {
@@ -13,10 +14,9 @@ function isDevMode() {
 
 const onAppMount = {
   browserFirefox: firefox,
-
   browserChrome: googlechrome,
-
   browserOpera: opera,
+  browserEdge: edge,
 
   // determine user's browser
   userBrowser:  () => {
@@ -26,10 +26,12 @@ const onAppMount = {
       }
     } else if (onAppMount.browserOpera.operaInfo() === true) { // user is on opera
       return 'opera';
+    } else if (onAppMount.browserEdge.edgeInfo() === true) { // user is on edge
+      return 'edge';
     } else if (onAppMount.browserChrome.chromeInfo() === true) { // user is on chrome
       return 'chrome';
     } else {
-      throw new Error("User's browser cannot be determined.")
+      return 'unknown browser'
     }
   },
 
@@ -43,10 +45,12 @@ const onAppMount = {
       return onAppMount.browserFirefox.urlChecking(tab);
     } else if (userBrowser === 'opera') {
       return onAppMount.browserOpera.urlChecking(tab);
+    } else if (userBrowser === 'edge') {
+      return onAppMount.browserEdge.urlChecking(tab);
     } else if (userBrowser === 'chrome') {
       return onAppMount.browserChrome.urlChecking(tab);
     } else {
-      throw new Error('user browser is not compatible. urlChecking failed')
+      return 'user browser unknown. unable to check for valid urls'
     }
   },
 

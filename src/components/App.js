@@ -68,7 +68,7 @@ class App extends React.Component {
         if (isDevMode()) console.log(`app.componenetDidMount tabId: ${tabId}`)
 
         // if url is invalid, inform the user why
-        if (urlValidityMessage !== 'valid URL') {
+        if (urlValidityMessage !== 'valid URL' && urlValidityMessage !== 'user browser unknown. unable to check for valid urls') {
           if (isDevMode()) console.log(`app.componenetDidMount urlValidityMessage: ${urlValidityMessage}`)
           this.setState({loading: urlValidityMessage})
         } else {
