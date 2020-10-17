@@ -3,6 +3,8 @@ import Tooltip from '@atlaskit/tooltip';
 import Select, { components } from 'react-select';
 // https://react-select.com/home
 import './LanguageInput.css';
+import isDevMode from '../logic/isDevMode';
+
 
 // const options = [
 //   {value: 'arabic', label: 'العربيةArabic'},
@@ -73,8 +75,8 @@ const customStyles = {
 }
 
 class LanguageInput extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -87,11 +89,12 @@ class LanguageInput extends React.Component {
     if (match) {
       return match
     } else {
-      return selectOptions[1]
+      return selectOptions[3]
     }
   }
 
   render() {
+    if (isDevMode()) console.log(`rendering lang-input default = ${JSON.stringify(this.setDefault())}`)
     return (
       <div className={this.props.seeMore ? 'inactive' : 'language-input grid-box'}>
         <label className="input-label" htmlFor="langinput">Select a language to resize</label>
@@ -103,7 +106,8 @@ class LanguageInput extends React.Component {
         styles={customStyles}
         options={selectOptions}
         maxMenuHeight='6.5rem'
-        defaultValue={this.setDefault()}
+        value={this.setDefault()}
+        // defaultValue={this.setDefault()}
         onChange={this.handleChange} 
         />
       </div>

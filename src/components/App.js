@@ -7,10 +7,11 @@ import './App.css';
 import LanguageInput from './LanguageInput';
 import MinFontSize from './MinFontSize';
 import MoreInfo from './MoreInfo';
-import Error from './Error';
+import Notification from './Notification';
 
 import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
+import isDevMode from '../logic/isDevMode';
 
 // npm start runs app in browser tab which doesn't have accesse to required chrome apis, so we provide them here for UI testing purposes
 if(process.env.NODE_ENV === 'development') {
@@ -31,22 +32,19 @@ if(process.env.NODE_ENV === 'development') {
 }
 
 // update_url is set by chrome webstore on submit. If it doesn't exist, the extension was loaded locally rather than installed from webstore
-function isDevMode() {
-  return !('update_url' in chrome.runtime.getManifest());
-}
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-
+  constructor() {
+    super();
     this.state = {
       tabId: null,
       language: null,
       minFontSize: 0,
       seeMore: false,
       ready: false,
-      errorMessage: 'Please input a positive integer',
-      loading: 'Loading...'
+      initialLoad: true,
+      notification: '',
+      errorMessage: ''
     };
     
     // bind event handlers to App
@@ -70,7 +68,7 @@ class App extends React.Component {
         // if url is invalid, inform the user why
         if (urlValidityMessage !== 'valid URL' && urlValidityMessage !== 'user browser unknown. unable to check for valid urls') {
           if (isDevMode()) console.log(`app.componenetDidMount urlValidityMessage: ${urlValidityMessage}`)
-          this.setState({loading: urlValidityMessage})
+          this.setState({ready: false, initialLoad: false, errorMessage: urlValidityMessage})
         } else {
           // if this is the first time loading the extension, fontsize & language wont have stored values
           // so, we submit default values "chinese" and "0" in order for content script to inject properly
@@ -80,23 +78,27 @@ class App extends React.Component {
             'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
             'mode': 'initial'
           };
-          if (isDevMode()) console.log(`app.componenetDidMount contentObj: ${contentObj}`)
+          if (isDevMode()) console.log(`app.componenetDidMount contentObj: ${JSON.stringify(contentObj)}`)
         // inject content script on browser action click or send content object if already injected
           tools.sendToContent(tabId, contentObj, (injectionErr) => {
             if (injectionErr !== null) {
               console.log(`app caught error: ${injectionErr}`)
               this.setState({
-                loading: injectionErr
+                ready: false,
+                initialLoad: false,
+                errorMessage: injectionErr
               })
             } else {
               this.setState({
                 language : contentObj.language,
                 minFontSize: contentObj.newMinFontSize,
                 tabId: tabId,
-                ready: true
+                ready: true,
+                initialLoad: false
               }, () => {
                 if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
               });
+              this.forceUpdate();
             }
           });
         }
@@ -145,13 +147,13 @@ class App extends React.Component {
       // finally update state
       this.setState({
         minFontSize: minFontSize,
-        errorMessage: ''
+        notification: ''
       }, () => {
         console.log('app.handleFSChange current state: ' + JSON.stringify(this.state))
       });
     } else { // if fontsize is invalid
       this.setState({
-        errorMessage: 'Please input a positive integer'
+        notification: 'Please input a positive integer'
     })
     }
   }
@@ -162,42 +164,77 @@ class App extends React.Component {
     this.setState({ seeMore: !currentState });
   }
 
-  // this function is used in snapshot testing only to bypass the loading state
-  readyup() {
-    this.setState({ ready: true })
-  }
-
   render() {
-    // show loading page until response from chrome.tabs.query is receieved
-    if(this.state.ready !== true && process.env.NODE_ENV !== 'development' ) {
-      return (<div className="loading">{this.state.loading}</div>)
+    // display placeholder interface
+    if(!this.state.ready && this.state.initialLoad) {
+      if (isDevMode()) console.log('display placeholder interface')
+      return (
+        <div className='App'>
+          <header className="logo-container grid-box">
+            <div className="logo-background">
+              <img src={logo} alt="logo" />
+            </div>
+          </header>
+          <LanguageInput 
+          language={"chinese"}
+          changeHandler={this.handleLangChange}
+          seeMore={false}
+          />
+          <MinFontSize 
+          minFontSize={0}
+          changeHandler={this.handleFSChange}
+          seeMore={false}
+          />
+          <Notification 
+          notification={""}
+          seeMore={false}
+          />
+          <MoreInfo 
+          clickHandler={this.handleMoreInfoClick}
+          seeMore={false}
+          />      
+        </div>
+      )
     }
-    return (
-      <div className={this.state.seeMore ? 'see-more': 'App'}>
-        <header className="logo-container grid-box">
-          <div className="logo-background">
-            <img src={logo} alt="logo" />
-          </div>
-        </header>
-        <LanguageInput 
-        language={this.state.language}
-        changeHandler={this.handleLangChange}
-        seeMore={this.state.seeMore}
-        />
-        <MinFontSize 
-        minFontSize={this.state.minFontSize}
-        changeHandler={this.handleFSChange}
-        seeMore={this.state.seeMore}
-        />
-        <Error 
-        errorMessage={this.state.errorMessage}
-        seeMore={this.state.seeMore}
-        />
-        <MoreInfo 
-        clickHandler={this.handleMoreInfoClick}
-        seeMore={this.state.seeMore}/>      
-      </div>
-    )
+    // display any error messages recieved
+    else if(!this.state.ready && !this.state.initialLoad) {
+      if (isDevMode()) console.log('display error message')
+      return (<div className="error-message">{this.state.errorMessage}</div>)
+    } 
+    // display active interface
+    else {
+      if (isDevMode()) {
+        console.log('display active interface')
+        console.log('current state: ' + JSON.stringify(this.state))
+      }
+      return (
+        <div className={this.state.seeMore ? 'see-more': 'App'}>
+          <header className="logo-container grid-box">
+            <div className="logo-background">
+              <img src={logo} alt="logo" />
+            </div>
+          </header>
+          <LanguageInput 
+          language={this.state.language}
+          changeHandler={this.handleLangChange}
+          seeMore={this.state.seeMore}
+          />
+          <MinFontSize 
+          minFontSize={this.state.minFontSize}
+          changeHandler={this.handleFSChange}
+          seeMore={this.state.seeMore}
+          />
+          <Notification 
+          notification={this.state.notification}
+          seeMore={this.state.seeMore}
+          />
+          <MoreInfo 
+          clickHandler={this.handleMoreInfoClick}
+          seeMore={this.state.seeMore}
+          />      
+        </div>
+      )
+    }
   };
 }
 

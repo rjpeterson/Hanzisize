@@ -1,6 +1,6 @@
 {
   "name": "hanzisize-reboot-react",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "description": "A React web extension for changing text font-size based on language",
   "main": "index.js",
@@ -17,7 +17,7 @@
     "react-scripts": "3.4.1",
     "react-select": "^3.1.0",
     "styled-components": "^5.2.0",
-    "web-ext": "^5.1.0"
+    "web-ext": "^5.2.0"
   },
   "scripts": {
     "start": "set PORT=3000 && react-scripts start",

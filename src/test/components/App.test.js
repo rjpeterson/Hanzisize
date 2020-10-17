@@ -23,7 +23,6 @@ global.chrome = {
 describe('App', () => {
   it('renders', () => {
     const component = renderer.create(<App />);
-    component.getInstance().readyup();
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
