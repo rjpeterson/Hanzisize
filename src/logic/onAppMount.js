@@ -6,11 +6,7 @@ import firefox from './browser-specific/firefox';
 import opera from './browser-specific/opera';
 import edge from './browser-specific/edge';
 
-// update_url is set by chrome webstore on submit. If it doesn't exist, the extension was loaded locally rather than installed from webstore
-function isDevMode() {
-  if(process.env.NODE_ENV === "test") {return true}
-  else {return !('update_url' in chrome.runtime.getManifest());}  
-}
+import isDevMode from './isDevMode';
 
 const onAppMount = {
   browserFirefox: firefox,
