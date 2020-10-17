@@ -2,6 +2,8 @@ import React from 'react';
 import NumericInput from 'react-numeric-input';
 // https://www.npmjs.com/package/react-numeric-input
 import './MinFontSize.css'
+import isDevMode from '../logic/isDevMode';
+
 
 const customStyles = {
   wrap: {
@@ -44,6 +46,7 @@ class MinFontSize extends React.Component {
   }
 
   render() {
+    if (isDevMode()) console.log(`rendering minfontsize with val = ${this.props.minFontSize}`)
     return (
       <div className={this.props.seeMore ? 'inactive' : 'mfs-input grid-box'}>
         <label className="input-label" htmlFor="mfsinput">Min Font-Size</label>
@@ -53,7 +56,8 @@ class MinFontSize extends React.Component {
         mobile={true}
         size={3}
         min={1}
-        defaultValue={this.props.minFontSize}
+        // defaultValue={this.props.minFontSize}
+        value={this.props.minFontSize}
         style={customStyles}
         onChange={valueAsNumber => {this.handleChange(valueAsNumber)}}
         />

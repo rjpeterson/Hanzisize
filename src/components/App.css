@@ -4,7 +4,7 @@ body {
   padding-bottom: 1rem;
 }
 
-.loading {
+.error-message {
   width: 10rem;
   font-size: .9rem;
 }
@@ -16,7 +16,7 @@ body {
     'logo'
     'langinput'
     'mfsinput'
-    'error'
+    'notification'
     'more-info';
   align-items: center;
 }

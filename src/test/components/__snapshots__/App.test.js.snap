@@ -41,7 +41,7 @@ exports[`App renders 1`] = `
           <div
             className="language-input__single-value css-1uccc91-singleValue"
           >
-            မြန်မာဘာသာ
+            中文
           </div>
           <div
             className="css-b8ldur-Input"
@@ -286,12 +286,12 @@ exports[`App renders 1`] = `
     </span>
   </div>
   <div
-    className="error grid-box"
+    className="notification grid-box"
   >
     <div
-      className="error-content"
+      className="notification-content"
     >
-      Please input a positive integer
+      
     </div>
   </div>
   <div

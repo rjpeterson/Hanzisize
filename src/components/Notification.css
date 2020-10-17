@@ -1,5 +1,5 @@
-.error {
-  grid-area: error;
+.notification {
+  grid-area: notification;
   font-size: .8rem;
   height: auto;
   width: 70%;
@@ -7,6 +7,6 @@
   margin-right: auto;
 }
 
-.error-content {
+.notification-content {
   text-align: center;
 }
