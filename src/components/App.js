@@ -73,6 +73,7 @@ class App extends React.Component {
           // if this is the first time loading the extension, fontsize & language wont have stored values
           // so, we submit default values "chinese" and "0" in order for content script to inject properly
           // otherwise, submit values retrieved from storage
+
           const contentObj = {
             'language' : ('language' in storedObject) ? storedObject.language : 'chinese',
             'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
@@ -80,13 +81,24 @@ class App extends React.Component {
           };
           if (isDevMode()) console.log(`app.componenetDidMount contentObj: ${JSON.stringify(contentObj)}`)
         // inject content script on browser action click or send content object if already injected
-          tools.sendToContent(tabId, contentObj, (injectionErr) => {
+          tools.sendToContent(tabId, contentObj, (injectionErr, response) => {
             if (injectionErr !== null) {
               console.log(`app caught error: ${injectionErr}`)
               this.setState({
                 ready: false,
                 initialLoad: false,
-                errorMessage: injectionErr
+                errorMessage: injectionErr,
+                notification: ''
+              })
+            } else if (response.multipleFrames) {
+              this.setState({
+                language : contentObj.language,
+                minFontSize: contentObj.newMinFontSize,
+                tabId: tabId,
+                ready: true,
+                initialLoad: false,
+                notification: "Warning: This page contains iframes. Hanzisize may not work properly.",
+                errorMessage: ''
               })
             } else {
               this.setState({
@@ -94,7 +106,9 @@ class App extends React.Component {
                 minFontSize: contentObj.newMinFontSize,
                 tabId: tabId,
                 ready: true,
-                initialLoad: false
+                initialLoad: false,
+                notification: '',
+                errorMessage: ''
               }, () => {
                 if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
               });
@@ -129,6 +143,7 @@ class App extends React.Component {
 
   // fire resizing when user inputs a new minimum font size
   handleFSChange(valid, minFontSize) {
+    
     // validity is determined by MinFontSize component
     if (valid) {
       // first store new minfontsize
@@ -141,16 +156,19 @@ class App extends React.Component {
         'mode': 'fontsize-change'
       };
       // then send to content script
-      try{tools.sendToContent(this.state.tabId, contentObj)}
+      try{tools.sendToContent(this.state.tabId, contentObj, (injectionErr, response) => {
+        let newNotification = '';
+        if (response.multipleFrames) {newNotification = "Warning: This page contains iframes. Hanzisize may not work properly."}
+        this.setState({
+          minFontSize: minFontSize,
+          notification: newNotification
+        }, () => {
+          console.log('app.handleFSChange current state: ' + JSON.stringify(this.state))
+        });
+      })}
       catch(err) {console.log(`app.handleFSChange Could not send to content script: ${err}`)}
 
-      // finally update state
-      this.setState({
-        minFontSize: minFontSize,
-        notification: ''
-      }, () => {
-        console.log('app.handleFSChange current state: ' + JSON.stringify(this.state))
-      });
+      
     } else { // if fontsize is invalid
       this.setState({
         notification: 'Please input a positive integer'
