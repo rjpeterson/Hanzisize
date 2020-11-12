@@ -2,6 +2,8 @@ var test_mode = false;
 let mostRecentSettings;
 
 const hanzisizeUtil = {
+  multipleFrames: false,
+
   // combined Chinese/Japanese
   REGEX_CN_JP: /[\u{3000}-\u{303F}]|[\u{3040}-\u{309F}]|[\u{30A0}-\u{30FF}]|[\u{FF00}-\u{FFEF}]|[\u{4E00}-\u{9FAF}]|[\u{2605}-\u{2606}]|[\u{2190}-\u{2195}]|\u{203B}/u,
   REGEX_CHINESE: /[\u{4e00}-\u{9fff}]|[\u{3400}-\u{4dbf}]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\u{f900}-\u{faff}]|[\u{3300}-\u{33ff}]|[\u{fe30}-\u{fe4f}]|[\u{f900}-\u{faff}]|[\u{2f800}-\u{2fa1f}]/u,
@@ -20,6 +22,16 @@ const hanzisizeUtil = {
   // REGEX_GEORGIAN: /\p{Script=Georgian}+/u,
   REGEX_HINDI: /[\u0900-\u097F]/,
   REGEX_BURMESE: /[\u1000-\u109F]/,
+
+  // activeTab api doesn't allow injection into iframes. This function checks for existence of iframes
+  frameCheck() {
+    const frames = document.getElementsByTagName("iframe");
+    if(frames.length >= 1) {
+      return true
+    } else {
+      return false
+    }
+  },
 
   // apply new class to elements that contain a text_node 
   tagTextElems(nodeSelector) {
@@ -189,11 +201,13 @@ const hanzisizeUtil = {
     if(test_mode) console.log(`initiating main function...`);
 
     if(mode === 'initial') { // initial resize call
+      hanzisizeUtil.multipleFrames = hanzisizeUtil.frameCheck();
       hanzisizeUtil.tagTextElems('body *');
       hanzisizeUtil.tagLangElems('body *', language);
     } else if(mode === 'lang-change') { // resize call after language change doesn't require retagging text-elems
       hanzisizeUtil.tagLangElems('body *', language);
     } else if(mode === 'mutation') { // resize call after dynamic content is loaded
+      hanzisizeUtil.multipleFrames = hanzisizeUtil.frameCheck();
       hanzisizeUtil.tagTextElems(nodeSelector);
       hanzisizeUtil.tagLangElems(nodeSelector, language);
     }
@@ -218,13 +232,14 @@ const hanzisizeUtil = {
 try {
   chrome.runtime.onMessage.addListener(
     function(obj, sender, sendResponse) {
-      // save object send from popup
+      // save object sent from popup
       mostRecentSettings = obj;
-      sendResponse({received: "yes"});
       if (test_mode) {console.log('object received by contentScript:' + JSON.stringify(obj) + 'Resizing now...')}
 
       // call resizing function with object properties received from popup
-      hanzisizeUtil.main(obj.language, obj.newMinFontSize, obj.mode)
+      hanzisizeUtil.main(obj.language, obj.newMinFontSize, obj.mode);
+      // tell popup if multiple frames are present
+      sendResponse({received: "yes", multipleFrames: hanzisizeUtil.multipleFrames})
   });
 
   // add mutation observer to fire new DOM scan if new element nodes have been added. This fixes the problem of the user having to manually resize everytime new content is dynamically loaded.
