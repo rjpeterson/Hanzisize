@@ -110,7 +110,6 @@ describe('chromeTools', () => {
       tools.handleJqueryInjection(chrome.runtime.lastError, tabId, obj);
 
       expect(spy).toHaveBeenCalledWith(tabId, obj);
-      expect(tools.contentResponse).toBeTruthy();
     })
   })
 

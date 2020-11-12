@@ -57,7 +57,7 @@ const tools = {
   },
 
   // Handle response from jquery injection
-  handleJqueryInjection: async (lastError, tabId, obj) => {
+  handleJqueryInjection: (lastError, tabId, obj) => {
     // if an error is returned, the user is probably trying to use the extension on a page that the browser doesn't allow (e.g. chrome webstore, addons.mozilla.org, etc.) or is using Opera on search results without the proper settings
     if(lastError) {
       tools.injectionError = tools.handleJqueryInjectErr(chrome.runtime.lastError);
