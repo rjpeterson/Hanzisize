@@ -35,8 +35,13 @@ Go to https://chrome.google.com/webstore/detail/hanzisize/jcljolcajgicemckjlgndb
 7. Click 'This Firefox', then click 'Load Temporary Add-on...'
 8. Navigate to 'Hanzisize/build/web-ext-artifacts', select the zip file and click 'Open'
 
+
+## Privacy
+Hanzisize does not collect or transmit any user data. The only information that is stored are the most recent language and font size settings for user convenience. This data is stored in the user's browser and is not used for any other purpose.
+
 ## Donate
+Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hours working on Hanzisize while making it available for anyone to use for free. If you are able, please consider donating so I can continue to improve this tool for all of us. If you're not able to donate, please leave a review of this extension on the extension webstore of your choice so more people can find it. Thanks for your support!
 Enjoy using this extension? You can show your appreciation by donating in the following ways:
-* buymeacoffee.com/djmouthguard
-* Bitcoin: bc1q4524l0qtj5ucjw8qvxdpd7vta7x9peyazd8ykc
+* buymeacoffee.com/djmouthguard ![buy me a coffee button](src/images/bmc-new-btn-logo)
+* Bitcoin: ![bitcoin qr code](src/images/btcdonation.jpg)
 * Or check out my Redbubble store: [www.redbubble.com/people/djmouthguard/shop]

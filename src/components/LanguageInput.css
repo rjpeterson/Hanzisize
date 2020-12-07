@@ -2,6 +2,7 @@
   grid-area: langinput;
 }
 
-.language-input label {
-  font-size: .75rem;
+.language-input img {
+  height: 2rem;
+  width: 2rem;
 }

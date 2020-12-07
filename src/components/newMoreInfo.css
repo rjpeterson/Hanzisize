@@ -1,0 +1,5 @@
+.more-info-container {
+  grid-area: more-info;
+  height: auto;
+  width: 1.5rem;
+}

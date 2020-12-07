@@ -1,7 +1,6 @@
 import React from 'react';
 import Tooltip from '@atlaskit/tooltip';
 import Select, { components } from 'react-select';
-// https://react-select.com/home
 import './LanguageInput.css';
 import isDevMode from '../logic/isDevMode';
 
@@ -81,7 +80,7 @@ class LanguageInput extends React.Component {
   }
 
   handleChange = e => {
-      this.props.changeHandler(e.value);
+    this.props.changeHandler(e.value);
   }
 
   setDefault = () => {

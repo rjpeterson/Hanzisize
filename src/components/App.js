@@ -1,12 +1,13 @@
 /*global chrome*/
 
 import React from 'react';
-import logo from '../logo.png';
+import logo from '../images/logo.png';
+import spinner from '../images/91.gif';
 import './App.css';
 
-import LanguageInput from './LanguageInput';
-import MinFontSize from './MinFontSize';
-import MoreInfo from './MoreInfo';
+import LanguageInput from './newLangInput';
+import MinFontSize from './newMinFontSize';
+import MoreInfo from './newMoreInfo';
 import Notification from './Notification';
 
 import tools from '../logic/chromeTools';
@@ -40,7 +41,6 @@ class App extends React.Component {
       tabId: null,
       language: null,
       minFontSize: 0,
-      seeMore: false,
       ready: false,
       initialLoad: true,
       notification: '',
@@ -50,7 +50,6 @@ class App extends React.Component {
     // bind event handlers to App
     this.handleFSChange = this.handleFSChange.bind(this);
     this.handleLangChange = this.handleLangChange.bind(this);
-    this.handleMoreInfoClick = this.handleMoreInfoClick.bind(this);
   }
 
   componentDidMount() {
@@ -112,7 +111,7 @@ class App extends React.Component {
               }, () => {
                 if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
               });
-              this.forceUpdate();
+              // this.forceUpdate();
             }
           });
         }
@@ -133,7 +132,7 @@ class App extends React.Component {
     };
     // then send to content script
     try{tools.sendToContent(this.state.tabId, contentObj)}
-    catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err}`)}
+    catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${this.state.tabId} contentObj: ${JSON.stringify(contentObj)}`)}
 
     // finally update state
     this.setState({language: language}, () => {
@@ -176,42 +175,12 @@ class App extends React.Component {
     }
   }
 
-  // toggle more-info section display when use clicks "more info" button
-  handleMoreInfoClick() {
-    const currentState = this.state.seeMore;
-    this.setState({ seeMore: !currentState });
-  }
-
   render() {
     // display placeholder interface
     if(!this.state.ready && this.state.initialLoad) {
       if (isDevMode()) console.log('display placeholder interface')
       return (
-        <div className='App'>
-          <header className="logo-container grid-box">
-            <div className="logo-background">
-              <img src={logo} alt="logo" />
-            </div>
-          </header>
-          <LanguageInput 
-          language={"chinese"}
-          changeHandler={this.handleLangChange}
-          seeMore={false}
-          />
-          <MinFontSize 
-          minFontSize={0}
-          changeHandler={this.handleFSChange}
-          seeMore={false}
-          />
-          <Notification 
-          notification={""}
-          seeMore={false}
-          />
-          <MoreInfo 
-          clickHandler={this.handleMoreInfoClick}
-          seeMore={false}
-          />      
-        </div>
+        <div class="loading-screen"><img src={spinner} alt="loading..."></img></div>
       )
     }
     // display any error messages recieved
@@ -226,30 +195,27 @@ class App extends React.Component {
         console.log('current state: ' + JSON.stringify(this.state))
       }
       return (
-        <div className={this.state.seeMore ? 'see-more': 'App'}>
-          <header className="logo-container grid-box">
-            <div className="logo-background">
-              <img src={logo} alt="logo" />
-            </div>
-          </header>
-          <LanguageInput 
-          language={this.state.language}
-          changeHandler={this.handleLangChange}
-          seeMore={this.state.seeMore}
-          />
-          <MinFontSize 
-          minFontSize={this.state.minFontSize}
-          changeHandler={this.handleFSChange}
-          seeMore={this.state.seeMore}
-          />
-          <Notification 
-          notification={this.state.notification}
-          seeMore={this.state.seeMore}
-          />
-          <MoreInfo 
-          clickHandler={this.handleMoreInfoClick}
-          seeMore={this.state.seeMore}
-          />      
+        <div className='App'>
+          <div className="top">
+            <img className="logo" src={logo} alt="logo" />
+            <LanguageInput 
+              language={this.state.language}
+              changeHandler={this.handleLangChange}
+            />
+          </div>
+          <div className="divider"></div>
+          <div className="bottom">
+            <MinFontSize 
+            minFontSize={this.state.minFontSize}
+            changeHandler={this.handleFSChange}
+            />
+            <Notification 
+            notification={this.state.notification}
+            />
+            <MoreInfo 
+            clickHandler={this.handleMoreInfoClick}
+            />  
+          </div>    
         </div>
       )
     }

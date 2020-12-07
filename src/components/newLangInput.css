@@ -1,0 +1,17 @@
+.language-input {
+  grid-area: langinput;
+  display: grid;
+  grid-template-columns: 1fr 4.5fr 1fr;
+  font-size: .9rem;
+  width: 95%;
+}
+
+.arrow-button {
+  cursor: pointer;
+}
+
+#language {
+  text-align: center;
+  position: relative;
+  top: .2rem;
+}

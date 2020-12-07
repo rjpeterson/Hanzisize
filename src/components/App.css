@@ -1,9 +1,3 @@
-body {
-  margin: .4rem;
-  background-color: sandybrown;
-  padding-bottom: 1rem;
-}
-
 .error-message {
   width: 10rem;
   font-size: .9rem;
@@ -11,57 +5,49 @@ body {
 
 .App {
   display: grid;
-  width: 10rem;
+  width: 16rem;
   grid-template-areas: 
-    'logo'
-    'langinput'
-    'mfsinput'
-    'notification'
-    'more-info';
+    'top'
+    'divider'
+    'bottom';
+  align-items: center;
+  border-style: solid;
+  border-radius: .1rem;
+  border-width: .1rem;
+  border-color: #5658576e;
+}
+
+.top {
+  display: grid;
+  grid-area: top;
+  grid-template-areas: 'logo langinput';
+  background-color: #A6C9D3;  
   align-items: center;
 }
 
-.see-more {
+.divider {
+  height: .12rem;
+  background-color: #565857;
+}
+
+.bottom {
   display: grid;
-  width: 10rem;
+  grid-area: bottom;
   grid-template-areas: 
-    'logo'
-    'more-info';
-  align-items: center;
+  'mfsinput mfsinput mfsinput'
+  'notification notification more-info';
+  background-color: #E4E4E4;
 }
 
 .grid-box {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: .2rem;
-  flex-direction: column;
-  align-items: center;
+  margin-top: .1rem;
 }
 
-.logo-container {
+.logo {
   grid-area: logo;
-}
-
-.logo-background {
-  display: flex;
-  justify-content: center;
-  width: 8.5rem;
-  padding: 0.3rem;
-  background-color: whitesmoke;
-  border-radius: .3rem;
-}
-
-.logo-container img {
-  height: 1.5rem;
-}
-
-.input-label {
-  display: block;
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-}
-
-.inactive {
-  display: none;
+  height: 2rem;
+  padding: .2rem;
 }
