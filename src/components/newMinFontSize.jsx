@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
@@ -6,7 +6,8 @@ import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Typography from '@material-ui/core/Typography';
 import './newMinFontSize.css'
-import isDevMode from '../logic/isDevMode';
+import isDevMode from '../utils/isDevMode';
+import Context from '../utils/context';
 
 const MySlider = withStyles({
   root: {
@@ -21,24 +22,21 @@ const MyInput = withStyles({
   },
 })(Input)
 
-export default function InputSlider(minFontSizeProp, changeHandlerProp) {
-  const [minFontSize, setMinFontSize] = React.useState(minFontSizeProp);
+export default function InputSlider({minFontSize, changeHandler}) {
 
   const handleSliderChange = (event, newValue) => {
-    setMinFontSize(newValue);
-    changeHandlerProp(minFontSize)
+    changeHandler(newValue)
   };
 
   const handleInputChange = (event) => {
-    setMinFontSize(event.target.value === '' ? '' : Number(event.target.value));
-    changeHandlerProp(minFontSize);
+    changeHandler(event.target.value === '' ? '' : Number(event.target.value));
   };
 
   const handleBlur = () => {
     if (minFontSize < 0) {
-      setMinFontSize(0);
+      changeHandler(0);
     } else if (minFontSize > 50) {
-      setMinFontSize(50);
+      changeHandler(50);
     }
   };
 

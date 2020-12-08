@@ -6,13 +6,14 @@ import spinner from '../images/91.gif';
 import './App.css';
 
 import LanguageInput from './newLangInput';
-import MinFontSize from './newMinFontSize';
+import InputSlider from './newMinFontSize';
 import MoreInfo from './newMoreInfo';
 import Notification from './Notification';
 
 import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
-import isDevMode from '../logic/isDevMode';
+import isDevMode from '../utils/isDevMode';
+import Context from '../utils/context';
 
 // npm start runs app in browser tab which doesn't have accesse to required chrome apis, so we provide them here for UI testing purposes
 if(process.env.NODE_ENV === 'development') {
@@ -141,38 +142,28 @@ class App extends React.Component {
   }
 
   // fire resizing when user inputs a new minimum font size
-  handleFSChange(valid, minFontSize) {
-    
-    // validity is determined by MinFontSize component
-    if (valid) {
-      // first store new minfontsize
-      try{tools.pushFSToStorage(minFontSize)}
-      catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}
+  handleFSChange(minFontSize) {
+    // first store new minfontsize
+    try{tools.pushFSToStorage(minFontSize)}
+    catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}
 
-      const contentObj = {
-        'language' : this.state.language,
-        'newMinFontSize': minFontSize,
-        'mode': 'fontsize-change'
-      };
-      // then send to content script
-      try{tools.sendToContent(this.state.tabId, contentObj, (injectionErr, response) => {
-        let newNotification = '';
-        if (response.multipleFrames) {newNotification = "Warning: This page contains iframes. Hanzisize may not work properly."}
-        this.setState({
-          minFontSize: minFontSize,
-          notification: newNotification
-        }, () => {
-          console.log('app.handleFSChange current state: ' + JSON.stringify(this.state))
-        });
-      })}
-      catch(err) {console.log(`app.handleFSChange Could not send to content script: ${err}`)}
-
-      
-    } else { // if fontsize is invalid
+    const contentObj = {
+      'language' : this.state.language,
+      'newMinFontSize': minFontSize,
+      'mode': 'fontsize-change'
+    };
+    // then send to content script
+    try{tools.sendToContent(this.state.tabId, contentObj, (injectionErr, response) => {
+      let newNotification = '';
+      if (response.multipleFrames) {newNotification = "Warning: This page contains iframes. Hanzisize may not work properly."}
       this.setState({
-        notification: 'Please input a positive integer'
-    })
-    }
+        minFontSize: minFontSize,
+        notification: newNotification
+      }, () => {
+        console.log('app.handleFSChange current state: ' + JSON.stringify(this.state))
+      });
+    })}
+    catch(err) {console.log(`app.handleFSChange Could not send to content script: ${err}`)}
   }
 
   render() {
@@ -203,17 +194,16 @@ class App extends React.Component {
               changeHandler={this.handleLangChange}
             />
           </div>
-          <div className="divider"></div>
-          <div className="bottom">
-            <MinFontSize 
-            minFontSize={this.state.minFontSize}
-            changeHandler={this.handleFSChange}
+          <div className="bottom">      
+            <InputSlider 
+              minFontSize={this.state.minFontSize}
+              changeHandler={this.handleFSChange}
             />
             <Notification 
-            notification={this.state.notification}
+              notification={this.state.notification}
             />
             <MoreInfo 
-            clickHandler={this.handleMoreInfoClick}
+              clickHandler={this.handleMoreInfoClick}
             />  
           </div>    
         </div>

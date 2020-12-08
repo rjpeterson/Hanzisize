@@ -1,5 +1,5 @@
 /*global chrome*/
-import isDevMode from './isDevMode';
+import isDevMode from '../utils/isDevMode';
 
 const tools = {
   injectionError: null,

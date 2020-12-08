@@ -1,7 +1,7 @@
 import React from 'react';
 import arrow from '../images/arrow.png';
 import './newLangInput.css';
-import isDevMode from '../logic/isDevMode';
+import isDevMode from '../utils/isDevMode';
 
 const selectOptions = [
   {value: 'arabic', label: 'العربية Arabic'},
@@ -27,12 +27,7 @@ class LanguageInput extends React.Component {
     const currentLang = selectOptions.find(element => element.value === this.props.language);
     const index = selectOptions.indexOf(currentLang);
     console.log(`current index: ${index}`);
-    let newIndex = index + direction;
-    if(newIndex > selectOptions.length - 1) {
-      newIndex = newIndex - selectOptions.length
-    } else if (newIndex < 0) {
-      newIndex = newIndex + selectOptions.length
-    }
+    let newIndex = (index + direction + selectOptions.length) % selectOptions.length;
     console.log(`new index: ${newIndex}`);
     if (isDevMode()) console.log(`old lang: ${selectOptions[index].value} index: ${index}, new lang: ${selectOptions[newIndex].value} index: ${newIndex}`)
     const updatedLang = selectOptions[newIndex];

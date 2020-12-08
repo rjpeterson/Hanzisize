@@ -6,7 +6,7 @@ import firefox from './browser-specific/firefox';
 import opera from './browser-specific/opera';
 import edge from './browser-specific/edge';
 
-import isDevMode from './isDevMode';
+import isDevMode from '../utils/isDevMode';
 
 const onAppMount = {
   browserFirefox: firefox,

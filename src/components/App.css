@@ -21,13 +21,8 @@
   display: grid;
   grid-area: top;
   grid-template-areas: 'logo langinput';
-  background-color: #A6C9D3;  
+  background-color:#5eb2ca;  
   align-items: center;
-}
-
-.divider {
-  height: .12rem;
-  background-color: #565857;
 }
 
 .bottom {

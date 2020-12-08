@@ -1,9 +1,8 @@
 .language-input {
   grid-area: langinput;
   display: grid;
-  grid-template-columns: 1fr 4.5fr 1fr;
-  font-size: .9rem;
   width: 95%;
+  grid-template-columns: 1fr 4.5fr 1fr;
 }
 
 .arrow-button {
@@ -13,5 +12,8 @@
 #language {
   text-align: center;
   position: relative;
-  top: .2rem;
+  top: .35rem;
+  font-size: .8rem;
+  color: beige;
+  font-weight: bold;
 }
