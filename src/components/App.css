@@ -8,7 +8,6 @@
   width: 16rem;
   grid-template-areas: 
     'top'
-    'divider'
     'bottom';
   align-items: center;
   border-style: solid;

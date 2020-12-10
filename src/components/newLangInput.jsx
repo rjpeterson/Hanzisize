@@ -16,26 +16,21 @@ const selectOptions = [
   {value: 'thai', label: 'ไทย Thai'}
 ]
 
-class LanguageInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.cycleLang = this.cycleLang.bind(this);
-    this.setDisplayLang = this.setDisplayLang.bind(this);
-  }
+export default function LanguageInput ({language, changeHandler}) {
 
-  cycleLang = direction => {
-    const currentLang = selectOptions.find(element => element.value === this.props.language);
+  const cycleLang = (direction) => {
+    const currentLang = selectOptions.find(element => element.value === language);
     const index = selectOptions.indexOf(currentLang);
     console.log(`current index: ${index}`);
     let newIndex = (index + direction + selectOptions.length) % selectOptions.length;
     console.log(`new index: ${newIndex}`);
     if (isDevMode()) console.log(`old lang: ${selectOptions[index].value} index: ${index}, new lang: ${selectOptions[newIndex].value} index: ${newIndex}`)
     const updatedLang = selectOptions[newIndex];
-    this.props.changeHandler(updatedLang.value)
+    changeHandler(updatedLang.value)
   }
 
-  setDisplayLang = () =>{
-    const match = selectOptions.find(element => element.value === this.props.language);
+  const setDisplayLang = () =>{
+    const match = selectOptions.find(element => element.value === language);
     if (match) {
       if (isDevMode()) console.log(`setting display lang to match: ${match.value}`)
       return match.label
@@ -44,8 +39,8 @@ class LanguageInput extends React.Component {
     }
   }
 
-  render() {
-    if (isDevMode()) console.log(`rendering lang-input default = ${JSON.stringify(this.setDisplayLang())}`)
+    if (isDevMode()) console.log(`rendering lang-input default = ${JSON.stringify(setDisplayLang())}`)
+
     return (
       <div className='language-input grid-box'>
         <img 
@@ -53,18 +48,15 @@ class LanguageInput extends React.Component {
           class="arrow-button" 
           src={arrow} 
           alt="left arrow"
-          onClick={()=> this.cycleLang(-1)}></img>
-        <div id="language">{this.setDisplayLang()}</div>
+          onClick={()=> cycleLang(-1)}></img>
+        <div id="language">{setDisplayLang()}</div>
         <img 
           id="right-arrow" 
           class="arrow-button" 
           src={arrow} 
           style={{transform: "scaleX(-1)"}} 
           alt="right arrow"
-          onClick={() => this.cycleLang(1)}></img>
+          onClick={() => cycleLang(1)}></img>
       </div>
     )
-  }
 }
-
-export default LanguageInput;
