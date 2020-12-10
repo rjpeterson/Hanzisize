@@ -42,6 +42,6 @@ Hanzisize does not collect or transmit any user data. The only information that 
 ## Donate
 Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hours working on Hanzisize while making it available for anyone to use for free. If you are able, please consider donating so I can continue to improve this tool for all of us. If you're not able to donate, please leave a review of this extension on the extension webstore of your choice so more people can find it. Thanks for your support!
 Enjoy using this extension? You can show your appreciation by donating in the following ways:
-* buymeacoffee.com/djmouthguard ![buy me a coffee button](src/images/bmc-new-btn-logo.svg)
-* Bitcoin: ![bitcoin qr code](src/images/btcdonation.jpeg)
-* Or check out my Redbubble store: [www.redbubble.com/people/djmouthguard/shop]
+* buymeacoffee.com/djmouthguard [![buy me a coffee button](src/images/BMC.png)](https://www.buymeacoffee.com/djmouthguard)
+* Bitcoin: ![bitcoin qr code](src/images/btcdonation.jpeg){:height="200px" width="200px"}
+* Or check out my ![Redbubble store](www.redbubble.com/people/djmouthguard/shop)
