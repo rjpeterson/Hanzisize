@@ -1,3 +1,7 @@
+body {
+  overflow: hidden;
+}
+
 .error-message {
   width: 10rem;
   font-size: .9rem;
@@ -22,26 +26,19 @@
   grid-template-areas: 'logo langinput';
   background-color:#5eb2ca;  
   align-items: center;
+  height: 2.5rem;
 }
 
 .bottom {
   display: grid;
   grid-area: bottom;
-  grid-template-areas: 
-  'mfsinput mfsinput mfsinput'
-  'iframe-warning iframe-warning more-info';
+  grid-template-rows: 1fr .5fr;
+  grid-template-columns: 80% 20%;
   background-color: #E4E4E4;
-}
-
-.grid-box {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: .1rem;
 }
 
 .logo {
   grid-area: logo;
-  height: 2rem;
-  padding: .2rem;
+  height: 1.8rem;
+  padding-left: .5rem;
 }

@@ -1,8 +1,10 @@
-.notification {
-  grid-area: notification;
-  font-size: .8rem;
+.iframe-warning {
+  grid-row: 2;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  font-size: .7rem;
   height: auto;
-  width: 70%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   text-align: center;

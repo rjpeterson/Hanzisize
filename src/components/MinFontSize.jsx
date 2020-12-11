@@ -7,18 +7,41 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Typography from '@material-ui/core/Typography';
 import './minFontSize.css'
 import devLog from '../utils/devLog'
-import Context from '../utils/context';
 
 const MySlider = withStyles({
   root: {
     color: "#565857",
-  }
+    paddingTop: "1.1rem",
+    height: ".4rem",
+  },
+  thumb: {
+    height: "1rem",
+    width: "1rem",
+    backgroundColor: '#fff',
+    border: '2px solid currentColor',
+    marginTop: "-.35rem",
+    marginLeft: "-.45rem",
+    '&:focus, &:hover, &$active': {
+      boxShadow: 'inherit',
+    },
+  },
+  active: {},
+  track: {
+    height: ".3rem",
+    borderRadius: ".2rem",
+  },
+  rail: {
+    height: ".3rem",
+    borderRadius: ".2rem",
+    opacity: 1,
+  },
 })(Slider);
 
 const MyInput = withStyles({
   input: {
-    width: 42,
+    width: "2.5rem",
     textAlign: "right",
+    fontSize: "1.3rem",
   },
 })(Input)
 
@@ -49,7 +72,7 @@ export default function InputSlider({minFontSize, changeHandler}) {
             fullWidth="true"
             endAdornment={
               <InputAdornment position="end">
-                <Typography variant="body1">pt</Typography>
+                <Typography variant="h6">pt</Typography>
               </InputAdornment>
             }
             value={minFontSize}

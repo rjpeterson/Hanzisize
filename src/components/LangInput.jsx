@@ -40,7 +40,7 @@ export default function LanguageInput ({language, changeHandler}) {
   }
 
     return (
-      <div className='language-input grid-box'>
+      <div className='language-input'>
         <img 
           id="left-arrow" 
           class="arrow-button" 
