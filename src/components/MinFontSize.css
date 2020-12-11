@@ -1,7 +1,18 @@
 .mfs-input {
   grid-area: mfsinput;
+  width: 90%;
+  margin-top: .4rem;
+  margin-left: .4rem;
+  margin-right: .4rem;
 }
 
-.mfs-input label {
-  font-size: .75rem;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
 }

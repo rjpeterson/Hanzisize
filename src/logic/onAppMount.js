@@ -1,12 +1,11 @@
 /*global chrome*/
-/*global browser*/
-// above are needed for testing
+// above needed for testing
 import googlechrome from './browser-specific/googlechrome';
 import firefox from './browser-specific/firefox';
 import opera from './browser-specific/opera';
 import edge from './browser-specific/edge';
 
-import isDevMode from '../utils/isDevMode';
+import devLog from '../utils/devLog';
 
 const onAppMount = {
   browserFirefox: firefox,
@@ -16,58 +15,64 @@ const onAppMount = {
 
   // determine user's browser
   userBrowser:  () => {
-    if (typeof browser !== 'undefined') {
-      if(typeof browser.runtime.getBrowserInfo === 'function') { // user is on firefox
+    if (onAppMount.browserFirefox.isFirefox() === true) {// user is on firefox
       return 'firefox';
-      }
-    } else if (onAppMount.browserOpera.operaInfo() === true) { // user is on opera
+    } else if (onAppMount.browserOpera.isOpera() === true) { // user is on opera
       return 'opera';
-    } else if (onAppMount.browserEdge.edgeInfo() === true) { // user is on edge
+    } else if (onAppMount.browserEdge.isEdge() === true) { // user is on edge
       return 'edge';
-    } else if (onAppMount.browserChrome.chromeInfo() === true) { // user is on chrome
+    } else if (onAppMount.browserChrome.isChrome() === true) { // user is on chrome
       return 'chrome';
     } else {
-      return 'unknown browser'
+      return false;
     }
   },
 
   // check for disallowed urls by browser
-  urlChecking: (tab) => {
+  urlInvalid: (tab) => {
     const userBrowser = onAppMount.userBrowser();
-    if (isDevMode()) {
-      console.log(`onAppMount.urlChecking userBrowser is: ${userBrowser}`)
-    }
+    devLog(`onAppMount.urlChecking userBrowser is: ${userBrowser}`)
     if (userBrowser === 'firefox') {
-      return onAppMount.browserFirefox.urlChecking(tab);
+      return onAppMount.browserFirefox.urlInvalid(tab);
     } else if (userBrowser === 'opera') {
-      return onAppMount.browserOpera.urlChecking(tab);
+      return onAppMount.browserOpera.urlInvalid(tab);
     } else if (userBrowser === 'edge') {
-      return onAppMount.browserEdge.urlChecking(tab);
+      return onAppMount.browserEdge.urlInvalid(tab);
     } else if (userBrowser === 'chrome') {
-      return onAppMount.browserChrome.urlChecking(tab);
+      return onAppMount.browserChrome.urlInvalid(tab);
     } else {
-      return 'user browser unknown. unable to check for valid urls'
+      return false
     }
   },
 
   // gets and validates current tab.id and gets url validity string, sends both to callback
-  main: (_callback) => {
+  main: async () => {
 
     // get active tab info
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-      const tab = tabs[0];
-      if(isDevMode()) {console.log(`onAppMount.main tab ${JSON.stringify(tab)}`)}
+    const getQueryResult = () => {
+      return new Promise(resolve => {
+        chrome.tabs.query({active: true, currentWindow: true}, response => resolve(response))
+      }) 
+      // chrome.tabs.query({active: true, currentWindow: true}, (result) => {return result});
+    }
 
-      // tab object validation
-      if(!tab.id) {throw new Error('tab.id not defined')};
-      if(!tab.url) {throw new Error('tab.url not defined')}
-      
-      // check for invalid urls
-      const urlValidityMessage = onAppMount.urlChecking(tab);
-      const tabId = tab.id;
-      if(isDevMode()) {console.log(`onAppMount.main tabId: ${tabId}`)}
-      _callback(tabId, urlValidityMessage);
-    });
+    const tabs = await getQueryResult()
+    const tab = await tabs[0];
+
+    devLog(`onAppMount.main tab ${JSON.stringify(tab)}`)
+    // tab object validation
+    if(!tab.id) {throw new Error('tab.id not defined')};
+    if(!tab.url) {throw new Error('tab.url not defined')}
+    
+    // check browser
+    const validBrowser = onAppMount.userBrowser();
+    // check url
+    const invalidUrl = onAppMount.urlInvalid(tab);
+    return {
+      tabId: tab.id, 
+      validBrowser: validBrowser,
+      invalidUrl: invalidUrl
+    };
   }
 }
 

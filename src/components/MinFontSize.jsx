@@ -1,69 +1,79 @@
-import React from 'react';
-import NumericInput from 'react-numeric-input';
-// https://www.npmjs.com/package/react-numeric-input
-import './MinFontSize.css'
-import isDevMode from '../logic/isDevMode';
+import React, { useContext } from 'react';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Slider from '@material-ui/core/Slider';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Typography from '@material-ui/core/Typography';
+import './minFontSize.css'
+import devLog from '../utils/devLog'
+import Context from '../utils/context';
 
+const MySlider = withStyles({
+  root: {
+    color: "#565857",
+  }
+})(Slider);
 
-const customStyles = {
-  wrap: {
-    width: '7.5rem',
-    background: '#E2E2E2',
-    boxShadow: '0 0 1px 1px #fff inset, 1px 1px 5px -1px #000',
-    padding: '.1rem .1rem .1rem .1rem',
-    borderRadius: '.3rem .3rem .3rem .3rem',
-    fontSize: 15
-  },
+const MyInput = withStyles({
   input: {
-    borderRadius: '.1rem .05rem .1rem .05rem',
-    color: '#988869',
-    border: '1px solid #ccc',
-    display: 'block',
-    fontWeight: 70,
-    textShadow: '1px 1px 1px rgba(0, 0, 0, 0.1)',
-    margin: 'auto',
-    width: '100%',
-    padding: '.2rem 3.4ex .2rem 3.4ex'
+    width: 42,
+    textAlign: "right",
   },
-  'input:focus' : {
-    border: '1px solid #ccc',
-    outline: 'none'
-  }
-}
+})(Input)
 
-class MinFontSize extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
+export default function InputSlider({minFontSize, changeHandler}) {
 
-  handleChange(valueAsNumber) {
-    if(valueAsNumber > 0) {
-      this.props.changeHandler(true, valueAsNumber)
-    } else {
-      this.props.changeHandler(false, valueAsNumber);
+  const handleSliderChange = (event, newValue) => {
+    changeHandler(newValue)
+  };
+
+  const handleInputChange = (event) => {
+    changeHandler(event.target.value === '' ? '' : Number(event.target.value));
+  };
+
+  const handleBlur = () => {
+    if (minFontSize < 0) {
+      changeHandler(0);
+    } else if (minFontSize > 50) {
+      changeHandler(50);
     }
-  }
+  };
 
-  render() {
-    if (isDevMode()) console.log(`rendering minfontsize with val = ${this.props.minFontSize}`)
-    return (
-      <div className={this.props.seeMore ? 'inactive' : 'mfs-input grid-box'}>
-        <label className="input-label" htmlFor="mfsinput">Min Font-Size</label>
-        <NumericInput
-        id="mfsinput"
-        className="react-numeric-input-container"
-        mobile={true}
-        size={3}
-        min={1}
-        // defaultValue={this.props.minFontSize}
-        value={this.props.minFontSize}
-        style={customStyles}
-        onChange={valueAsNumber => {this.handleChange(valueAsNumber)}}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className='mfs-input'>
+      <Grid container spacing={2} alignItems="center">
+      <Grid item>
+          <MyInput
+            disableUnderline="true"
+            fullWidth="true"
+            endAdornment={
+              <InputAdornment position="end">
+                <Typography variant="body1">pt</Typography>
+              </InputAdornment>
+            }
+            value={minFontSize}
+            margin="none"
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            inputProps={{
+              step: 1,
+              min: 0,
+              max: 50,
+              type: 'number',
+              'aria-labelledby': 'input-slider',
+            }}
+          />
+        </Grid>
+        <Grid item xs>
+          <MySlider
+            value={typeof minFontSize === 'number' ? minFontSize : 0}
+            onChange={handleSliderChange}
+            aria-labelledby="input-slider"
+            max={50}
+          />
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
-
-export default MinFontSize;

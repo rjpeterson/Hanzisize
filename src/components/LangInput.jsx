@@ -1,7 +1,7 @@
 import React from 'react';
 import arrow from '../images/arrow.png';
-import './newLangInput.css';
-import isDevMode from '../utils/isDevMode';
+import './langInput.css';
+import devLog from '../utils/devLog';
 
 const selectOptions = [
   {value: 'arabic', label: 'العربية Arabic'},
@@ -24,7 +24,7 @@ export default function LanguageInput ({language, changeHandler}) {
     console.log(`current index: ${index}`);
     let newIndex = (index + direction + selectOptions.length) % selectOptions.length;
     console.log(`new index: ${newIndex}`);
-    if (isDevMode()) console.log(`old lang: ${selectOptions[index].value} index: ${index}, new lang: ${selectOptions[newIndex].value} index: ${newIndex}`)
+    devLog(`old lang: ${selectOptions[index].value} index: ${index}, new lang: ${selectOptions[newIndex].value} index: ${newIndex}`)
     const updatedLang = selectOptions[newIndex];
     changeHandler(updatedLang.value)
   }
@@ -32,14 +32,12 @@ export default function LanguageInput ({language, changeHandler}) {
   const setDisplayLang = () =>{
     const match = selectOptions.find(element => element.value === language);
     if (match) {
-      if (isDevMode()) console.log(`setting display lang to match: ${match.value}`)
+      devLog(`setting display lang to: ${match.value}`)
       return match.label
     } else {
       throw new Error("setDisplayLang: No match found in language options")
     }
   }
-
-    if (isDevMode()) console.log(`rendering lang-input default = ${JSON.stringify(setDisplayLang())}`)
 
     return (
       <div className='language-input grid-box'>

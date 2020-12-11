@@ -5,8 +5,9 @@
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
 
-.notification-content {
-  text-align: center;
+.hidden {
+  display: none;
 }

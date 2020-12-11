@@ -1,19 +1,18 @@
 /*global chrome*/
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../images/logo.png';
 import spinner from '../images/91.gif';
 import './App.css';
 
-import LanguageInput from './newLangInput';
-import InputSlider from './newMinFontSize';
-import MoreInfo from './newMoreInfo';
-import Notification from './Notification';
+import LanguageInput from './LangInput';
+import InputSlider from './MinFontSize';
+import MoreInfo from './MoreInfo';
+import IFrameWarning from './IFrameWarning';
 
 import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
-import isDevMode from '../utils/isDevMode';
-import Context from '../utils/context';
+import devLog from '../utils/devLog';
 
 // npm start runs app in browser tab which doesn't have accesse to required chrome apis, so we provide them here for UI testing purposes
 if(process.env.NODE_ENV === 'development') {
@@ -35,181 +34,195 @@ if(process.env.NODE_ENV === 'development') {
 
 // update_url is set by chrome webstore on submit. If it doesn't exist, the extension was loaded locally rather than installed from webstore
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      tabId: null,
-      language: null,
-      minFontSize: 0,
-      ready: false,
-      initialLoad: true,
-      notification: '',
-      errorMessage: ''
-    };
+export default function App() {
+  const [minFontSize, setMinFontSize] = useState(0);
+  const [language, setLanguage] = useState('chinese');
+  const [tabId, setTabId] = useState(null);
+  const [ready, setReady] = useState(false);
+  const [iFrames, setiFrames] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // const [state, setState] = useState({
+  //   minFontSize: 0,
+  //   language: 'chinese',
+  //   tabId: null,
+  //   ready: false,
+  //   iFrames: false,
+  //   errorMessage: '',
+  // })
+
+  useEffect(() => {
+
+    const fetchStoredData = async () => {
+      let result = await tools.getFromStorage();
+      devLog(`app.useEffect storedObject: ${JSON.stringify(result)}`);
+
+      setMinFontSize(result.minFontSize);
+      setLanguage(result.language);
+      // setState({
+      //   ...state,
+      //   minFontSize: result.minFontSize,
+      //   language: result.language,
+      // })
+    }
+
+    const fetchTabInfo = async () => {
+      const result = await onAppMount.main()
+      return result;
+    }
     
-    // bind event handlers to App
-    this.handleFSChange = this.handleFSChange.bind(this);
-    this.handleLangChange = this.handleLangChange.bind(this);
-  }
+    const checkTabValidity = (tabInfo) => {
+      let newErrorMessage;
+      if (!tabInfo.validBrowser || tabInfo.invalidUrl) {
+        newErrorMessage = tabInfo.invalidUrl || 'user browser unknown. unable to check for valid urls';
+        setErrorMessage(newErrorMessage);
+        // setState({
+        //   ...state,
+        //   errorMessage: newErrorMessage
+        // });
+        return false
+      } else {
+        return true
+      }
+    }
 
-  componentDidMount() {
-    // react run build compiles and compresses everything into one line of code so we provide console.log statements for debugging
-    if (isDevMode()) console.log(" app.componentDidMount PRODUCTION MODE popup.js loaded...");
+    const createContentObj = () => {
+      devLog('creating content object...')
+      return {
+        'language': language,
+        'newMinFontSize': minFontSize,
+        'mode': 'initial',
+      }
+    }
 
-    // retrieve stored language and minfontsize values from chrome storage if they exist
-    tools.getFromStorage((storedObject) => {
-      if (isDevMode()) console.log(`app.componenetDidMount storedObject: ${JSON.stringify(storedObject)}`)
+    const handleTabInfo = (tabInfo) => {
+      const contentObj = createContentObj();
+      const validTab = checkTabValidity(tabInfo);
 
-      // get and validate active tab info
-      onAppMount.main((tabId, urlValidityMessage) => {
-        if (isDevMode()) console.log(`app.componenetDidMount tabId: ${tabId}`)
+      if(!validTab) {return}
 
-        // if url is invalid, inform the user why
-        if (urlValidityMessage !== 'valid URL' && urlValidityMessage !== 'user browser unknown. unable to check for valid urls') {
-          if (isDevMode()) console.log(`app.componenetDidMount urlValidityMessage: ${urlValidityMessage}`)
-          this.setState({ready: false, initialLoad: false, errorMessage: urlValidityMessage})
+      tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr, response) => {
+        if (injectionErr) {
+          setErrorMessage(injectionErr);
+          // setState({
+          //   ...state,
+          //   errorMessage: injectionErr,
+          // })
         } else {
-          // if this is the first time loading the extension, fontsize & language wont have stored values
-          // so, we submit default values "chinese" and "0" in order for content script to inject properly
-          // otherwise, submit values retrieved from storage
-
-          const contentObj = {
-            'language' : ('language' in storedObject) ? storedObject.language : 'chinese',
-            'newMinFontSize': ('minFontSize' in storedObject) ? storedObject.minFontSize : 0,
-            'mode': 'initial'
-          };
-          if (isDevMode()) console.log(`app.componenetDidMount contentObj: ${JSON.stringify(contentObj)}`)
-        // inject content script on browser action click or send content object if already injected
-          tools.sendToContent(tabId, contentObj, (injectionErr, response) => {
-            if (injectionErr !== null) {
-              console.log(`app caught error: ${injectionErr}`)
-              this.setState({
-                ready: false,
-                initialLoad: false,
-                errorMessage: injectionErr,
-                notification: ''
-              })
-            } else if (response.multipleFrames) {
-              this.setState({
-                language : contentObj.language,
-                minFontSize: contentObj.newMinFontSize,
-                tabId: tabId,
-                ready: true,
-                initialLoad: false,
-                notification: "Warning: This page contains iframes. Hanzisize may not work properly.",
-                errorMessage: ''
-              })
-            } else {
-              this.setState({
-                language : contentObj.language,
-                minFontSize: contentObj.newMinFontSize,
-                tabId: tabId,
-                ready: true,
-                initialLoad: false,
-                notification: '',
-                errorMessage: ''
-              }, () => {
-                if (isDevMode()) console.log(`app.componenetDidMount state: ${JSON.stringify(this.state)}`)
-              });
-              // this.forceUpdate();
-            }
-          });
+          setTabId(tabInfo.tabId);
+          setReady(true);
+          setiFrames(response.multipleFrames);
+          // setErrorMessage('');
+          // setState({
+          //   ...state,
+          //   tabId: tabInfo.tabId,
+          //   ready: true,
+          //   iFrames: response.multipleFrames,
+          //   errorMessage: '',
+          // })
+          // devLog(`app.useEffect state: ${JSON.stringify(state)}`)
         }
-      });
-    })
-  }
+      })
+    }
+
+    const onMount = async () => {
+      await fetchStoredData();
+      const tabInfo = await fetchTabInfo();
+
+      devLog(`app.useEffect fetched tab info: ${JSON.stringify(tabInfo)}`);
+
+      handleTabInfo(tabInfo);
+    }
+
+    onMount();
+  }, [])
 
   // fire resizing when user selects a new language from dropdown
-  handleLangChange(language) {
+  const handleLangChange = (newLanguage) => {
     // first store new language
-    try{tools.pushLangToStorage(language)}
+    try{tools.pushLangToStorage(newLanguage)}
     catch(err) {console.log(`app.handleLangChange Could not push to storage: ${err}`)}
 
     const contentObj = {
-      'language' : language,
-      'newMinFontSize': this.state.minFontSize,
+      'language' : newLanguage,
+      'newMinFontSize': minFontSize,
       'mode': 'lang-change'
     };
     // then send to content script
-    try{tools.sendToContent(this.state.tabId, contentObj)}
-    catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${this.state.tabId} contentObj: ${JSON.stringify(contentObj)}`)}
+    try{tools.sendToContent(tabId, contentObj)}
+    catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${tabId} contentObj: ${JSON.stringify(contentObj)}`)}
 
     // finally update state
-    this.setState({language: language}, () => {
-      console.log('app.handleLangChange current state: ' + JSON.stringify(this.state));
-    })
+    setLanguage(newLanguage)
+    // setState({
+    //   ...state,
+    //   language: language
+    // })
+    // console.log('app.handleLangChange current state: ' + JSON.stringify(state));
   }
 
   // fire resizing when user inputs a new minimum font size
-  handleFSChange(minFontSize) {
+  const handleFSChange = (newMinFontSize) => {
     // first store new minfontsize
-    try{tools.pushFSToStorage(minFontSize)}
+    try{tools.pushFSToStorage(newMinFontSize)}
     catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}
 
     const contentObj = {
-      'language' : this.state.language,
-      'newMinFontSize': minFontSize,
+      'language' : language,
+      'newMinFontSize': newMinFontSize,
       'mode': 'fontsize-change'
     };
     // then send to content script
-    try{tools.sendToContent(this.state.tabId, contentObj, (injectionErr, response) => {
-      let newNotification = '';
-      if (response.multipleFrames) {newNotification = "Warning: This page contains iframes. Hanzisize may not work properly."}
-      this.setState({
-        minFontSize: minFontSize,
-        notification: newNotification
-      }, () => {
-        console.log('app.handleFSChange current state: ' + JSON.stringify(this.state))
-      });
+    try{tools.sendToContent(tabId, contentObj, (injectionErr, response) => {
+      setMinFontSize(newMinFontSize)
+      setiFrames(response.multipleFrames)
+      // setState({
+      //   ...state,
+      //   minFontSize: minFontSize,
+      //   iframes: response.multipleFrames
+      // })
+      // console.log('app.handleFSChange current state: ' + JSON.stringify(state))
     })}
     catch(err) {console.log(`app.handleFSChange Could not send to content script: ${err}`)}
   }
 
-  render() {
+    // display any error messages recieved
+    if(errorMessage) {
+      devLog('display error message')
+      return (<div className="error-message">{errorMessage}</div>)
+    } 
     // display placeholder interface
-    if(!this.state.ready && this.state.initialLoad) {
-      if (isDevMode()) console.log('display placeholder interface')
+    else if(!ready) {
+      devLog('display placeholder interface')
       return (
         <div class="loading-screen"><img src={spinner} alt="loading..."></img></div>
       )
     }
-    // display any error messages recieved
-    else if(!this.state.ready && !this.state.initialLoad) {
-      if (isDevMode()) console.log('display error message')
-      return (<div className="error-message">{this.state.errorMessage}</div>)
-    } 
+    
     // display active interface
     else {
-      if (isDevMode()) {
-        console.log('display active interface')
-        console.log('current state: ' + JSON.stringify(this.state))
-      }
+      devLog('display active interface')
+      // devLog('current state: ' + JSON.stringify(state))
       return (
         <div className='App'>
           <div className="top">
             <img className="logo" src={logo} alt="logo" />
             <LanguageInput 
-              language={this.state.language}
-              changeHandler={this.handleLangChange}
+              language={language}
+              changeHandler={handleLangChange}
             />
           </div>
           <div className="bottom">      
             <InputSlider 
-              minFontSize={this.state.minFontSize}
-              changeHandler={this.handleFSChange}
+              minFontSize={minFontSize}
+              changeHandler={handleFSChange}
             />
-            <Notification 
-              notification={this.state.notification}
+            <IFrameWarning 
+              display={iFrames}
             />
-            <MoreInfo 
-              clickHandler={this.handleMoreInfoClick}
-            />  
+            <MoreInfo />  
           </div>    
         </div>
       )
     }
-  };
-}
-
-export default App;
+};

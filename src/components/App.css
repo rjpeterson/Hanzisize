@@ -29,7 +29,7 @@
   grid-area: bottom;
   grid-template-areas: 
   'mfsinput mfsinput mfsinput'
-  'notification notification more-info';
+  'iframe-warning iframe-warning more-info';
   background-color: #E4E4E4;
 }
 

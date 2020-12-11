@@ -1,5 +1,5 @@
 /*global chrome*/
-import isDevMode from '../utils/isDevMode';
+import devLog from '../utils/devLog';
 
 const tools = {
   injectionError: null,
@@ -13,31 +13,47 @@ const tools = {
   // push submitted fontsize to chrome local storage
   pushFSToStorage: (minFontSize) => {
     chrome.storage.local.set({minFontSize: minFontSize}, () => {
-      if (isDevMode()) console.log(`tools.pushFSToStorage New minimum font size stored as: ${minFontSize}`)
+      devLog(`tools.pushFSToStorage New minimum font size stored as: ${minFontSize}`)
     })
   },  
   
   // push submitted language to chrome local storage
   pushLangToStorage: (language) => {
     chrome.storage.local.set({language: language}, () => {
-      if (isDevMode()) console.log(`tools.pushFSToStorage New language stored as: ${language}`)
+      devLog(`tools.pushFSToStorage New language stored as: ${language}`)
     })
   },
 
-  // return minFontSize and language from chrome local storage if exist
-  getFromStorage: (_callback) => {
-    chrome.storage.local.get(['minFontSize', 'language'], (result) => {
+  // return minFontSize and language from chrome local storage if exist, if not, return default values
+  getFromStorage: async () => {
+    const result = await new Promise(resolve => {
+      chrome.storage.local.get(['minFontSize', 'language'], response => { resolve(response)})});
+
       if(result.minFontSize && result.language) {
-        if (isDevMode()) {
-          console.log(`tools.getFromStorage Retrieved object from storage: ${JSON.stringify(result)}`)
-        };
-      } else if(!result.minFontSize) {
-        if (isDevMode()) console.log('tools.getFromStorage result.minFontSize not found');
-      } else {
-        if (isDevMode()) console.log('tools.getFromStorage result.language not found');
+        devLog(`tools.getFromStorage Retrieved object from storage: ${JSON.stringify(await result)}`);
+      } 
+      if(!result.minFontSize) {
+        devLog('tools.getFromStorage result.minFontSize not found');
+        result.minFontSize = 0
       }
-      _callback(result);
-    })
+      if(!result.language) {
+        devLog('tools.getFromStorage result.language not found');
+        result.language = 'chinese'
+      }
+      return await result;
+    // const storedInfo = await chrome.storage.local.get(['minFontSize', 'language'], (result) => {
+    //   if(result.minFontSize && result.language) {
+    //     devLog(`tools.getFromStorage Retrieved object from storage: ${JSON.stringify(result)}`);
+    //   } else if(!result.minFontSize) {
+    //     devLog('tools.getFromStorage result.minFontSize not found');
+    //     result.minFontSize = 0
+    //   } else {
+    //     devLog('tools.getFromStorage result.language not found');
+    //     result.language = 'chinese'
+    //   }
+    //   return result;
+    // })
+    // return storedInfo;
   },
 
   // Handle initial message response
@@ -45,8 +61,7 @@ const tools = {
     // if tab does not send back a response, the content script hasn't been injected yet
     if (lastError && !response) {
 
-      if (isDevMode())
-        console.log(`tools.sendToContent initial message send failed. injecting jquery...`);
+      devLog(`tools.sendToContent initial message send failed. injecting jquery...`);
       // First try to inject jquery into active tab. Requires "permissions": ["activeTab"] in manifest.json
       chrome.tabs.executeScript(tabId, { file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js' }, function () {
         tools.handleJqueryInjection(chrome.runtime.lastError, tabId, obj);
@@ -62,9 +77,7 @@ const tools = {
     if(lastError) {
       tools.injectionError = tools.handleJqueryInjectErr(chrome.runtime.lastError);
     } else {
-      if (isDevMode()) {
-        console.log('jquery injected. injecting content script...')
-      }
+      devLog('jquery injected. injecting content script...')
       // If jquery injects properly, inject contentScript.js in active tab. Requires "permissions": ["activeTab"] in manifest.json
       tools.injectCS(tabId, obj)
     }
@@ -72,13 +85,11 @@ const tools = {
 
   // Handle Opera search results permission & other injection errors
   handleJqueryInjectErr: (lastErrorMessage) => {
-    if (isDevMode()) {
-      console.error(`jquery injection error: ${lastErrorMessage}`);
-    }
+    devLog(`jquery injection error: ${lastErrorMessage}`);
   
     // Opera throws the following error if extension is used on google search results without first given permission
     if (lastErrorMessage === tools.operaErrors.extensionSettings) {
-      if (isDevMode()) {console.log('extension called on google search results with setting disabled')}
+      devLog('extension called on google search results with setting disabled')
 
       tools.injectionError = tools.operaErrors.popupWarning;
     } else {
@@ -91,7 +102,7 @@ const tools = {
     chrome.tabs.executeScript(tabId, {file: process.env.PUBLIC_URL + '/contentScript.js'}, function() {
       console.log(`executeScript: ${chrome.runtime.lastError}`)
       if (chrome.runtime.lastError) {
-        if (isDevMode()) console.error(`content script injection error ${chrome.runtime.lastError.message}`);
+        devLog(`content script injection error ${chrome.runtime.lastError.message}`);
         tools.injectionError = chrome.runtime.lastError.message;
       } else {               
         // if contentScript.js has been successfully injected, call sendMessage a second time to finally send the object to the active tab
@@ -101,14 +112,14 @@ const tools = {
   },
 
   // Send message after scripts have been injected
-  secondMessageToScripts: (tabid, obj) => {
+  secondMessageToScripts: (tabId, obj) => {
     try {
-      chrome.tabs.sendMessage(tabid, obj, {frameId: 0}, function(response) {
-         if (isDevMode()) console.log(`tools.sendToContent (2nd try) recieved response: ${JSON.stringify(response)}`);
+      chrome.tabs.sendMessage(tabId, obj, {frameId: 0}, function(response) {
+         devLog(`tools.sendToContent (2nd try) recieved response: ${JSON.stringify(response)}`);
          tools.contentResponse = response;
       })
      } catch (error) {
-        if (isDevMode()) console.log(`scripts injected, but message could not be sent. ${error}`)
+        devLog(`scripts injected, but message could not be sent. ${error}`)
     } 
   },
 
@@ -119,7 +130,7 @@ const tools = {
       tools.handleFirstMessageResponse(chrome.runtime.lastError, response, tab_id, obj);
     
       if (_callback) {_callback(tools.injectionError, tools.contentResponse)}
-      if (isDevMode()) console.log(`tools.sendToContent recieved response: ${JSON.stringify(response)}`);
+      devLog(`tools.sendToContent recieved response: ${JSON.stringify(response)}`);
     });
   }
 }
