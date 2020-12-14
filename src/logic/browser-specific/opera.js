@@ -7,7 +7,7 @@ const opera = {// opera specific url checking
     try { // if no regex match = user not on Chrome
       return (navigator.userAgent.match(/Opera|OPR\//) ? true : false);
     } catch (error) { // returns false if navigator.userAgent is not found
-      return null;
+      return false;
     }
   },
 

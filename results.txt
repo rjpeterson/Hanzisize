@@ -1,0 +1,10 @@
+
+> hanzisize-reboot-react@0.2.0 test D:\My Documents\Code\Chrome Extensions\Hanzisize
+> react-scripts test
+
+  console.log src/utils/devLog.js:12
+    display placeholder interface
+
+
+
+

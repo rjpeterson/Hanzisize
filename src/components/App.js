@@ -42,32 +42,17 @@ export default function App() {
   const [iFrames, setiFrames] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // const [state, setState] = useState({
-  //   minFontSize: 0,
-  //   language: 'chinese',
-  //   tabId: null,
-  //   ready: false,
-  //   iFrames: false,
-  //   errorMessage: '',
-  // })
-
   useEffect(() => {
 
     const fetchStoredData = async () => {
-      let result = await tools.getFromStorage();
-      devLog(`app.useEffect storedObject: ${JSON.stringify(result)}`);
-
-      setMinFontSize(result.minFontSize);
-      setLanguage(result.language);
-      // setState({
-      //   ...state,
-      //   minFontSize: result.minFontSize,
-      //   language: result.language,
-      // })
+      const result = await tools.getFromStorage();
+      devLog(`app.useEffect fetched stored data: ${JSON.stringify(result)}`);
+      return result;
     }
 
     const fetchTabInfo = async () => {
       const result = await onAppMount.main()
+      devLog(`app.useEffect fetched tab info: ${JSON.stringify(result)}`);
       return result;
     }
     
@@ -76,62 +61,45 @@ export default function App() {
       if (!tabInfo.validBrowser || tabInfo.invalidUrl) {
         newErrorMessage = tabInfo.invalidUrl || 'user browser unknown. unable to check for valid urls';
         setErrorMessage(newErrorMessage);
-        // setState({
-        //   ...state,
-        //   errorMessage: newErrorMessage
-        // });
         return false
       } else {
         return true
       }
     }
 
-    const createContentObj = () => {
-      devLog('creating content object...')
-      return {
-        'language': language,
-        'newMinFontSize': minFontSize,
+    const createContentObj = (storedData) => {
+      const contentObj = {
+        'language': storedData.language,
+        'newMinFontSize': storedData.minFontSize,
         'mode': 'initial',
-      }
+      };
+      devLog(`creating content object: ${JSON.stringify(contentObj)}`)
+      return contentObj;
     }
 
-    const handleTabInfo = (tabInfo) => {
-      const contentObj = createContentObj();
+    const handleInfo = (tabInfo, storedData) => {
+      const contentObj = createContentObj(storedData);
       const validTab = checkTabValidity(tabInfo);
 
       if(!validTab) {return}
 
+      devLog(`useEffect sending content obj: ${JSON.stringify(contentObj)}`)
+
       tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr, response) => {
-        if (injectionErr) {
           setErrorMessage(injectionErr);
-          // setState({
-          //   ...state,
-          //   errorMessage: injectionErr,
-          // })
-        } else {
           setTabId(tabInfo.tabId);
           setReady(true);
           setiFrames(response.multipleFrames);
-          // setErrorMessage('');
-          // setState({
-          //   ...state,
-          //   tabId: tabInfo.tabId,
-          //   ready: true,
-          //   iFrames: response.multipleFrames,
-          //   errorMessage: '',
-          // })
-          // devLog(`app.useEffect state: ${JSON.stringify(state)}`)
-        }
       })
     }
 
     const onMount = async () => {
-      await fetchStoredData();
+      const storedData = await fetchStoredData();
       const tabInfo = await fetchTabInfo();
 
-      devLog(`app.useEffect fetched tab info: ${JSON.stringify(tabInfo)}`);
-
-      handleTabInfo(tabInfo);
+      handleInfo(tabInfo, storedData);
+      setMinFontSize(storedData.minFontSize);
+      setLanguage(storedData.language);
     }
 
     onMount();
@@ -148,17 +116,13 @@ export default function App() {
       'newMinFontSize': minFontSize,
       'mode': 'lang-change'
     };
+    devLog(`handleLangChange sending content obj: ${JSON.stringify(contentObj)}`)
     // then send to content script
     try{tools.sendToContent(tabId, contentObj)}
     catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${tabId} contentObj: ${JSON.stringify(contentObj)}`)}
 
     // finally update state
     setLanguage(newLanguage)
-    // setState({
-    //   ...state,
-    //   language: language
-    // })
-    // console.log('app.handleLangChange current state: ' + JSON.stringify(state));
   }
 
   // fire resizing when user inputs a new minimum font size
@@ -172,18 +136,13 @@ export default function App() {
       'newMinFontSize': newMinFontSize,
       'mode': 'fontsize-change'
     };
+    devLog(`handleFSChange sending content obj: ${JSON.stringify(contentObj)}`)
     // then send to content script
-    try{tools.sendToContent(tabId, contentObj, (injectionErr, response) => {
-      setMinFontSize(newMinFontSize)
-      setiFrames(response.multipleFrames)
-      // setState({
-      //   ...state,
-      //   minFontSize: minFontSize,
-      //   iframes: response.multipleFrames
-      // })
-      // console.log('app.handleFSChange current state: ' + JSON.stringify(state))
-    })}
-    catch(err) {console.log(`app.handleFSChange Could not send to content script: ${err}`)}
+    try{tools.sendToContent(tabId, contentObj)}
+    catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${tabId} contentObj: ${JSON.stringify(contentObj)}`)}
+
+    // finally update state
+    setMinFontSize(newMinFontSize)
   }
 
     // display any error messages recieved

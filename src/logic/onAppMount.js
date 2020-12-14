@@ -8,20 +8,16 @@ import edge from './browser-specific/edge';
 import devLog from '../utils/devLog';
 
 const onAppMount = {
-  browserFirefox: firefox,
-  browserChrome: googlechrome,
-  browserOpera: opera,
-  browserEdge: edge,
 
   // determine user's browser
   userBrowser:  () => {
-    if (onAppMount.browserFirefox.isFirefox() === true) {// user is on firefox
+    if (firefox.isFirefox() === true) {// user is on firefox
       return 'firefox';
-    } else if (onAppMount.browserOpera.isOpera() === true) { // user is on opera
+    } else if (opera.isOpera() === true) { // user is on opera
       return 'opera';
-    } else if (onAppMount.browserEdge.isEdge() === true) { // user is on edge
+    } else if (edge.isEdge() === true) { // user is on edge
       return 'edge';
-    } else if (onAppMount.browserChrome.isChrome() === true) { // user is on chrome
+    } else if (googlechrome.isChrome() === true) { // test googlechrome last because the above browsers' useragent strings also contain the string "Chrome"
       return 'chrome';
     } else {
       return false;
@@ -29,20 +25,25 @@ const onAppMount = {
   },
 
   // check for disallowed urls by browser
-  urlInvalid: (tab) => {
-    const userBrowser = onAppMount.userBrowser();
-    devLog(`onAppMount.urlChecking userBrowser is: ${userBrowser}`)
-    if (userBrowser === 'firefox') {
-      return onAppMount.browserFirefox.urlInvalid(tab);
-    } else if (userBrowser === 'opera') {
-      return onAppMount.browserOpera.urlInvalid(tab);
-    } else if (userBrowser === 'edge') {
-      return onAppMount.browserEdge.urlInvalid(tab);
-    } else if (userBrowser === 'chrome') {
-      return onAppMount.browserChrome.urlInvalid(tab);
-    } else {
-      return false
+  urlInvalid: (tab, browser) => {
+    let result;
+    switch(browser) {
+      case 'firefox':
+        result = firefox.urlInvalid(tab)
+        break;
+      case 'opera':
+        result = opera.urlInvalid(tab)
+        break;
+      case 'edge':
+        result = edge.urlInvalid(tab)
+        break;
+      case 'chrome':
+        result = googlechrome.urlInvalid(tab);
+        break;
+      default:
+        result = true;
     }
+    return result;
   },
 
   // gets and validates current tab.id and gets url validity string, sends both to callback
@@ -53,7 +54,6 @@ const onAppMount = {
       return new Promise(resolve => {
         chrome.tabs.query({active: true, currentWindow: true}, response => resolve(response))
       }) 
-      // chrome.tabs.query({active: true, currentWindow: true}, (result) => {return result});
     }
 
     const tabs = await getQueryResult()
@@ -67,7 +67,7 @@ const onAppMount = {
     // check browser
     const validBrowser = onAppMount.userBrowser();
     // check url
-    const invalidUrl = onAppMount.urlInvalid(tab);
+    const invalidUrl = onAppMount.urlInvalid(tab, validBrowser);
     return {
       tabId: tab.id, 
       validBrowser: validBrowser,

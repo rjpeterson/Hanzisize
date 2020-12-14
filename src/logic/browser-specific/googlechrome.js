@@ -5,8 +5,8 @@ const googlechrome = {// chrome specific url checking
   isChrome: () => {
     try { // no regex match means user not on Chrome
       return (navigator.userAgent.match(/Chrome\//) ? true : false);
-    } catch (error) { // returns false if navigator.userAgent is not found
-      return null;
+    } catch (error) { // returns false if navigator.userAgent is not found, user not using chrome-based browser
+      return false;
     }
   },
 
@@ -18,7 +18,7 @@ const googlechrome = {// chrome specific url checking
       } else if (tab.url.match(/chrome\.google.com\/webstore/i)) {
         return googlechrome.webstoreErrorString;
       } else {
-        return 'valid URL'
+        return false;
       }
     } else {
       throw new Error('Active tab has no url value')
