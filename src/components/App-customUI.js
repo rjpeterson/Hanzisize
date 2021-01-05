@@ -1,51 +1,22 @@
+/*global chrome*/
+
 import React, { useState, useEffect } from 'react';
+import logo from '../images/logo.png';
+import spinner from '../images/91.gif';
+import './App.css';
+
+import LanguageInput from './Upper/LangSelect/old-LangInput';
+import InputSlider from './Lower/InputSlider/old-MinFontSize';
+import MoreInfo from './MoreInfo';
+import IFrameWarning from './IFrameWarning';
+
 import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
-import Upper from './Upper/Upper';
-import Lower from './Lower/Lower';
 import testingTools from '../utils/testingTools';
-import spinner from '../images/91.gif';
-
-import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { grey } from '@material-ui/core/colors';
-import 'fontsource-roboto';
 
 testingTools.setupTestEnv();
 
-const theme = createMuiTheme({
-  typography: {
-    body1: {
-      fontSize: 14,
-    }
-  },
-  palette: {
-    primary: {
-      main: '#74BED3',
-    },
-    secondary: {
-      main: grey[200],
-    },
-    contrastThreshold: 1,
-    tonalOffset: .4,
-  }
-})
-
-const useStyles = makeStyles({
-  container: {
-    width: 340,
-    backgroundColor: grey[200],
-  },
-  root: {
-    marginTop: 0,
-    paddingTop: 6,
-    paddingBottom: 6,
-  },
-})
-
-function App() {
-  const classes = useStyles();
-
+export default function App() {
   const [minFontSize, setMinFontSize] = useState(0);
   const [language, setLanguage] = useState('chinese');
   const [tabId, setTabId] = useState(null);
@@ -115,10 +86,9 @@ function App() {
 
     main();
   }, [])
-  
+
   // fire resizing when user selects a new language from dropdown
   const handleLangChange = (newLanguage) => {
-    // const newLanguage = newLanguageObj.value;
     // first store new language
     try{tools.pushLangToStorage(newLanguage)}
     catch(err) {console.log(`app.handleLangChange Could not push to storage: ${err}`)}
@@ -157,45 +127,42 @@ function App() {
     setMinFontSize(newMinFontSize)
   }
 
-      // display any error messages recieved
-      if(errorMessage) {
-        testingTools.devLog('display error message')
-        return (<div className="error-message">{errorMessage}</div>)
-      } 
-      // display placeholder interface
-      else if(!ready && !testingTools.devMode()) {
-        testingTools.devLog('display placeholder interface')
-        return (
-          <div class="loading-screen"><img src={spinner} alt="loading..."></img></div>
-        )
-      }
-      
-      // display active interface
-      else {
-        testingTools.devLog('display active interface')
-        return (
-          <ThemeProvider theme={theme}>
-            <Container 
-              className={classes.container} 
-              disableGutters 
-              fixed={true} 
-              maxWidth="xs"
-            >
-              <div className="App">
-                <Upper 
-                  language={language}
-                  changeHandler={handleLangChange}
-                />
-                <Lower 
-                  minFontSize={minFontSize}
-                  changeHandler={handleFSChange}
-                  iFrames={iFrames}
-                />
-              </div>
-            </Container>
-          </ThemeProvider>
-        );
-      }
-}
-
-export default App;
+    // display any error messages recieved
+    if(errorMessage) {
+      testingTools.devLog('display error message')
+      return (<div className="error-message">{errorMessage}</div>)
+    } 
+    // display placeholder interface
+    else if(!ready && !testingTools.devMode()) {
+      testingTools.devLog('display placeholder interface')
+      return (
+        <div class="loading-screen"><img src={spinner} alt="loading..."></img></div>
+      )
+    }
+    
+    // display active interface
+    else {
+      testingTools.devLog('display active interface')
+      return (
+        <div className='App'>
+          <div className="top">
+            <img className="logo" src={logo} alt="logo" />
+            <LanguageInput 
+              language={language}
+              changeHandler={handleLangChange}
+            />
+          </div>
+          <div className="bottom">      
+            <InputSlider 
+              minFontSize={minFontSize}
+              changeHandler={handleFSChange}
+            />
+            <IFrameWarning 
+              display={iFrames}
+            />
+            <MoreInfo />  
+          </div>    
+        </div>
+      )
+    }
+};

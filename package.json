@@ -6,10 +6,12 @@
   "main": "index.js",
   "dependencies": {
     "@material-ui/core": "^4.11.1",
+    "@material-ui/icons": "^4.11.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^26.0.0",
+    "fontsource-roboto": "^4.0.0",
     "jquery": "^3.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -46,7 +48,6 @@
   },
   "devDependencies": {
     "eslint-plugin-jquery": "^1.5.1",
-    "jest-chain": "^1.1.5",
     "react-devtools": "^4.8.2",
     "react-test-renderer": "^16.13.1",
     "web-ext": "^5.4.1"

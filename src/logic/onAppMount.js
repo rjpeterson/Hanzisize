@@ -5,7 +5,7 @@ import firefox from './browser-specific/firefox';
 import opera from './browser-specific/opera';
 import edge from './browser-specific/edge';
 
-import devLog from '../utils/devLog';
+import testingTools from '../utils/testingTools';
 
 const onAppMount = {
 
@@ -59,7 +59,7 @@ const onAppMount = {
     const tabs = await getQueryResult()
     const tab = await tabs[0];
 
-    devLog(`onAppMount.main tab ${JSON.stringify(tab)}`)
+    testingTools.devLog(`onAppMount.main tab ${JSON.stringify(tab)}`)
     // tab object validation
     if(!tab.id) {throw new Error('tab.id not defined')};
     if(!tab.url) {throw new Error('tab.url not defined')}

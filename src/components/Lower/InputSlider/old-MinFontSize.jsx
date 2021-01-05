@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Typography from '@material-ui/core/Typography';
-import './minFontSize.css'
-import devLog from '../utils/devLog'
+import './MinFontSize.css'
 
 const MySlider = withStyles({
   root: {
@@ -68,8 +67,8 @@ export default function InputSlider({minFontSize, changeHandler}) {
       <Grid container spacing={2} alignItems="center">
       <Grid item>
           <MyInput
-            disableUnderline="true"
-            fullWidth="true"
+            disableUnderline= {true}
+            fullWidth= {true}
             endAdornment={
               <InputAdornment position="end">
                 <Typography variant="h6">pt</Typography>

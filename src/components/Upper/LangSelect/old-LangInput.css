@@ -9,11 +9,10 @@
   cursor: pointer;
 }
 
-#language {
-  text-align: center;
-  position: relative;
-  top: .35rem;
-  font-size: .8rem;
-  color: beige;
-  font-weight: bold;
-}
+/* .MuiSelect-select.MuiSelect-select {
+  padding-right: 0px;
+} */
+
+/* .MuiMenu-paper {
+  max-height: 5.5rem;
+} */
