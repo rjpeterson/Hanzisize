@@ -1,4 +1,7 @@
+import { FilterFramesOutlined } from '@material-ui/icons';
 import tools from '../../logic/chromeTools';
+
+const mockStoredObject = {'minFontSize': 10, 'language': 'chinese'};
 
 describe('chromeTools', () => {
   beforeEach(() => {
@@ -11,7 +14,7 @@ describe('chromeTools', () => {
       storage: {
         local: {
           set: jest.fn().mockReturnValue(10),
-          get: jest.fn((array, _callback) => {_callback({'minFontSize': 10, 'language': 'chinese'})})
+          get: jest.fn((array, _callback) => {_callback(mockStoredObject)})
         }
       },
       tabs: {
@@ -53,12 +56,11 @@ describe('chromeTools', () => {
   })
   
   describe('getFromStorage', () => {
-    const GFSCallback = jest.fn((arr) => {return arr});
 
-    test('calls callback on minFontSize and Language object from chrome storage', () => {
-      const result = tools.getFromStorage(GFSCallback);
+    test('it returns stored language and minfontsize values', async () => {
+      const result = await tools.getFromStorage();
       expect(chrome.storage.local.get).toHaveBeenCalledTimes(1);
-      expect(GFSCallback).toHaveBeenCalledWith({'minFontSize': 10, 'language': 'chinese'});
+      expect(result).toEqual(mockStoredObject);
     })
   })
 
@@ -105,7 +107,7 @@ describe('chromeTools', () => {
 
     test('if there is no error, it injects content script', () => {
       chrome.runtime.lastError = false;
-      const spy = jest.spyOn(tools, "injectCS").mockReturnValueOnce(true);
+      const spy = jest.spyOn(tools, "injectContentScript").mockReturnValueOnce(true);
 
       tools.handleJqueryInjection(chrome.runtime.lastError, tabId, obj);
 
@@ -131,16 +133,16 @@ describe('chromeTools', () => {
     })
   })
 
-  describe('injectCS', () => {
+  describe('injectContentScript', () => {
     const tabId = 1;
     const obj = {mock: 'obj'};
 
-    test('script fails to inject', () => {
+    test('script fails to inject and returns correct injection error', () => {
       chrome.tabs.executeScript = jest.fn((tab_id, object, _callback) => {
         _callback();
       })
 
-      tools.injectCS(tabId, obj);
+      tools.injectContentScript(tabId, obj);
 
       expect(chrome.tabs.executeScript).toHaveBeenCalledTimes(1);
       expect(chrome.tabs.executeScript).toHaveBeenCalledWith(tabId, {file: process.env.PUBLIC_URL + '/contentScript.js'}, expect.any(Function))
@@ -150,21 +152,21 @@ describe('chromeTools', () => {
     test('script successfully injects', () => {
       const spy = jest.spyOn(tools, 'secondMessageToScripts');
 
-      tools.injectCS(tabId, obj);
-
-      expect(spy).toHaveBeenCalledWith(tabId, obj, {frameId: 0})
+      tools.injectContentScript(tabId, obj);
+      expect(chrome.tabs.executeScript).toHaveBeenCalledTimes(1);
+      expect(chrome.tabs.executeScript).toHaveBeenCalledWith(tabId, {file: process.env.PUBLIC_URL + '/contentScript.js'}, expect.any(Function))
+      expect(spy).toHaveBeenCalledWith(tabId, obj)
     })
   })
   
   describe('secondMessageToScripts', () => {
     const tabId = 1;
     const obj = {mock: 'obj'};
-    const frame = {frame: 1};
 
     test('it sends the message to the content script', () => {
-      tools.secondMessageToScripts(tabId, obj, frame);
+      tools.secondMessageToScripts(tabId, obj);
 
-      expect(chrome.tabs.sendMessage).toHaveBeenCalledWith(tabId, obj, frame, expect.any(Function));
+      expect(chrome.tabs.sendMessage).toHaveBeenCalledWith(tabId, obj, {frameId: 0}, expect.any(Function));
       expect(tools.contentResponse).toEqual('message response')
     })
   });

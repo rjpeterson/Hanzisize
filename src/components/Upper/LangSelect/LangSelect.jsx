@@ -12,14 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { grey } from '@material-ui/core/colors';
 
 import LangOptions from './LangOptions';
-import testingTools from '../../../utils/testingTools';
 
 const useStyles = makeStyles({
-  root: {
-    marginTop: 0,
-    paddingTop: 6,
-    paddingBottom: 6,
-  },
   menuItem: {
     fontSize: ".7rem",
     minHeight: "1.3rem",
@@ -55,10 +49,14 @@ const useStyles = makeStyles({
   },
   paper: {
     borderRadius: 12,
-    marginTop: 8,
+    marginTop: 4,
+    maxHeight: '80%',
+    maxWidth: '40%',
+    top: '7px',
   },
   list: {
     maxHeight: 200,
+    minHeight: 50,
     overflowY: 'scroll',
     overflowX: 'hidden',
     paddingTop:0,
@@ -68,8 +66,8 @@ const useStyles = makeStyles({
       fontSize: 12,
       fontWeight:200,
       color: grey[800],
-      paddingTop:6,
-      paddingBottom:6,
+      paddingTop:2,
+      paddingBottom:2,
     },
     "& li:hover":{
       background: grey[100]
@@ -121,7 +119,7 @@ function LangSelect({language, changeHandler}) {
         MenuProps={menuProps}
         IconComponent={iconComponent}
         value={language}
-        onChange={handleSelectChange}
+        onChange={(event) => {handleSelectChange(event)}}
         inputProps={{
           'aria-label': 'language'
         }}

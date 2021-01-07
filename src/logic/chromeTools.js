@@ -41,19 +41,6 @@ const tools = {
         result.language = 'chinese'
       }
       return await result;
-    // const storedInfo = await chrome.storage.local.get(['minFontSize', 'language'], (result) => {
-    //   if(result.minFontSize && result.language) {
-    //     testingTools.devLog(`tools.getFromStorage Retrieved object from storage: ${JSON.stringify(result)}`);
-    //   } else if(!result.minFontSize) {
-    //     testingTools.devLog('tools.getFromStorage result.minFontSize not found');
-    //     result.minFontSize = 0
-    //   } else {
-    //     testingTools.devLog('tools.getFromStorage result.language not found');
-    //     result.language = 'chinese'
-    //   }
-    //   return result;
-    // })
-    // return storedInfo;
   },
 
   // Handle initial message response
@@ -79,7 +66,7 @@ const tools = {
     } else {
       testingTools.devLog('jquery injected. injecting content script...')
       // If jquery injects properly, inject contentScript.js in active tab. Requires "permissions": ["activeTab"] in manifest.json
-      tools.injectCS(tabId, obj)
+      tools.injectContentScript(tabId, obj)
     }
   },
 
@@ -98,9 +85,9 @@ const tools = {
   },
 
   // Inject contentScript after jquery has been injected
-  injectCS: (tabId, obj) => {
+  injectContentScript: (tabId, obj) => {
     chrome.tabs.executeScript(tabId, {file: process.env.PUBLIC_URL + '/contentScript.js'}, function() {
-      console.log(`executeScript: ${chrome.runtime.lastError}`)
+      console.log(`executeScript: ${JSON.stringify(chrome.runtime.lastError)}`)
       if (chrome.runtime.lastError) {
         testingTools.devLog(`content script injection error ${chrome.runtime.lastError.message}`);
         tools.injectionError = chrome.runtime.lastError.message;

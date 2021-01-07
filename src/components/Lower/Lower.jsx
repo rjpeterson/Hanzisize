@@ -1,5 +1,5 @@
 import React from 'react';
-import IFrameWarning from '../IFrameWarning';
+import IFrameWarning from './IFrameWarning/IFrameWarning';
 
 import InputSlider from './InputSlider/InputSlider';
 
@@ -12,11 +12,12 @@ import 'fontsource-roboto';
 const useStyles = makeStyles({
   lower: {
     position: 'relative',
+    paddingBottom: 2,
   },
   help: {
     position: 'absolute',
     bottom: 0,
-    right: 0,
+    left: 0,
   },
 })
 

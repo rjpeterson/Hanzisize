@@ -9,17 +9,13 @@ import logo from '../../images/logo.png';
 
 
 const useStyles = makeStyles({
-  root: {
-    marginTop: 0,
-    paddingTop: 6,
-    paddingBottom: 6,
-    paddingLeft: 12,
-    paddingRight: 12,
-  },
   logo: {
-    display: 'flex',
-    maxWidth: '12%',
+    width: '2rem',
+    height: '2rem',
   },
+  toolbar: {
+    minHeight: '64px'
+  }
 })
 
 export default function Upper({language, changeHandler}) {
@@ -29,17 +25,18 @@ export default function Upper({language, changeHandler}) {
     <div className="upper-container">
       <AppBar position="static">
         <Toolbar 
-          className={classes.root} 
+          className={classes.toolbar}
           color="primary"
+          disableGutters
         >
           <Grid 
             container 
-            spacing={.5} 
+            spacing={.6} 
             justify="center" 
             alignItems="center"
           >
-            <Grid item className={classes.logo}>
-              <img src={logo} alt="logo" />
+            <Grid item>
+              <img src={logo} alt="logo" className={classes.logo}/>
             </Grid>
             <Grid item>
               <LangSelectBar 

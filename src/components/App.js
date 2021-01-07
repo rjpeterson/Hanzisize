@@ -9,6 +9,7 @@ import spinner from '../images/91.gif';
 import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { grey } from '@material-ui/core/colors';
+import { common } from "@material-ui/core/colors";
 import 'fontsource-roboto';
 
 testingTools.setupTestEnv();
@@ -22,6 +23,7 @@ const theme = createMuiTheme({
   palette: {
     primary: {
       main: '#74BED3',
+      contrastText: common.white,
     },
     secondary: {
       main: grey[200],
@@ -35,9 +37,10 @@ const useStyles = makeStyles({
   container: {
     width: 340,
     backgroundColor: grey[200],
+    overflow: 'hidden',
+    flexDirection: 'row',
   },
   root: {
-    marginTop: 0,
     paddingTop: 6,
     paddingBottom: 6,
   },
@@ -157,45 +160,46 @@ function App() {
     setMinFontSize(newMinFontSize)
   }
 
-      // display any error messages recieved
-      if(errorMessage) {
-        testingTools.devLog('display error message')
-        return (<div className="error-message">{errorMessage}</div>)
-      } 
-      // display placeholder interface
-      else if(!ready && !testingTools.devMode()) {
-        testingTools.devLog('display placeholder interface')
-        return (
-          <div class="loading-screen"><img src={spinner} alt="loading..."></img></div>
-        )
-      }
-      
-      // display active interface
-      else {
-        testingTools.devLog('display active interface')
-        return (
-          <ThemeProvider theme={theme}>
-            <Container 
-              className={classes.container} 
-              disableGutters 
-              fixed={true} 
-              maxWidth="xs"
-            >
-              <div className="App">
-                <Upper 
-                  language={language}
-                  changeHandler={handleLangChange}
-                />
-                <Lower 
-                  minFontSize={minFontSize}
-                  changeHandler={handleFSChange}
-                  iFrames={iFrames}
-                />
-              </div>
-            </Container>
-          </ThemeProvider>
-        );
-      }
+  // display any error messages recieved
+  if(errorMessage) {
+    testingTools.devLog('display error message')
+    return (<div className="error-message">{errorMessage}</div>)
+  } 
+
+  // display placeholder interface
+  else if(!ready && !testingTools.devMode()) {
+    testingTools.devLog('display placeholder interface')
+    return (
+      <div class="loading-screen"><img src={spinner} alt="loading..."></img></div>
+    )
+  }
+  
+  // display active interface
+  else {
+    testingTools.devLog('display active interface')
+    return (
+      <ThemeProvider theme={theme}>
+        <Container 
+          className={classes.container} 
+          disableGutters 
+          fixed={true} 
+          maxWidth="xs"
+        >
+          <div className="App">
+            <Upper 
+              language={language}
+              changeHandler={handleLangChange}
+            />
+            <Lower 
+              minFontSize={minFontSize}
+              changeHandler={handleFSChange}
+              iFrames={iFrames}
+            />
+          </div>
+        </Container>
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;

@@ -1,5 +1,18 @@
 # Hanzisize
 
+## Donate
+Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hours working on Hanzisize while making it available for anyone to use for free. If you are able, please consider donating so I can continue to improve this tool for all of us. If you're not able to donate, please leave a review of this extension on the extension webstore of your choice so more people can find it. Thanks for your support!
+Enjoy using this extension? You can show your appreciation by donating in the following ways:
+* Buy me a matcha latte\!
+
+<a href="https://www.buymeacoffee.com/djmouthguard"><img src="https://github.com/rjpeterson/Hanzisize/blob/issue74/src/images/BMC.png" height="50px" alt="buy me a coffee button"></a>
+
+* Donate Bitcoin\!
+
+<img src="https://github.com/rjpeterson/Hanzisize/blob/issue74/src/images/btcdonation.jpeg" width="100px" height="100px" alt="bitcoin qr code">
+
+* Or check out my [Redbubble store](www.redbubble.com/people/djmouthguard/shop)\!
+
 ## What is it?
 Hanzisize is a multi-browser extension built using React that allows selective resizing of page content based on the selected language.
 
@@ -39,15 +52,3 @@ Go to https://chrome.google.com/webstore/detail/hanzisize/jcljolcajgicemckjlgndb
 ## Privacy
 Hanzisize does not collect or transmit any user data. The only information that is stored are the most recent language and font size settings for user convenience. This data is stored in the user's browser and is not used for any other purpose.
 
-## Donate
-Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hours working on Hanzisize while making it available for anyone to use for free. If you are able, please consider donating so I can continue to improve this tool for all of us. If you're not able to donate, please leave a review of this extension on the extension webstore of your choice so more people can find it. Thanks for your support!
-Enjoy using this extension? You can show your appreciation by donating in the following ways:
-* Buy me a matcha latte\!
-
-<a href="https://www.buymeacoffee.com/djmouthguard"><img src="https://github.com/rjpeterson/Hanzisize/blob/issue74/src/images/BMC.png" height="50px" alt="buy me a coffee button"></a>
-
-* Donate Bitcoin\!
-
-<img src="https://github.com/rjpeterson/Hanzisize/blob/issue74/src/images/btcdonation.jpeg" width="100px" height="100px" alt="bitcoin qr code">
-
-* Or check out my [Redbubble store](www.redbubble.com/people/djmouthguard/shop)\!
