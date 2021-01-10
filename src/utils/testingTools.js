@@ -2,7 +2,7 @@
 
 const testingTools = {
   devMode: () => {
-    if(process.env.NODE_ENV === "development") {
+    if(process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
       return true
     } else if (chrome && chrome.runtime && typeof chrome.runtime.getManifest !== 'undefined') {
       // update_url is set by chrome webstore on submit. If it doesn't exist, the extension was loaded locally rather than installed from webstore

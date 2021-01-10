@@ -31,7 +31,7 @@ export default function Upper({language, changeHandler}) {
         >
           <Grid 
             container 
-            spacing={.6} 
+            spacing={1} 
             justify="center" 
             alignItems="center"
           >

@@ -55,8 +55,6 @@ const useStyles = makeStyles({
     top: '7px',
   },
   list: {
-    maxHeight: 200,
-    minHeight: 50,
     overflowY: 'scroll',
     overflowX: 'hidden',
     paddingTop:0,
@@ -129,6 +127,7 @@ function LangSelect({language, changeHandler}) {
             <MenuItem 
               dense={true} 
               value={option.value}
+              key={option.value}
             >
               <Typography>{option.label}</Typography>
             </MenuItem>
@@ -160,7 +159,7 @@ function LangSelectBar({language, changeHandler}) {
   return (
     <Grid 
       container
-      spacing={.5} 
+      spacing={1} 
       justify="center" 
       alignItems="center"
     >

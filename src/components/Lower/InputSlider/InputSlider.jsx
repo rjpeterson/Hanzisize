@@ -51,7 +51,7 @@ export default function InputSlider({minFontSize, changeHandler}) {
       </Grid>
       <Grid item>
         <Input
-          readOnly="true"
+          readOnly={true}
           disableUnderline
           className={classes.input}
           value={minFontSize}

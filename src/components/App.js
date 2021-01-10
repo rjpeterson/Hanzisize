@@ -3,47 +3,25 @@ import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
 import Upper from './Upper/Upper';
 import Lower from './Lower/Lower';
+import ErrorMessage from './ErrorMessage';
 import testingTools from '../utils/testingTools';
 import spinner from '../images/91.gif';
 
-import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { grey } from '@material-ui/core/colors';
-import { common } from "@material-ui/core/colors";
+import theme from './theme';
 import 'fontsource-roboto';
 
 testingTools.setupTestEnv();
 
-const theme = createMuiTheme({
-  typography: {
-    body1: {
-      fontSize: 14,
-    }
-  },
-  palette: {
-    primary: {
-      main: '#74BED3',
-      contrastText: common.white,
-    },
-    secondary: {
-      main: grey[200],
-    },
-    contrastThreshold: 1,
-    tonalOffset: .4,
-  }
-})
-
 const useStyles = makeStyles({
   container: {
     width: 340,
-    backgroundColor: grey[200],
+    backgroundColor: theme.palette.secondary.main,
     overflow: 'hidden',
     flexDirection: 'row',
-  },
-  root: {
-    paddingTop: 6,
-    paddingBottom: 6,
-  },
+  }
 })
 
 function App() {
@@ -163,7 +141,7 @@ function App() {
   // display any error messages recieved
   if(errorMessage) {
     testingTools.devLog('display error message')
-    return (<div className="error-message">{errorMessage}</div>)
+    return (<ErrorMessage errorMessage={errorMessage} />)
   } 
 
   // display placeholder interface

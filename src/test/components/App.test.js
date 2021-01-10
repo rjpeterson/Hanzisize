@@ -4,11 +4,9 @@ import React from 'react';
 import renderer from 'react-test-renderer';
  
 import App from '../../components/App';
+import testingTools from '../../utils/testingTools';
 
 global.chrome = {
-  runtime: {
-    getManifest: () => {return {update_url: true}}
-  },
   tabs: {
     query: ()=>{}
   },
@@ -21,8 +19,9 @@ global.chrome = {
 }
  
 describe('App', () => {
-  it('renders', () => {
+  it.only('renders', async () => {
     const component = renderer.create(<App />);
+    await Promise.resolve();
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });

@@ -2,11 +2,299 @@
 
 exports[`App renders 1`] = `
 <div
-  class="loading-screen"
+  className="MuiContainer-root makeStyles-container-1 MuiContainer-fixed MuiContainer-disableGutters MuiContainer-maxWidthXs"
 >
-  <img
-    alt="loading..."
-    src="91.gif"
-  />
+  <div
+    className="App"
+  >
+    <div
+      className="upper-container"
+    >
+      <header
+        className="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary MuiPaper-elevation4"
+      >
+        <div
+          className="MuiToolbar-root MuiToolbar-regular makeStyles-toolbar-3"
+          color="primary"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-align-items-xs-center MuiGrid-justify-xs-center"
+          >
+            <div
+              className="MuiGrid-root MuiGrid-item"
+            >
+              <img
+                alt="logo"
+                className="makeStyles-logo-2"
+                src="logo.png"
+              />
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item"
+            >
+              <div
+                className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-align-items-xs-center MuiGrid-justify-xs-center"
+              >
+                <div
+                  className="MuiGrid-root MuiGrid-item"
+                >
+                  <button
+                    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onDragLeave={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex={0}
+                    type="button"
+                  >
+                    <span
+                      className="MuiIconButton-label"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
+                >
+                  <div
+                    className="MuiFormControl-root"
+                  >
+                    <div
+                      className="MuiInputBase-root MuiInput-root MuiInputBase-formControl MuiInput-formControl"
+                      onClick={[Function]}
+                    >
+                      <div
+                        aria-haspopup="listbox"
+                        aria-label="language"
+                        className="MuiSelect-root makeStyles-select-5 MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="button"
+                        tabIndex={0}
+                      >
+                        <p
+                          className="MuiTypography-root MuiTypography-body1"
+                        >
+                          中文 Chinese
+                        </p>
+                      </div>
+                      <input
+                        aria-hidden={true}
+                        className="MuiSelect-nativeInput"
+                        onAnimationStart={[Function]}
+                        onChange={[Function]}
+                        required={false}
+                        tabIndex={-1}
+                        value="chinese"
+                      />
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSelect-icon makeStyles-icon-6"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
+                >
+                  <button
+                    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onDragLeave={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex={0}
+                    type="button"
+                  >
+                    <span
+                      className="MuiIconButton-label"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <div
+      className="lower-container"
+    >
+      <div
+        className="MuiBox-root MuiBox-root-11 makeStyles-lower-9"
+      >
+        <div
+          className="MuiGrid-root makeStyles-grid-12 MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center MuiGrid-justify-xs-center"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-item"
+          >
+            <span
+              className="MuiSlider-root MuiSlider-colorPrimary makeStyles-slider-13"
+              inputProps={
+                Object {
+                  "aria-label": "minimum font size",
+                }
+              }
+              onMouseDown={[Function]}
+            >
+              <span
+                className="MuiSlider-rail"
+              />
+              <span
+                className="MuiSlider-track"
+                style={
+                  Object {
+                    "left": "0%",
+                    "width": "0%",
+                  }
+                }
+              />
+              <input
+                type="hidden"
+                value="0"
+              />
+              <span
+                aria-orientation="horizontal"
+                aria-valuemax={99}
+                aria-valuemin={0}
+                aria-valuenow={0}
+                className="MuiSlider-thumb MuiSlider-thumbColorPrimary"
+                data-index={0}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseOver={[Function]}
+                role="slider"
+                style={
+                  Object {
+                    "left": "0%",
+                  }
+                }
+                tabIndex={0}
+              />
+            </span>
+          </div>
+          <div
+            className="MuiGrid-root MuiGrid-item"
+          >
+            <div
+              className="MuiInputBase-root MuiInput-root makeStyles-input-14 MuiInputBase-marginDense MuiInput-marginDense"
+              onClick={[Function]}
+            >
+              <input
+                aria-label="minimum font size"
+                className="MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
+                max={99}
+                min={0}
+                onAnimationStart={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                readOnly={true}
+                step={1}
+                type="number"
+                value={0}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="MuiBox-root MuiBox-root-20 makeStyles-help-10"
+        >
+          <a
+            aria-disabled={false}
+            className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+            href="https://github.com/rjpeterson/Hanzisize#donate"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            target="_blank"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
+                />
+              </svg>
+            </span>
+          </a>
+        </div>
+        <div
+          className="MuiBox-root MuiBox-root-23 makeStyles-hidden-22"
+        >
+          <p
+            className="MuiTypography-root MuiTypography-body1"
+          >
+            "Warning: This page contains iframes. Hanzisize may not work properly."
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
