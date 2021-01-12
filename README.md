@@ -5,11 +5,11 @@ Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hour
 You can show your appreciation for Hanzisize by donating in the following ways:
 * Buy me a matcha latte\!
 
-<a href="https://www.buymeacoffee.com/djmouthguard"><img src="https://github.com/rjpeterson/Hanzisize/blob/issue74/src/images/BMC.png" height="50px" alt="buy me a coffee button"></a>
+<a href="https://www.buymeacoffee.com/djmouthguard"><img src="https://github.com/rjpeterson/Hanzisize/blob/master/src/images/BMC.png" height="50px" alt="buy me a coffee button"></a>
 
 * Donate Bitcoin\!
 
-<img src="https://github.com/rjpeterson/Hanzisize/blob/issue74/src/images/btcdonation.jpeg" width="100px" height="100px" alt="bitcoin qr code">
+<img src="https://github.com/rjpeterson/Hanzisize/blob/master/src/images/btcdonation.jpeg" width="100px" height="100px" alt="bitcoin qr code">
 
 * Or check out my [Redbubble store](www.redbubble.com/people/djmouthguard/shop)\!
 
