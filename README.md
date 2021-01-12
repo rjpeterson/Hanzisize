@@ -22,7 +22,7 @@ The inspiration for this browser extension came from my own frustration trying t
 ## How does it work?
 The current version of Hanzisize is able to selectively resize Arabic, Burmese, Chinese, English, Georgian, Korean, Hebrew, Hindi, Japanese, and Thai text. Other languages may be added later based on demand.
 
-The current functionality allows for easy increasing and descreasing font-size on the page with a few limitations.
+The current functionality allows for easy increasing and decreasing font-size on the page with a few limitations.
 The font size of an element can never be smaller than it was when the page was first loaded. This prevents headers and other large font size elements from shrinking while small paragraph text is enlarged.
 
 ## Privacy
