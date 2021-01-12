@@ -35,6 +35,7 @@ You can email me at hanzisizeextension@gmail.com, or if you have a Github accoun
 
 ### Production
 [Install on Google Chrome](https://chrome.google.com/webstore/detail/hanzisize/jcljolcajgicemckjlgndbmoaeoobodk)
+
 [Install on Mozilla Firefox](https://addons.mozilla.org/en-US/firefox/addon/hanzisize/)
 
 ### Development
