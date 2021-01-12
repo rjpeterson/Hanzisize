@@ -5,11 +5,10 @@ import Upper from './Upper/Upper';
 import Lower from './Lower/Lower';
 import ErrorMessage from './ErrorMessage';
 import testingTools from '../utils/testingTools';
-import spinner from '../images/91.gif';
+
 
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { grey } from '@material-ui/core/colors';
 import theme from './theme';
 import 'fontsource-roboto';
 
@@ -142,16 +141,7 @@ function App() {
   if(errorMessage) {
     testingTools.devLog('display error message')
     return (<ErrorMessage errorMessage={errorMessage} />)
-  } 
-
-  // display placeholder interface
-  else if(!ready && !testingTools.devMode()) {
-    testingTools.devLog('display placeholder interface')
-    return (
-      <div class="loading-screen"><img src={spinner} alt="loading..."></img></div>
-    )
-  }
-  
+  }   
   // display active interface
   else {
     testingTools.devLog('display active interface')

@@ -2,7 +2,7 @@
   "name": "hanzisize-reboot-react",
   "version": "0.2.0",
   "private": true,
-  "description": "A React web extension for changing text font-size based on language",
+  "description": "A browser extension for changing font-size based on user-selected language",
   "main": "index.js",
   "dependencies": {
     "@material-ui/core": "^4.11.1",

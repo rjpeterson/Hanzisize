@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 
-import './InputSlider.css';
+// import './InputSlider.css';
 
 const useStyles = makeStyles({
   grid: {
@@ -30,6 +30,18 @@ export default function InputSlider({minFontSize, changeHandler}) {
     changeHandler(newValue);
   };
 
+  const handleInputChange = (event) => {
+    changeHandler(event.target.value === '' ? '' : Number(event.target.value));
+  };
+
+  const handleBlur = () => {
+    if (minFontSize < 0) {
+      changeHandler(0);
+    } else if (minFontSize > 99) {
+      changeHandler(99);
+    }
+  };
+
   return (
     <Grid 
       container 
@@ -51,13 +63,13 @@ export default function InputSlider({minFontSize, changeHandler}) {
       </Grid>
       <Grid item>
         <Input
-          readOnly={true}
+          // readOnly={true}
           disableUnderline
           className={classes.input}
           value={minFontSize}
           margin="dense"
-          // onChange={(event) => {handleInputChange(event)}}
-          // onBlur={handleBlur}
+          onChange={(event) => {handleInputChange(event)}}
+          onBlur={handleBlur}
           inputProps={{
             step: 1,
             min: 0,
