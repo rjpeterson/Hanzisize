@@ -1,8 +1,8 @@
 {
   "name": "Hanzisize",
-  "version": "0.2.0",
+  "version": "0.2.2",
 
-  "description": "A browser extension for changing font-size based on user-selected language",
+  "description": "Selectively enlarge text of a specific language",
   "permissions": [
     "activeTab",
     "storage"

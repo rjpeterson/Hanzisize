@@ -50,7 +50,7 @@ const tools = {
 
       testingTools.devLog(`tools.sendToContent initial message send failed. injecting jquery...`);
       // First try to inject jquery into active tab. Requires "permissions": ["activeTab"] in manifest.json
-      chrome.tabs.executeScript(tabId, { file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js' }, function () {
+      chrome.tabs.executeScript(tabId, { file: process.env.PUBLIC_URL + 'jquery-3.5.1.min.js' }, function () {
         tools.handleJqueryInjection(chrome.runtime.lastError, tabId, obj, _errorCallback);
       });
     } else {

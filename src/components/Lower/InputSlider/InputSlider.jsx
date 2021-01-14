@@ -5,8 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 
-// import './InputSlider.css';
-
 const useStyles = makeStyles({
   grid: {
     paddingTop: 10,

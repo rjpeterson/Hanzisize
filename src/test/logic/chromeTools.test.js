@@ -77,7 +77,7 @@ describe('chromeTools', () => {
       tools.handleFirstMessageResponse(chrome.runtime.lastError, response, tabId, obj, mockCallback);
 
       expect(chrome.tabs.executeScript).toHaveBeenCalledTimes(1);
-      expect(chrome.tabs.executeScript).toHaveBeenCalledWith(tabId, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js'}, expect.any(Function));
+      expect(chrome.tabs.executeScript).toHaveBeenCalledWith(tabId, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.min.js'}, expect.any(Function));
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledWith(false, tabId, obj, mockCallback);
     })
@@ -189,57 +189,5 @@ describe('chromeTools', () => {
       expect(chrome.tabs.sendMessage).toHaveBeenCalledWith(tabId, obj, {frameId: 0}, expect.any(Function));
       expect(spy).toHaveBeenCalledWith(chrome.runtime.lastError, 'message response', tabId, obj, mockCallback);
     })
-
-    // describe('initial call', () => {
-    //   test('sends message, fails, injects content script and sends message again', () => {
-      
-    //     tools.sendToContent(tabId, obj, callback);
-      
-    //     expect(chrome.tabs.sendMessage).toHaveBeenCalledTimes(2);
-    //     expect(chrome.tabs.sendMessage).toHaveBeenNthCalledWith(1, tabId, obj, {frameId: 0}, expect.any(Function))
-    //     expect(chrome.tabs.sendMessage).toHaveBeenNthCalledWith(2, tabId, obj, {frameId: 0}, expect.any(Function))
-    //     expect(chrome.tabs.executeScript).toHaveBeenCalledTimes(2);
-    //     expect(chrome.tabs.executeScript).toHaveBeenNthCalledWith(1,tabId, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js'}, expect.any(Function));
-    //     expect(chrome.tabs.executeScript).toHaveBeenNthCalledWith(2,tabId, {file: process.env.PUBLIC_URL + '/contentScript.js'}, expect.any(Function));
-    //     expect(callback).toHaveBeenCalledTimes(1);
-    //     expect(callback).toHaveBeenCalledWith(null);
-    //   })
-    // })
-    
-    // describe('second call', () => {
-    //   test('sends message to content script', () => {
-    //     chrome.runtime.lastError = false;
-      
-    //     tools.sendToContent(tabId, obj, callback);
-        
-    //     expect(chrome.tabs.sendMessage).toHaveBeenCalledTimes(1);
-    //     expect(chrome.tabs.sendMessage).toHaveBeenCalledWith(tabId, obj, {frameId: 0}, expect.any(Function));
-    //     expect(chrome.tabs.executeScript).toHaveBeenCalledTimes(0);
-    //     expect(callback).toHaveBeenCalledTimes(1);
-    //     expect(callback).toHaveBeenCalledWith(null);
-    //   })
-    // })
-
-    // describe('opera allow search page results setting', () => {
-    //   test('it fires callback with correct error message when setting is disabled', () => {
-    //     let injectionError;
-    //     let response = {recieved: "yes", frameCheck: false};
-    //     chrome.tabs.sendMessage = jest.fn((tab_id, obj, frameId, _callback) => {
-    //       _callback(injectionError, response)
-    //     });
-    //     chrome.tabs.executeScript = jest.fn((tab_id, object, _callback) => {
-    //       injectionError = {message: 'This page cannot be scripted due to an ExtensionsSettings policy.'};
-    //     })
-
-    //     tools.sendToContent(tabId, obj, callback);
-
-    //     expect(chrome.tabs.sendMessage).toHaveBeenCalledTimes(1);
-    //     expect(chrome.tabs.sendMessage).toHaveBeenCalledWith(tabId, obj, {frameId: 0}, expect.any(Function));
-    //     expect(chrome.tabs.executeScript).toHaveBeenCalledTimes(1);
-    //     expect(chrome.tabs.executeScript).toHaveBeenCalledWith(tabId, {file: process.env.PUBLIC_URL + 'jquery-3.5.1.slim.min.js'}, expect.any(Function));
-    //     expect(callback).toHaveBeenCalledTimes(1);
-    //     expect(callback).toHaveBeenCalledWith(tools.operaErrors.popupWarning, response)
-    //   })
-    // })
   })
 })
