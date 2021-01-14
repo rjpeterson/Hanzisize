@@ -38,6 +38,8 @@ You can email me at hanzisizeextension@gmail.com, or if you have a Github accoun
 
 [Install on Mozilla Firefox](https://addons.mozilla.org/en-US/firefox/addon/hanzisize/)
 
+[Install on Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/hanzisize/kfnlbmlnhaikojdaedhjfbjjfgklblfa)
+
 ### Development
 #### Chrome
 1. Clone repository OR download and extract ZIP file from github.com/rjpeterson/Hanzisize
