@@ -24,7 +24,7 @@ const classes = useStyles();
   return (
     <Box className={display ? classes.warning : classes.hidden}>
       <Typography>
-        "Warning: This page contains iframes. Hanzisize may not work properly."
+        Warning: This page contains iframes. Hanzisize may not work properly.
       </Typography>
     </Box>
   )
