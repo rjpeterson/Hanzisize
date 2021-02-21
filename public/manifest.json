@@ -1,6 +1,6 @@
 {
   "name": "Hanzisize",
-  "version": "0.2.3",
+  "version": "0.2.4",
 
   "description": "Selectively enlarge text of a specific language",
   "permissions": [
@@ -8,7 +8,7 @@
     "storage"
   ],
 
-  "browser_action": {
+  "action": {
     "default_popup": "index.html",
     "default_title": "Hanzisize",
     "default_icon": "icons/icon16.png"
@@ -20,7 +20,7 @@
    "128": "icons/icon128.png" 
   },
   "offline_enabled": true,
-  "manifest_version": 2,
+  "manifest_version": 3,
   "browser_specific_settings": {
     "gecko": {
       "id": "hanzisizeextension@gmail.com"
