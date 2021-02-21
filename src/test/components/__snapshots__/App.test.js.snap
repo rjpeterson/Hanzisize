@@ -289,7 +289,7 @@ exports[`App renders 1`] = `
           <p
             className="MuiTypography-root MuiTypography-body1"
           >
-            "Warning: This page contains iframes. Hanzisize may not work properly."
+            Warning: This page contains iframes. Hanzisize may not work properly.
           </p>
         </div>
       </div>
