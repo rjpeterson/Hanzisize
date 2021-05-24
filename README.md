@@ -1,5 +1,14 @@
 # Hanzisize
 
+## What's new in version 0.2.6?
+Users can now resize page content using keyboard hotkeys, instead of having to click the extension icon every time. The default hotkeys are:
+
+"Shift+Alt+Q" - Initiate resizing using the most recent language and fontsize settings
+
+"Shift+Alt+W" - Open the Hanzisize menu
+
+These default hotkeys can be changed to the key comination of your choice in your browser settings.
+
 ## Donate
 Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hours working on Hanzisize while making it available for anyone to use for free. If you are able, please consider donating so I can continue to improve this tool for all of us. If you're not able to donate, please leave a review of this extension on the extension webstore of your choice so more people can find it. Thanks for your support!
 You can show your appreciation for Hanzisize by donating in the following ways:
@@ -22,8 +31,8 @@ The inspiration for this browser extension came from my own frustration trying t
 ## How does it work?
 The current version of Hanzisize is able to selectively resize Arabic, Burmese, Chinese, English, Georgian, Korean, Hebrew, Hindi, Japanese, and Thai text. Other languages may be added later based on demand.
 
-The current functionality allows for easy increasing and decreasing font-size on the page with a few limitations.
-The font size of an element can never be smaller than it was when the page was first loaded. This prevents headers and other large font size elements from shrinking while small paragraph text is enlarged.
+Hanzisize allows for easy increasing and decreasing font-size on the page, with a few limitations.
+For example, the font size of an element can never be smaller than it was when the page was first loaded. This prevents headers and other large font size elements from shrinking while small paragraph text is enlarged.
 
 ## Privacy
 Hanzisize does not collect or transmit any user data. The only information that is stored are the most recent language and font size settings for user convenience. This data is stored in the user's browser and is not transmitted externally or used for any other purpose.
