@@ -7,7 +7,7 @@ Users can now resize page content using keyboard hotkeys, instead of having to c
 
 "Shift+Alt+W" - Open the Hanzisize menu
 
-These default hotkeys can be changed to the key comination of your choice in your browser settings.
+These default hotkeys can be changed to the key combination of your choice in your browser settings.
 
 ## Donate
 Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hours working on Hanzisize while making it available for anyone to use for free. If you are able, please consider donating so I can continue to improve this tool for all of us. If you're not able to donate, please leave a review of this extension on the extension webstore of your choice so more people can find it. Thanks for your support!
