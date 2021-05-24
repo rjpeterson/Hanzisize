@@ -10,14 +10,14 @@
   "commands": {
     "resize": {
 			"suggested_key": {
-				"default": "Shift+Alt+Space"
+				"default": "Shift+Alt+Q"
 			},
 			"description" : "Resize w/ saved settings"
 		},
 
     "_execute_browser_action": {
       "suggested_key": {
-        "default": "Shift+Alt+H"
+        "default": "Shift+Alt+W"
       }
     }
   },
