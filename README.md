@@ -2,7 +2,9 @@
 
 ## What's new in version 0.2.6?
 Users can now resize page content using keyboard hotkeys, instead of having to click the extension icon every time. The default hotkeys are:
+
 "Shift+Alt+Spacebar" - Initiate resizing using the most recent language and fontsize settings
+
 "Shift+Alt+H" - Open the Hanzisize menu
 
 These default hotkeys can be changed to the key comination of your choice in your browser settings.
