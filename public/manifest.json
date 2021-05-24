@@ -1,12 +1,31 @@
 {
   "name": "Hanzisize",
-  "version": "0.2.4",
-
+  "version": "0.2.6",
   "description": "Selectively enlarge text of a specific language",
   "permissions": [
     "activeTab",
     "storage"
   ],
+
+  "commands": {
+    "resize": {
+			"suggested_key": {
+				"default": "Shift+Alt+Space"
+			},
+			"description" : "Resize w/ saved settings"
+		},
+
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Shift+Alt+H"
+      }
+    }
+  },
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
 
   "browser_action": {
     "default_popup": "index.html",
@@ -25,5 +44,10 @@
     "gecko": {
       "id": "hanzisizeextension@gmail.com"
     }
-  }
+  },
+  "web_accessible_resources": [
+    "src/background.js",
+    "src/logic/*",
+    "src/utils/testingTools.js"
+  ]
 }
