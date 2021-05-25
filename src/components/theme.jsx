@@ -6,6 +6,14 @@ const theme = createMuiTheme({
   typography: {
     body1: {
       fontSize: 14,
+      lineHeight: 1,
+      textAlign: 'center'
+    },
+    body2: {
+      fontsize: '.3rem',
+      textAlign: 'center',
+      fontWeight: 200,
+      lineHeight: .75
     }
   },
   palette: {

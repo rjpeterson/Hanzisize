@@ -15,8 +15,8 @@ import LangOptions from './LangOptions';
 
 const useStyles = makeStyles({
   menuItem: {
-    fontSize: ".7rem",
-    minHeight: "1.3rem",
+    fontSize: ".6rem",
+    minHeight: "1.1rem",
     paddingTop: "0px",
     paddingBottom: "0px",
   },
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
     borderWidth: 2,
     borderRadius: 12,
     marginBottom: 0,
-    paddingLeft: 24,
+    paddingLeft: 16,
     paddingTop: 10,
     paddingBottom: 10,
     boxShadow: '0px 5px 8px -3px rgba(0,0,0,0.14)',
@@ -42,7 +42,7 @@ const useStyles = makeStyles({
   },
   icon:{
     color: grey[500],
-    right: 12,
+    right: 8,
     position: 'absolute',
     userSelect: 'none',
     pointerEvents: 'none'

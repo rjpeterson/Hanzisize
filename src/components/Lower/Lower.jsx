@@ -1,24 +1,17 @@
 import React from 'react';
 import IFrameWarning from './IFrameWarning/IFrameWarning';
 
-import InputSlider from './InputSlider/InputSlider';
+import FontSize from './FontSize/FontSize';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import HelpOutline from '@material-ui/icons/HelpOutline';
-import IconButton from '@material-ui/core/IconButton';
 import 'fontsource-roboto';
 
 const useStyles = makeStyles({
   lower: {
     position: 'relative',
     paddingBottom: 2,
-  },
-  help: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-  },
+  }
 })
 
 export default function Lower({minFontSize, changeHandler, iFrames}) {
@@ -27,17 +20,10 @@ export default function Lower({minFontSize, changeHandler, iFrames}) {
   return (
     <div className="lower-container">
       <Box className={classes.lower}>
-      <InputSlider 
+      <FontSize 
         minFontSize={minFontSize}
         changeHandler={changeHandler}
       />
-      <Box 
-        className={classes.help}
-      >
-        <IconButton size="small" href='https://github.com/rjpeterson/Hanzisize#donate' target="_blank">
-          <HelpOutline />
-        </IconButton>
-      </Box>
       <IFrameWarning 
         display={iFrames}
       />
