@@ -149,27 +149,22 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
   };
 
   const buttonSwap = (minFontSize, fontsizeSML) => {
-
     if(minFontSize === fontsizeSML) {
-      return <ActiveButton
-        onClick={() => { handleButtonClick(fontsizeSML)}}
-      >
-      <Typography
-        style={{fontSize: fontsizeSML}}
-      >
-        Aa
-      </Typography>
-    </ActiveButton>
+      return (
+        <ActiveButton onClick={() => { handleButtonClick(fontsizeSML)}}>
+          <Typography style={{fontSize: fontsizeSML}}>
+            Aa
+          </Typography>
+        </ActiveButton>
+      )
     } else {
-      return <NormalButton
-        onClick={() => {handleButtonClick(fontsizeSML)}}
-      >
-      <Typography
-        style={{fontSize: fontsizeSML}}
-      >
-        Aa
-      </Typography>
-    </NormalButton>
+      return (
+        <NormalButton onClick={() => {handleButtonClick(fontsizeSML)}}>
+          <Typography style={{fontSize: fontsizeSML}}>
+            Aa
+          </Typography>
+        </NormalButton>
+      )
     }
   }
 
@@ -181,44 +176,9 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
       alignItems="center" 
       justify="center"
     >
-      <Grid item>
-        {/* <NormalButton
-          onClick={() => {handleButtonClick(fontSizes.s)}}
-          className={minFontSize === fontSizes.s ? classes.is_active : ''}
-        >
-          <Typography
-            className={classes.small}
-          >
-            Aa
-          </Typography>
-        </NormalButton> */}
-        {buttonSwap(minFontSize, fontSizes.small)}
-      </Grid>
-      <Grid item>
-        {/* <NormalButton
-          onClick={() => { handleButtonClick(fontSizes.m)}}
-          className={minFontSize === fontSizes.m ? classes.is_active : ''}
-        >
-          <Typography
-            className={classes.medium}
-          >
-            Aa
-          </Typography>
-        </NormalButton> */}
-        {buttonSwap(minFontSize, fontSizes.medium)}
-      </Grid>
-      <Grid item>
-        {/* <ActiveButton
-          onClick={() => { handleButtonClick(fontSizes.l)}}
-        >
-          <Typography
-            className={classes.large}
-          >
-            Aa
-          </Typography>
-        </ActiveButton> */}
-        {buttonSwap(minFontSize, fontSizes.large)}
-      </Grid>
+      <Grid item>{buttonSwap(minFontSize, fontSizes.small)}</Grid>
+      <Grid item>{buttonSwap(minFontSize, fontSizes.medium)}</Grid>
+      <Grid item>{buttonSwap(minFontSize, fontSizes.large)}</Grid>
       <Grid item>
         <Typography variant='body2'>
           Custom
