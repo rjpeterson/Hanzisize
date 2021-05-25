@@ -17,7 +17,6 @@ testingTools.setupTestEnv();
 const useStyles = makeStyles({
   container: {
     width: 340,
-    height: 160,
     backgroundColor: theme.palette.secondary.main,
     overflow: 'hidden',
     flexDirection: 'row',
