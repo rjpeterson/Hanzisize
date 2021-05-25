@@ -15,7 +15,6 @@ import LangOptions from './LangOptions';
 
 const useStyles = makeStyles({
   menuItem: {
-    fontSize: ".6rem",
     minHeight: "1.1rem",
     paddingTop: "0px",
     paddingBottom: "0px",

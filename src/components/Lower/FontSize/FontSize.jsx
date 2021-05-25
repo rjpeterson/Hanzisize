@@ -26,11 +26,19 @@ const useStyles = makeStyles({
   large: {
     fontSize: fontSizes.large
   },
-  input: {
+  activeButton: {
+    boxShadow: "0 3px 6px 2px rgba(255, 105, 135, .3)",
+    color: grey[50],
+    backgroundColor: grey[500]
+  }
+})
+
+const FontSizeInput = withStyles({
+  root: {
     width: 67,
     boxShadow: 'none',
     textTransform: 'none',
-    padding: '8px 7px',
+    padding: '8px 15px',
     lineHeight: 1.5,
     color: grey[800],
     fontFamily: [
@@ -44,14 +52,15 @@ const useStyles = makeStyles({
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"'
-    ]
+    ],
   },
-  activeButton: {
-    boxShadow: "0 3px 6px 2px rgba(255, 105, 135, .3)",
-    color: grey[50],
-    backgroundColor: grey[500]
+  underline: {
+    '&::before': {
+      'left': '20%',
+      'width': '60%'
+    },
   }
-})
+})(Input);
 
 const NormalButton = withStyles({
   root: {
@@ -183,12 +192,12 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
         <Typography variant='body2'>
           Custom
         </Typography>
-        <Input
-          className={classes.input}
+        <FontSizeInput
           value={minFontSize}
           onChange={(event) => {handleInputChange(event)}}
           onBlur={handleBlur}
           inputProps={{
+            classes: {underline: classes.underline},
             step: 1,
             min: 0,
             max: 99,

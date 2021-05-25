@@ -1,5 +1,5 @@
 import React from 'react';
-import IFrameWarning from './IFrameWarning/IFrameWarning';
+import Notification from './Notification/Notification';
 
 import FontSize from './FontSize/FontSize';
 
@@ -24,8 +24,8 @@ export default function Lower({minFontSize, changeHandler, iFrames}) {
         minFontSize={minFontSize}
         changeHandler={changeHandler}
       />
-      <IFrameWarning 
-        display={iFrames}
+      <Notification 
+        iFrames={iFrames}
       />
       </Box>
     </div>
