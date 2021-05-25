@@ -39,15 +39,5 @@
    "128": "icons/icon128.png" 
   },
   "offline_enabled": true,
-  "manifest_version": 2,
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "hanzisizeextension@gmail.com"
-    }
-  },
-  "web_accessible_resources": [
-    "src/background.js",
-    "src/logic/*",
-    "src/utils/testingTools.js"
-  ]
+  "manifest_version": 2
 }

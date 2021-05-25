@@ -29,7 +29,6 @@ function App() {
   const [minFontSize, setMinFontSize] = useState(0);
   const [language, setLanguage] = useState('chinese');
   const [tabId, setTabId] = useState(null);
-  const [ready, setReady] = useState(false);
   const [iFrames, setiFrames] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -79,7 +78,6 @@ function App() {
       tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr, response) => {
           setErrorMessage(injectionErr);
           setTabId(tabInfo.tabId);
-          setReady(true);
           setiFrames(response.multipleFrames);
       })
     }
