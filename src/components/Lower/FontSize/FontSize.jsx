@@ -1,21 +1,27 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 
+import "./FontSize.css";
+
 const fontSizes = {
   small: 10,
-  medium: 16,
+  medium: 18,
   large: 24
 }
 
 const useStyles = makeStyles({
   grid: {
     paddingTop: '1rem',
-    paddingBottom: '.25rem',
+    paddingBottom: '.5rem',
+  },
+  subgrid: {
+    padding: '0 5px',
   },
   small: {
     fontSize: fontSizes.small
@@ -26,19 +32,24 @@ const useStyles = makeStyles({
   large: {
     fontSize: fontSizes.large
   },
-  activeButton: {
-    boxShadow: "0 3px 6px 2px rgba(255, 105, 135, .3)",
-    color: grey[50],
-    backgroundColor: grey[500]
+  plusMinusButton: {
+    height: '1rem',
+    border: '1px solid',
+    borderRadius: 4,
+    backgroundColor: grey[50],
+    borderColor: grey[800],
+    color: grey[800],
   }
 })
 
 const FontSizeInput = withStyles({
   root: {
-    width: 67,
+    width: 57,
+    height: '1rem',
     boxShadow: 'none',
     textTransform: 'none',
-    padding: '8px 15px',
+    padding: '8px 0px',
+    textAlign: 'center',
     lineHeight: 1.5,
     color: grey[800],
     fontFamily: [
@@ -59,12 +70,15 @@ const FontSizeInput = withStyles({
       'left': '20%',
       'width': '60%'
     },
+    '&::after': {
+      'left': '20%',
+      'width': '60%'
+    },
   }
 })(Input);
 
 const NormalButton = withStyles({
   root: {
-    width: 67,
     height: 57,
     boxShadow: 'none',
     textTransform: 'none',
@@ -90,26 +104,15 @@ const NormalButton = withStyles({
     '&:hover': {
       backgroundColor: grey[300],
       color: grey[800],
-      boxShadow: 'none',
-    },
-    '&:active': {
-      boxShadow: 'none',
-      color: grey[50],
-      backgroundColor: grey[500]
-    },
-    '&:focus': {
-      boxShadow: "0 3px 6px 2px rgba(255, 105, 135, .3)",
-      color: grey[50],
-      backgroundColor: grey[500]
-    },
+      boxShadow: "2px 2px 6px 1px rgba(0, 0, 0, 0.1)",
+    }
   },
 })(Button);
 
 const ActiveButton = withStyles({
   root: {
-    width: 67,
     height: 57,
-    boxShadow: "0 3px 6px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "2px 2px 6px 1px rgba(0, 0, 0, 0.1)",
     textTransform: 'none',
     padding: '8px 7px',
     border: '1px solid',
@@ -133,7 +136,7 @@ const ActiveButton = withStyles({
     '&:hover': {
       backgroundColor: grey[300],
       color: grey[800],
-      boxShadow: 'none',
+      boxShadow: "2px 2px 6px 1px rgba(0, 0, 0, 0.1)",
     },
   },
 })(Button);
@@ -144,6 +147,16 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
   const handleButtonClick = (newValue) => {
     changeHandler(newValue);
   };
+
+  const decrementFontSize = () => {
+    const newMinFontSize = (minFontSize > 0) ? (minFontSize - 1) : 0;
+    changeHandler(newMinFontSize);
+  }
+
+  const incrementFontSize = () => {
+    const newMinFontSize = (minFontSize < 99) ? (minFontSize + 1) : 99;
+    changeHandler(newMinFontSize);
+  }
 
   const handleInputChange = (event) => {
     changeHandler(event.target.value === '' ? '' : Number(event.target.value));
@@ -181,7 +194,7 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
     <Grid 
       container 
       className={classes.grid} 
-      spacing={2} 
+      spacing={1} 
       alignItems="center" 
       justify="center"
     >
@@ -189,23 +202,59 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
       <Grid item>{buttonSwap(minFontSize, fontSizes.medium)}</Grid>
       <Grid item>{buttonSwap(minFontSize, fontSizes.large)}</Grid>
       <Grid item>
-        <Typography variant='body2'>
-          Custom
-        </Typography>
-        <FontSizeInput
-          value={minFontSize}
-          onChange={(event) => {handleInputChange(event)}}
-          onBlur={handleBlur}
-          inputProps={{
-            classes: {underline: classes.underline},
-            step: 1,
-            min: 0,
-            max: 99,
-            type: 'number',
-            'aria-label': 'minimum font size',
-            }
-          }
-        />
+        <Grid 
+          container
+          className={classes.subgrid}
+          direction="column"
+          justify="space-evenly"
+          alignItems="center"
+        >
+          <Grid item>
+            <Typography variant='body2'>
+              Custom
+            </Typography>
+          </Grid>
+          <Grid item xs>
+            <FontSizeInput
+              type="number"
+              value={minFontSize}
+              onChange={(event) => {handleInputChange(event)}}
+              onBlur={handleBlur}
+              disableUnderline
+              inputProps={{
+                style: {textAlign: 'center'},
+                step: 1,
+                min: 0,
+                max: 99,
+                type: 'number',
+                'aria-label': 'minimum font size',
+                }
+              }
+            />
+          </Grid>
+          <Grid item>
+            <ButtonGroup
+              orientation="horizontal"
+              color="default"
+              aria-label="horizontal outlined primary button group"
+            >
+              <Button 
+                size="small"
+                className={classes.plusMinusButton}
+                onClick={() => {decrementFontSize(minFontSize)}}
+              >
+                -
+              </Button>
+              <Button 
+                size="small"
+                className={classes.plusMinusButton}  
+                onClick={() => {incrementFontSize(minFontSize)}}
+                >
+                  +
+                </Button>
+            </ButtonGroup>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
