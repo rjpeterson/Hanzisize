@@ -5,15 +5,15 @@ import { common } from "@material-ui/core/colors";
 const theme = createMuiTheme({
   typography: {
     body1: {
-      fontSize: 14,
-      lineHeight: 1,
-      textAlign: 'center'
+      'font-size': 14,
+      'line-height': 1,
+      'text-align': 'center'
     },
     body2: {
-      fontsize: '.3rem',
-      textAlign: 'center',
-      fontWeight: 200,
-      lineHeight: .75
+      'font-size': 10,
+      'text-align': 'center',
+      'color': grey[700],
+      'line-height': 1
     }
   },
   palette: {
