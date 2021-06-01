@@ -59,7 +59,7 @@ export default function Upper({language, changeHandler}) {
               >
                 <IconButton 
                   size="small" 
-                  href='https://github.com/rjpeterson/Hanzisize#donate' target="_blank"
+                  href='https://rjpeterson.github.io/hanzisize-about/' target="_blank"
                   color="secondary"
                 >
                   <HelpOutline />
