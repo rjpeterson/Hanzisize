@@ -18,9 +18,6 @@ You can show your appreciation for Hanzisize by donating in the following ways:
 
 * Donate Bitcoin\!
 
-[![Bitcoin Donate Button](https://i.stack.imgur.com/MnQ6V.pngx)](http://rjpeterson.github.io/Hanzisize/public/bitcoin-redirect)
-
-
 <img src="https://github.com/rjpeterson/Hanzisize/blob/master/src/images/casaSKbtcQR.png" width="180px" alt="bitcoin qr code"></a>
 
 * Or check out my [Redbubble store](www.redbubble.com/people/djmouthguard/shop)\!
