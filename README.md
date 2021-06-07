@@ -1,6 +1,12 @@
 # Hanzisize
 
-## What's new in version 0.2.6?
+## What's new in version 0.2.7?
+* Small, Medium, and Large font size buttons
+
+The font size slider has been replaced with three easier to use font size buttons and a custom font size input field
+
+* Hotkeys
+
 Users can now resize page content using keyboard hotkeys, instead of having to click the extension icon every time. The default hotkeys are:
 
 "Shift+Alt+Q" - Initiate resizing using the most recent language and fontsize settings
