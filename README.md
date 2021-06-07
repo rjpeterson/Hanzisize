@@ -16,9 +16,17 @@ You can show your appreciation for Hanzisize by donating in the following ways:
 
 <a href="https://www.buymeacoffee.com/djmouthguard"><img src="https://github.com/rjpeterson/Hanzisize/blob/master/src/images/BMC.png" height="50px" alt="buy me a coffee button"></a>
 
-* Donate Bitcoin\!
+* Donate Bitcoin\!852083
 
 <img src="https://github.com/rjpeterson/Hanzisize/blob/master/src/images/casaSKbtcQR.png" width="100px" height="100px" alt="bitcoin qr code">
+
+* Paypal me\!
+
+<a href="https://www.paypal.com/biz/fund?id=CPGN8BAF93S7J"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"></a>
+
+* Venmo me \!
+
+Send a donation to @hanzisize on Venmo
 
 * Or check out my [Redbubble store](www.redbubble.com/people/djmouthguard/shop)\!
 
