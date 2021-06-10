@@ -16,7 +16,7 @@ const hanzisizeUtil = {
   // REGEX_THAI: /\p{Script=Thai}+/u,
   REGEX_ARABIC: /[\u0600-\u06FF]|[\u0750-\u077F]|[\u08a0-\u08ff]|[\uFB50-\uFDFF]|[\uFE70-\uFEFF]/,
   // REGEX_ARABIC: /\p{Script=Arabic}+/u,
-  REGEX_HEBREW: /[\u0590-\u05FF]/,
+  REGEX_HEBREW: /[\u0590-\u05FF]|[\uFB1D-\uFB4F]/,
   // REGEX_HEBREW: /\p{Script=Hebrew}+/u,
   REGEX_GEORGIAN: /[\u10A0-\u10FF]/,
   // REGEX_GEORGIAN: /\p{Script=Georgian}+/u,
