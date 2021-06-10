@@ -1,42 +1,39 @@
 {
   "name": "Hanzisize",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "description": "Selectively enlarge text of a specific language",
   "permissions": [
     "activeTab",
     "storage"
   ],
-
   "commands": {
     "resize": {
-			"suggested_key": {
-				"default": "Shift+Alt+Q"
-			},
-			"description" : "Resize w/ saved settings"
-		},
-
+      "suggested_key": {
+        "default": "Shift+Alt+Q"
+      },
+      "description": "Resize w/ saved settings"
+    },
     "_execute_browser_action": {
       "suggested_key": {
         "default": "Shift+Alt+W"
       }
     }
   },
-
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   },
-
   "browser_action": {
     "default_popup": "index.html",
     "default_title": "Hanzisize",
     "default_icon": "icons/icon16.png"
   },
-  
-  "icons": { 
+  "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
-   "128": "icons/icon128.png" 
+    "128": "icons/icon128.png"
   },
   "offline_enabled": true,
   "manifest_version": 2
