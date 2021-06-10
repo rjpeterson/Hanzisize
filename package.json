@@ -1,6 +1,6 @@
 {
   "name": "hanzisize-reboot-react",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "private": true,
   "description": "Selectively enlarge text of a specific language",
   "main": "index.js",
@@ -22,7 +22,10 @@
     "start": "set PORT=3000 && react-scripts start",
     "build": "react-scripts build && cd build && sed -i -e 's#https://storage[.]googleapis[.]com/workbox-cdn/releases/[0-9.]*/workbox-sw.js#/workbox-sw.js#g' service-worker.js && web-ext build && cd ..",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "update-version-patch": "mversion patch && cd public && mversion patch && cd ..",
+    "update-version-minor": "mversion minor && cd public && mversion minor && cd ..",
+    "update-version-major": "mversion major && cd public && mversion major && cd .."
   },
   "eslintConfig": {
     "extends": "react-app",
