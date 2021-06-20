@@ -12,7 +12,7 @@ const testingTools = {
     }
   },
 
-  devLog: (str) => {
+  devLog: (str: string) => {
     if(testingTools.devMode()) {console.log(str)} 
   },
 

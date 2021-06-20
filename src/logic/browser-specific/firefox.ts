@@ -16,18 +16,23 @@ const firefox = {// firefox specific url checking
   },
 
   // addons are not allowed on addons.mozilla.org or settings pages. This function checks for these urls
-  urlInvalid: (tab) => {
+  urlValid: (tab : chrome.tabs.Tab) => {
+    let result = {
+      message: '',
+      valid: false
+    }
     if ('url' in tab) {
-      if (tab.url.match(/\/addons\.mozilla\.org/i)) {
-        return firefox.addonsErrorString;
-      } else if (tab.url.match(/^about:/i)) {
-        return firefox.aboutErrorString;
+      if (tab.url?.match(/\/addons\.mozilla\.org/i)) {
+        result.message = firefox.addonsErrorString;
+      } else if (tab.url?.match(/^about:/i)) {
+        result.message = firefox.aboutErrorString;
       } else {
-        return false
+        result.valid = true
       }
     } else {
       throw new Error('Active tab has no url value')
     }
+    return result;
   }
 }
 

@@ -14,19 +14,25 @@ const useStyles = makeStyles({
   }
 })
 
-export default function Lower({minFontSize, changeHandler, iFrames}) {
+type LowerProps = {
+  minFontSize: number,
+  changeHandler: Function,
+  iFrames: boolean
+}
+
+export default function Lower({minFontSize, changeHandler, iFrames}: LowerProps) {
   const classes = useStyles();
 
   return (
     <div className="lower-container">
       <Box className={classes.lower}>
-      <FontSize 
-        minFontSize={minFontSize}
-        changeHandler={changeHandler}
-      />
-      <Notification 
-        iFrames={iFrames}
-      />
+        <FontSize 
+          minFontSize={minFontSize}
+          changeHandler={changeHandler}
+        />
+        <Notification 
+          iFrames={iFrames}
+        />
       </Box>
     </div>
   )

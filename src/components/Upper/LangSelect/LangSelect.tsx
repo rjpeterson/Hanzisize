@@ -79,7 +79,12 @@ const useStyles = makeStyles({
   }
 })
 
-function LangSelect({language, changeHandler}) {
+type LangSelectProps = {
+  language: string;
+  changeHandler: Function
+}
+
+function LangSelect({language, changeHandler}: LangSelectProps) {
   const classes = useStyles();
 
   // moves the menu below the select input
@@ -94,12 +99,12 @@ function LangSelect({language, changeHandler}) {
     },
     transformOrigin: {
       vertical: "top",
-        horizontal: "left"
+      horizontal: "left"
     },
     getContentAnchorEl: null
   };
 
-  const handleSelectChange = (event) => {
+  const handleSelectChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     changeHandler(event.target.value)
   };
 
@@ -137,9 +142,9 @@ function LangSelect({language, changeHandler}) {
   );
 }
 
-function LangSelectBar({language, changeHandler}) {
+function LangSelectBar({language, changeHandler}: LangSelectProps) {
 
-  const getLangIndex = (value) => {
+  const getLangIndex = (value: string) => {
     const currentLang = LangOptions.find(element => element.value === value);
     const index = LangOptions.indexOf(currentLang);
     return index;

@@ -23,14 +23,35 @@ const useStyles = makeStyles({
   }
 })
 
+type ContentResponse = {
+  received: string,
+  multipleFrames: boolean
+}
+
+type ValidityCheck = {
+  valid: boolean,
+  message: string
+}
+
+type TabInfo = { 
+  tabId: number;
+  browserValid: ValidityCheck;
+  urlValid: ValidityCheck
+}
+
+type StoredData = {
+  minFontSize: number;
+  language: string
+}
+
 function App() {
   const classes = useStyles();
 
-  const [minFontSize, setMinFontSize] = useState(0);
-  const [language, setLanguage] = useState('chinese');
-  const [tabId, setTabId] = useState(null);
-  const [iFrames, setiFrames] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [minFontSize, setMinFontSize] = useState<StoredData["minFontSize"]>(0);
+  const [language, setLanguage] = useState<StoredData["language"]>('chinese');
+  const [tabId, setTabId] = useState<TabInfo["tabId"]>(0);
+  const [iFrames, setiFrames] = useState<ContentResponse["multipleFrames"]>(false);
+  const [errorMessage, setErrorMessage] = useState<ValidityCheck["message"]>('');
 
   useEffect(() => {
 
@@ -46,10 +67,10 @@ function App() {
       return result;
     }
     
-    const checkTabValidity = (tabInfo) => {
-      let newErrorMessage;
-      if (!tabInfo.validBrowser || tabInfo.invalidUrl) {
-        newErrorMessage = tabInfo.invalidUrl || 'user browser unknown. unable to check for valid urls';
+    const checkTabValidity = (tabInfo: TabInfo) => {
+      let newErrorMessage : string = '';
+      if (!tabInfo.browserValid.valid || !tabInfo.urlValid.valid) {
+        newErrorMessage = tabInfo.urlValid.message || 'user browser unknown. unable to check for valid urls';
         setErrorMessage(newErrorMessage);
         return false
       } else {
@@ -57,7 +78,7 @@ function App() {
       }
     }
 
-    const createContentObj = (storedData) => {
+    const createContentObj = (storedData: StoredData) => {
       const contentObj = {
         'language': storedData.language,
         'newMinFontSize': storedData.minFontSize,
@@ -67,7 +88,7 @@ function App() {
       return contentObj;
     }
 
-    const handleInfo = (tabInfo, storedData) => {
+    const handleInfo = (tabInfo: TabInfo, storedData: StoredData) => {
       const contentObj = createContentObj(storedData);
       const validTab = checkTabValidity(tabInfo);
 
@@ -75,7 +96,7 @@ function App() {
 
       testingTools.devLog(`useEffect sending content obj: ${JSON.stringify(contentObj)}`)
 
-      tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr, response) => {
+      tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr: string, response: ContentResponse) => {
           setErrorMessage(injectionErr);
           setTabId(tabInfo.tabId);
           setiFrames(response.multipleFrames);
@@ -83,7 +104,7 @@ function App() {
     }
 
     const main = async () => {
-      const storedData = await fetchStoredData();
+      const storedData : StoredData = await fetchStoredData();
       const tabInfo = await fetchTabInfo();
 
       handleInfo(tabInfo, storedData);
@@ -95,7 +116,7 @@ function App() {
   }, [])
   
   // fire resizing when user selects a new language from dropdown
-  const handleLangChange = (newLanguage) => {
+  const handleLangChange = (newLanguage: string) => {
     // const newLanguage = newLanguageObj.value;
     // first store new language
     try{tools.pushLangToStorage(newLanguage)}
@@ -116,7 +137,7 @@ function App() {
   }
 
   // fire resizing when user inputs a new minimum font size
-  const handleFSChange = (newMinFontSize) => {
+  const handleFSChange = (newMinFontSize: number) => {
     // first store new minfontsize
     try{tools.pushFSToStorage(newMinFontSize)}
     catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}

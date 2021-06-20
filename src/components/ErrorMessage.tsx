@@ -24,7 +24,11 @@ const useStyles = makeStyles({
   },
 })
 
-export default function ErrorMessage({errorMessage}) {
+type ErrorMessageType = {
+  errorMessage: string
+}
+
+export default function ErrorMessage({errorMessage}: ErrorMessageType) {
   const classes = useStyles();
 
   return (

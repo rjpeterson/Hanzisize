@@ -14,10 +14,14 @@ const useStyles = makeStyles({
   }
 })
 
-export default function Notification({iFrames}) {
+type NotificationProps = {
+  iFrames: boolean
+}
+
+export default function Notification({iFrames}: NotificationProps) {
   const classes = useStyles();
 
-  const notificationSwap = (iFrames) => {
+  const notificationSwap = () => {
     if(iFrames) {
       return (
         <Typography color='error'>
@@ -35,7 +39,7 @@ export default function Notification({iFrames}) {
 
   return (
     <Box className={classes.notification}>
-      {notificationSwap(iFrames)}
+      {notificationSwap()}
     </Box>
   )
 }

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ChangeEvent, ChangeEventHandler } from 'react';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles, createStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
@@ -52,7 +52,7 @@ const FontSizeInput = withStyles({
     textAlign: 'center',
     lineHeight: 1.5,
     color: grey[800],
-    fontFamily: [
+    'font-family': [
       '-apple-system',
       'BlinkMacSystemFont',
       '"Segoe UI"',
@@ -141,10 +141,15 @@ const ActiveButton = withStyles({
   },
 })(Button);
 
-export default function FontSizeButtons({minFontSize, changeHandler}) {
+type FontSizeButtonsProps = {
+  minFontSize: number;
+  changeHandler: Function
+}
+
+export default function FontSizeButtons({minFontSize, changeHandler}: FontSizeButtonsProps) {
   const classes = useStyles();
 
-  const handleButtonClick = (newValue) => {
+  const handleButtonClick = (newValue: Number) => {
     changeHandler(newValue);
   };
 
@@ -158,7 +163,7 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
     changeHandler(newMinFontSize);
   }
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     changeHandler(event.target.value === '' ? '' : Number(event.target.value));
   };
 
@@ -170,7 +175,7 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
     }
   };
 
-  const buttonSwap = (minFontSize, fontsizeSML) => {
+  const buttonSwap = (minFontSize: number, fontsizeSML: number) => {
     if(minFontSize === fontsizeSML) {
       return (
         <ActiveButton onClick={() => { handleButtonClick(fontsizeSML)}}>
@@ -215,6 +220,7 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
             </Typography>
           </Grid>
           <Grid item xs>
+          {/* @ts-ignore */}
             <FontSizeInput
               type="number"
               value={minFontSize}
@@ -241,14 +247,14 @@ export default function FontSizeButtons({minFontSize, changeHandler}) {
               <Button 
                 size="small"
                 className={classes.plusMinusButton}
-                onClick={() => {decrementFontSize(minFontSize)}}
+                onClick={() => {decrementFontSize()}}
               >
                 -
               </Button>
               <Button 
                 size="small"
                 className={classes.plusMinusButton}  
-                onClick={() => {incrementFontSize(minFontSize)}}
+                onClick={() => {incrementFontSize()}}
                 >
                   +
                 </Button>

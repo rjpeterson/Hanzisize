@@ -27,7 +27,12 @@ const useStyles = makeStyles({
   },
 })
 
-export default function Upper({language, changeHandler}) {
+type UpperProps = {
+  language: string;
+  changeHandler: Function
+}
+
+export default function Upper({language, changeHandler}: UpperProps) {
   const classes = useStyles();
 
   return (
