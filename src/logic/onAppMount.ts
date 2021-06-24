@@ -4,6 +4,7 @@ import googlechrome from './browser-specific/googlechrome';
 import firefox from './browser-specific/firefox';
 import opera from './browser-specific/opera';
 import edge from './browser-specific/edge';
+import { TabInfo, GetQueryResult } from '../../types';
 
 import testingTools from '../utils/testingTools';
 
@@ -54,14 +55,14 @@ const onAppMount = {
   main: async () => {
 
     // get active tab info
-    const getQueryResult = () => {
+    const getQueryResult : GetQueryResult = () => {
       return new Promise(resolve => {
         chrome.tabs.query({active: true, currentWindow: true}, response => resolve(response))
       }) 
     }
 
-    const tabs : Array<object> = await getQueryResult()
-    const tab : chrome.tabs.Tab = await tabs[0];
+    const tabs : chrome.tabs.Tab[] = await getQueryResult()
+    const tab : chrome.tabs.Tab = tabs[0];
 
     testingTools.devLog(`onAppMount.main tab ${JSON.stringify(tab)}`)
     // tab object validation
@@ -72,11 +73,12 @@ const onAppMount = {
     const browserValid = onAppMount.userBrowser();
     // check url
     const urlValid = onAppMount.urlValid(tab, browserValid.message);
-    return {
+    const result: TabInfo = {
       tabId: tab.id, 
       browserValid: browserValid,
       urlValid: urlValid
-    };
+    }
+    return result;
   }
 }
 

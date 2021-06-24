@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { NotificationProps } from '../../../../types';
 
 const useStyles = makeStyles({
   notification: {
@@ -13,10 +14,6 @@ const useStyles = makeStyles({
     textAlign: 'center',
   }
 })
-
-type NotificationProps = {
-  iFrames: boolean
-}
 
 export default function Notification({iFrames}: NotificationProps) {
   const classes = useStyles();

@@ -1,7 +1,7 @@
 import React from 'react';
 import Notification from './Notification/Notification';
-
 import FontSize from './FontSize/FontSize';
+import { LowerProps } from '../../../types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -13,12 +13,6 @@ const useStyles = makeStyles({
     paddingBottom: 2,
   }
 })
-
-type LowerProps = {
-  minFontSize: number,
-  changeHandler: Function,
-  iFrames: boolean
-}
 
 export default function Lower({minFontSize, changeHandler, iFrames}: LowerProps) {
   const classes = useStyles();

@@ -5,6 +5,7 @@ import Upper from './Upper/Upper';
 import Lower from './Lower/Lower';
 import ErrorMessage from './ErrorMessage';
 import testingTools from '../utils/testingTools';
+import { ContentResponse, ValidityCheck, TabInfo, StoredData } from '../../types';
 
 
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
@@ -22,27 +23,6 @@ const useStyles = makeStyles({
     flexDirection: 'row',
   }
 })
-
-type ContentResponse = {
-  received: string,
-  multipleFrames: boolean
-}
-
-type ValidityCheck = {
-  valid: boolean,
-  message: string
-}
-
-type TabInfo = { 
-  tabId: number;
-  browserValid: ValidityCheck;
-  urlValid: ValidityCheck
-}
-
-type StoredData = {
-  minFontSize: number;
-  language: string
-}
 
 function App() {
   const classes = useStyles();
@@ -81,7 +61,7 @@ function App() {
     const createContentObj = (storedData: StoredData) => {
       const contentObj = {
         'language': storedData.language,
-        'newMinFontSize': storedData.minFontSize,
+        'minFontSize': storedData.minFontSize,
         'mode': 'initial',
       };
       testingTools.devLog(`creating content object: ${JSON.stringify(contentObj)}`)
@@ -96,7 +76,7 @@ function App() {
 
       testingTools.devLog(`useEffect sending content obj: ${JSON.stringify(contentObj)}`)
 
-      tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr: string, response: ContentResponse) => {
+      tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr: string | undefined, response: ContentResponse) => {
           setErrorMessage(injectionErr);
           setTabId(tabInfo.tabId);
           setiFrames(response.multipleFrames);
@@ -124,7 +104,7 @@ function App() {
 
     const contentObj = {
       'language' : newLanguage,
-      'newMinFontSize': minFontSize,
+      'minFontSize': minFontSize,
       'mode': 'lang-change'
     };
     testingTools.devLog(`handleLangChange sending content obj: ${JSON.stringify(contentObj)}`)
@@ -137,14 +117,14 @@ function App() {
   }
 
   // fire resizing when user inputs a new minimum font size
-  const handleFSChange = (newMinFontSize: number) => {
+  const handleFSChange = (minFontSize: number) => {
     // first store new minfontsize
-    try{tools.pushFSToStorage(newMinFontSize)}
+    try{tools.pushFSToStorage(minFontSize)}
     catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}
 
     const contentObj = {
       'language' : language,
-      'newMinFontSize': newMinFontSize,
+      'minFontSize': minFontSize,
       'mode': 'fontsize-change'
     };
     testingTools.devLog(`handleFSChange sending content obj: ${JSON.stringify(contentObj)}`)
@@ -153,7 +133,7 @@ function App() {
     catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${tabId} contentObj: ${JSON.stringify(contentObj)}`)}
 
     // finally update state
-    setMinFontSize(newMinFontSize)
+    setMinFontSize(minFontSize)
   }
 
   // display any error messages recieved

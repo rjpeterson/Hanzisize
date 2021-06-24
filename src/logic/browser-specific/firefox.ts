@@ -6,7 +6,9 @@ const firefox = {// firefox specific url checking
   aboutErrorString: "NOTE: For this addon to work you must leave this page and go to another website. Mozilla blocks addons from functioning on special Firefox pages such as this one.",
 
   isFirefox: () => {
+    // @ts-ignore
     if (typeof browser !== 'undefined') {
+      // @ts-ignore
       if(typeof browser.runtime.getBrowserInfo === 'function') { // user is on firefox
         return true;
       } else { 

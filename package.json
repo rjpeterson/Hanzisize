@@ -12,12 +12,11 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "styled-components": "^5.2.0",
-    "typescript": "^4.3.3"
+    "styled-components": "^5.2.0"
   },
   "scripts": {
     "start": "set PORT=3000 && react-scripts start",
-    "build": "react-scripts build && cd build && sed -i -e 's#https://storage[.]googleapis[.]com/workbox-cdn/releases/[0-9.]*/workbox-sw.js#/workbox-sw.js#g' service-worker.js && web-ext build && cd ..",
+    "build": "cd public && tsc contentScript.ts && tsc background.ts && cd .. && react-scripts build && cd build && sed -i -e '/exports.__esModule = true;/d' contentScript.js background.js && sed -i -e 's#https://storage[.]googleapis[.]com/workbox-cdn/releases/[0-9.]*/workbox-sw.js#/workbox-sw.js#g' service-worker.js && web-ext build && rm background.ts && rm contentScript.ts && cd ../public && rm background.js && rm contentScript.js && cd ..",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "update-version-patch": "mversion patch && cd public && mversion patch && cd ..",
@@ -52,12 +51,14 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/chrome": "0.0.145",
     "@types/jest": "^26.0.23",
+    "@types/jquery": "^3.5.5",
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
     "eslint-plugin-jquery": "^1.5.1",
     "react-devtools": "^4.8.2",
     "react-test-renderer": "^16.13.1",
+    "typescript": "^4.3.4",
     "web-ext": "^5.4.1"
   }
 }

@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 import 'fontsource-roboto';
+import { ErrorMessageType } from '../../types';
 
 const useStyles = makeStyles({
   container: {
@@ -23,10 +24,6 @@ const useStyles = makeStyles({
     textAlign: 'center',
   },
 })
-
-type ErrorMessageType = {
-  errorMessage: string
-}
 
 export default function ErrorMessage({errorMessage}: ErrorMessageType) {
   const classes = useStyles();

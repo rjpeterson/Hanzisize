@@ -4,23 +4,26 @@
     "target": "es5",
     "module": "esnext",
     "strict": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "lib": [
       "dom",
       "dom.iterable",
       "esnext",
-      "es6"
+      "es6",
+      "es5"
     ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "esModuleInterop": true
   },
   "include": [
-    "src"
+    "src",
+    "public",
+    "types.d.ts"
   ]
 }

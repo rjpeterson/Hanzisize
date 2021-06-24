@@ -21,13 +21,16 @@ const testingTools = {
   if(process.env.NODE_ENV === 'development') {
     global.chrome = {
       runtime: {
+        // @ts-ignore
         getManifest: () => {return {update_url: true}}
       },
       tabs: {
+        // @ts-ignore
         query: ()=>{},
         sendMessage: ()=>{}
       },
       storage: {
+        // @ts-ignore
         local: {
           get: ()=>{},
           set: ()=>{}
