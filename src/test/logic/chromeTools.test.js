@@ -2,6 +2,7 @@ import { FilterFramesOutlined } from '@material-ui/icons';
 import tools from '../../logic/chromeTools';
 
 const mockStoredObject = {'minFontSize': 10, 'language': 'chinese'};
+const defaultStoredObject = {'minFontSize': 0, 'language': 'chinese'};
 const mockCallback = jest.fn();
 
 describe('chromeTools', () => {
@@ -56,13 +57,40 @@ describe('chromeTools', () => {
     }) 
   })
   
-  describe('getFromStorage', () => {
+  describe.only('getFromStorage', () => {
 
-    test('it returns stored language and minfontsize values', async () => {
-      const result = await tools.getFromStorage();
-      expect(chrome.storage.local.get).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(mockStoredObject);
+    describe('stored valued already exist', () => {
+
+      test('it returns stored language and minfontsize values', async () => {
+        const result = await tools.getFromStorage();
+        expect(chrome.storage.local.get).toHaveBeenCalledTimes(1);
+        expect(result).toEqual(mockStoredObject);
+      })
+
     })
+
+    describe('no stored valued exist', () => {
+
+      test('it returns default values and sends them to storage', async () => {
+        global.chrome.storage.local.get = jest.fn((array, _callback) => {_callback({})})
+        const spyLang = jest.spyOn(tools, 'pushLangToStorage');
+        const spyMFS = jest.spyOn(tools, 'pushFSToStorage');
+        const result = await tools.getFromStorage();
+
+        expect(chrome.storage.local.get).toHaveBeenCalledTimes(1);
+        expect(spyLang).toHaveBeenCalledTimes(1);
+        expect(spyLang).toHaveBeenCalledWith('chinese');
+        expect(spyMFS).toHaveBeenCalledTimes(1);
+        expect(spyMFS).toHaveBeenCalledWith(0);
+        // expect(chrome.storage.local.set).toHaveBeenCalledTimes(2);
+        // expect(chrome.storage.local.set).toHaveBeenNthCalledWith(1, {minFontSize: 0},expect.any(Function));
+        // expect(chrome.storage.local.set).toHaveBeenNthCalledWith(2, {language: 'chinese'},expect.any(Function));
+        expect(result).toEqual(defaultStoredObject);
+
+      })
+
+    })
+
   })
 
   describe('handleFirstMessageResponse', () => {

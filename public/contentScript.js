@@ -122,7 +122,7 @@ const hanzisizeUtil = {
   },
 
   // call singleElemeResizer on each child of {nodeSelector} that has class {language}-elem
-  resizeElems(nodeSelector, language, _singleElemResizer, newMinFontSize) {
+  cycleThroughElems(nodeSelector, language, _singleElemResizer, newMinFontSize) {
 
     // build query string
     const queryString = `${nodeSelector} .${language}-elem`;
@@ -200,30 +200,31 @@ const hanzisizeUtil = {
   main(language, minFontSize, mode, nodeSelector) {
     if(test_mode) console.log(`initiating main function...`);
 
-    if(mode === 'initial') { // initial resize call
+    // first tag DOM elements
+    if(mode === 'initial') { // initial resize call requires full tagging of text and lang elements
       hanzisizeUtil.multipleFrames = hanzisizeUtil.frameCheck();
       hanzisizeUtil.tagTextElems('body *');
       hanzisizeUtil.tagLangElems('body *', language);
-    } else if(mode === 'lang-change') { // resize call after language change doesn't require retagging text-elems
+    } else if(mode === 'lang-change') { // resize call after language change only requires tagging lang elements
       hanzisizeUtil.tagLangElems('body *', language);
-    } else if(mode === 'mutation') { // resize call after dynamic content is loaded
+    } else if(mode === 'mutation') { // resize call after dynamic content is loaded requires tagging text and lang elements
       hanzisizeUtil.multipleFrames = hanzisizeUtil.frameCheck();
       hanzisizeUtil.tagTextElems(nodeSelector);
       hanzisizeUtil.tagLangElems(nodeSelector, language);
     }
 
-    if (minFontSize) {
+    // if (minFontSize) {
       try {
         if(mode === 'mutation') {
           // if mutation mode, only resize elements nested inside {nodeSelector}
-          hanzisizeUtil.resizeElems(nodeSelector, language, hanzisizeUtil.singleElemResizer, minFontSize)
+          hanzisizeUtil.cycleThroughElems(nodeSelector, language, hanzisizeUtil.singleElemResizer, minFontSize)
         } else {
           // otherwise, scan and resize the full html body
-          hanzisizeUtil.resizeElems('body', language, hanzisizeUtil.singleElemResizer, minFontSize)
+          hanzisizeUtil.cycleThroughElems('body', language, hanzisizeUtil.singleElemResizer, minFontSize)
         }
       }
       catch(err) {console.log(`Hanzisize failed: ${err}`)}
-    }
+    // }
   }
 }
 

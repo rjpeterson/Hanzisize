@@ -1,3 +1,4 @@
+/*global chrome*/
 import React, { useState, useEffect } from 'react';
 import tools from '../logic/chromeTools';
 import onAppMount from '../logic/onAppMount';
@@ -40,55 +41,64 @@ function App() {
       return result;
     }
 
-    const fetchTabInfo = async () => {
-      const result = await onAppMount.main()
-      testingTools.devLog(`app.useEffect fetched tab info: ${JSON.stringify(result)}`);
-      return result;
-    }
+    // const fetchTabInfo = async () => {
+    //   const result = await onAppMount.main()
+    //   testingTools.devLog(`app.useEffect fetched tab info: ${JSON.stringify(result)}`);
+    //   return result;
+    // }
     
-    const checkTabValidity = (tabInfo) => {
-      let newErrorMessage;
-      if (!tabInfo.validBrowser || tabInfo.invalidUrl) {
-        newErrorMessage = tabInfo.invalidUrl || 'user browser unknown. unable to check for valid urls';
-        setErrorMessage(newErrorMessage);
-        return false
-      } else {
-        return true
-      }
-    }
+    // const checkTabValidity = (tabInfo) => {
+    //   let newErrorMessage;
+    //   if (!tabInfo.validBrowser || tabInfo.invalidUrl) {
+    //     newErrorMessage = tabInfo.invalidUrl || 'user browser unknown. unable to check for valid urls';
+    //     setErrorMessage(newErrorMessage);
+    //     return false
+    //   } else {
+    //     return true
+    //   }
+    // }
 
-    const createContentObj = (storedData) => {
-      const contentObj = {
-        'language': storedData.language,
-        'newMinFontSize': storedData.minFontSize,
-        'mode': 'initial',
-      };
-      testingTools.devLog(`creating content object: ${JSON.stringify(contentObj)}`)
-      return contentObj;
-    }
+    // const createContentObj = (storedData) => {
+    //   const contentObj = {
+    //     'language': storedData.language,
+    //     'newMinFontSize': storedData.minFontSize,
+    //     'mode': 'initial',
+    //   };
+    //   testingTools.devLog(`creating content object: ${JSON.stringify(contentObj)}`)
+    //   return contentObj;
+    // }
 
-    const handleInfo = (tabInfo, storedData) => {
-      const contentObj = createContentObj(storedData);
-      const validTab = checkTabValidity(tabInfo);
+    // const handleInfo = (tabInfo, storedData) => {
+    //   const contentObj = createContentObj(storedData);
+    //   const validTab = checkTabValidity(tabInfo);
 
-      if(!validTab) {return}
+    //   if(!validTab) {return}
 
-      testingTools.devLog(`useEffect sending content obj: ${JSON.stringify(contentObj)}`)
+    //   testingTools.devLog(`useEffect sending content obj: ${JSON.stringify(contentObj)}`)
 
-      tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr, response) => {
-          setErrorMessage(injectionErr);
-          setTabId(tabInfo.tabId);
-          setiFrames(response.multipleFrames);
-      })
-    }
+    //   tools.sendToContent(tabInfo.tabId, contentObj, (injectionErr, response) => {
+    //       setErrorMessage(injectionErr);
+    //       setTabId(tabInfo.tabId);
+    //       setiFrames(response.multipleFrames);
+    //   })
+    // }
 
     const main = async () => {
       const storedData = await fetchStoredData();
-      const tabInfo = await fetchTabInfo();
+      // const tabInfo = await fetchTabInfo();
 
-      handleInfo(tabInfo, storedData);
+      // handleInfo(tabInfo, storedData);
       setMinFontSize(storedData.minFontSize);
       setLanguage(storedData.language);
+      // send content object to background script
+      testingTools.devLog('sending "popup opened" message to background.js')
+      chrome.runtime.sendMessage({
+        message: "popup opened",
+        data: {
+          minFontSize: storedData.minFontSize,
+          language: storedData.language
+        }
+      })
     }
 
     main();
@@ -98,18 +108,27 @@ function App() {
   const handleLangChange = (newLanguage) => {
     // const newLanguage = newLanguageObj.value;
     // first store new language
-    try{tools.pushLangToStorage(newLanguage)}
+    testingTools.devLog('pushing new language to storage')
+    try{tools.pushLangToStorage(newLanguage)} //background script listens for this change, and activates content script
     catch(err) {console.log(`app.handleLangChange Could not push to storage: ${err}`)}
 
-    const contentObj = {
-      'language' : newLanguage,
-      'newMinFontSize': minFontSize,
-      'mode': 'lang-change'
-    };
-    testingTools.devLog(`handleLangChange sending content obj: ${JSON.stringify(contentObj)}`)
-    // then send to content script
-    try{tools.sendToContent(tabId, contentObj)}
-    catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${tabId} contentObj: ${JSON.stringify(contentObj)}`)}
+    // const contentObj = {
+    //   'language' : newLanguage,
+    //   'newMinFontSize': minFontSize,
+    //   'mode': 'lang-change'
+    // };
+    // testingTools.devLog(`handleLangChange sending content obj: ${JSON.stringify(contentObj)}`)
+    // // then send to content script
+    // try{tools.sendToContent(tabId, contentObj)}
+    // catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${tabId} contentObj: ${JSON.stringify(contentObj)}`)}
+
+    // chrome.runtime.sendMessage({
+    //   message: "lang-change",
+    //   data: {
+    //     minFontSize: minFontSize,
+    //     language: newLanguage
+    //   }
+    // })
 
     // finally update state
     setLanguage(newLanguage)
@@ -118,18 +137,26 @@ function App() {
   // fire resizing when user inputs a new minimum font size
   const handleFSChange = (newMinFontSize) => {
     // first store new minfontsize
-    try{tools.pushFSToStorage(newMinFontSize)}
+    testingTools.devLog('pushing new font size to storage')
+    try{tools.pushFSToStorage(newMinFontSize)}//background script listens for this change, and activates content script
     catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}
 
-    const contentObj = {
-      'language' : language,
-      'newMinFontSize': newMinFontSize,
-      'mode': 'fontsize-change'
-    };
-    testingTools.devLog(`handleFSChange sending content obj: ${JSON.stringify(contentObj)}`)
-    // then send to content script
-    try{tools.sendToContent(tabId, contentObj)}
-    catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${tabId} contentObj: ${JSON.stringify(contentObj)}`)}
+    // const contentObj = {
+    //   'language' : language,
+    //   'newMinFontSize': newMinFontSize,
+    //   'mode': 'fontsize-change'
+    // };
+    // testingTools.devLog(`handleFSChange sending content obj: ${JSON.stringify(contentObj)}`)
+    // // then send to content script
+    // try{tools.sendToContent(tabId, contentObj)}
+    // catch(err) {console.log(`app.handleLangChange Could not send to content script: ${err} tabId: ${tabId} contentObj: ${JSON.stringify(contentObj)}`)}
+    // chrome.runtime.sendMessage({
+    //   message: "fontsize-change",
+    //   data: {
+    //     minFontSize: newMinFontSize,
+    //     language: language
+    //   }
+    // })
 
     // finally update state
     setMinFontSize(newMinFontSize)

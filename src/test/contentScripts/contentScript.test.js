@@ -241,7 +241,7 @@ describe('hanzisizeUtil', () => {
     })
   })
 
-  describe('resizeElems', () => {
+  describe('cycleThroughElems', () => {
     let mockCallback;
 
     beforeEach(() => {
@@ -254,7 +254,7 @@ describe('hanzisizeUtil', () => {
     })
 
     test('it calls a callback on all elems that have "chinese-elem" class when passed "Chinese" arg', () => {
-      hanzisizeUtil.resizeElems('body', "chinese", mockCallback, 20);
+      hanzisizeUtil.cycleThroughElems('body', "chinese", mockCallback, 20);
 
       expect(mockCallback).toHaveBeenCalledTimes(2);
       expect(mockCallback).toHaveBeenNthCalledWith(1,document.querySelector('p'), 20);
@@ -412,7 +412,7 @@ describe('hanzisizeUtil', () => {
     beforeEach(() => {
       hanzisizeUtil.tagTextElems = jest.fn();
       hanzisizeUtil.tagLangElems = jest.fn();
-      hanzisizeUtil.resizeElems = jest.fn();
+      hanzisizeUtil.cycleThroughElems = jest.fn();
     })
 
     afterEach(() => {
@@ -423,7 +423,7 @@ describe('hanzisizeUtil', () => {
       hanzisizeUtil = originalHU;
     })
 
-    test('it calls tagTextElems, tagLangElems, and resizeElems with the proper args in "initial" mode', () => {
+    test('it calls tagTextElems, tagLangElems, and cycleThroughElems with the proper args in "initial" mode', () => {
       const language = "chinese";
       const minFontSize = 12;
       const mode = "initial";
@@ -432,10 +432,10 @@ describe('hanzisizeUtil', () => {
       
       expect(hanzisizeUtil.tagTextElems).toHaveBeenCalledWith('body *');
       expect(hanzisizeUtil.tagLangElems).toHaveBeenCalledWith('body *', language);
-      expect(hanzisizeUtil.resizeElems).toHaveBeenCalledWith('body', language, hanzisizeUtil.singleElemResizer, minFontSize);
+      expect(hanzisizeUtil.cycleThroughElems).toHaveBeenCalledWith('body', language, hanzisizeUtil.singleElemResizer, minFontSize);
     })
     
-    test('it calls tagLangElems and resizeElems with the proper args in "lang-change" mode', () => {
+    test('it calls tagLangElems and cycleThroughElems with the proper args in "lang-change" mode', () => {
       const language = "chinese";
       const minFontSize = 12;
       const mode = "lang-change";
@@ -444,10 +444,10 @@ describe('hanzisizeUtil', () => {
       
       expect(hanzisizeUtil.tagTextElems).toHaveBeenCalledTimes(0);
       expect(hanzisizeUtil.tagLangElems).toHaveBeenCalledWith('body *', language);
-      expect(hanzisizeUtil.resizeElems).toHaveBeenCalledWith('body', language, hanzisizeUtil.singleElemResizer, minFontSize);
+      expect(hanzisizeUtil.cycleThroughElems).toHaveBeenCalledWith('body', language, hanzisizeUtil.singleElemResizer, minFontSize);
     })
     
-    test('it calls tagLangElems and resizeElems with the proper args in "fontsize-change" mode', () => {
+    test('it calls tagLangElems and cycleThroughElems with the proper args in "fontsize-change" mode', () => {
       const language = "chinese";
       const minFontSize = 12;
       const mode = "fontsize-change";
@@ -456,10 +456,10 @@ describe('hanzisizeUtil', () => {
       
       expect(hanzisizeUtil.tagTextElems).toHaveBeenCalledTimes(0);
       expect(hanzisizeUtil.tagLangElems).toHaveBeenCalledTimes(0);
-      expect(hanzisizeUtil.resizeElems).toHaveBeenCalledWith('body', language, hanzisizeUtil.singleElemResizer, minFontSize);
+      expect(hanzisizeUtil.cycleThroughElems).toHaveBeenCalledWith('body', language, hanzisizeUtil.singleElemResizer, minFontSize);
     })
 
-    test('it calls tagTextElems, tagLangElems, and resizeElems with the proper args in "mutation" mode', () => {
+    test('it calls tagTextElems, tagLangElems, and cycleThroughElems with the proper args in "mutation" mode', () => {
     
       const language = "chinese";
       const minFontSize = 12;
@@ -469,7 +469,7 @@ describe('hanzisizeUtil', () => {
       
       expect(hanzisizeUtil.tagTextElems).toHaveBeenCalledWith('mock node');
       expect(hanzisizeUtil.tagLangElems).toHaveBeenCalledWith('mock node', language);
-      expect(hanzisizeUtil.resizeElems).toHaveBeenCalledWith('mock node', language, hanzisizeUtil.singleElemResizer, minFontSize);
+      expect(hanzisizeUtil.cycleThroughElems).toHaveBeenCalledWith('mock node', language, hanzisizeUtil.singleElemResizer, minFontSize);
     })
   })
 })

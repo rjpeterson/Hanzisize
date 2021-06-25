@@ -32,16 +32,20 @@ const tools = {
       if(result.minFontSize && result.language) {
         testingTools.devLog(`tools.getFromStorage Retrieved object from storage: ${JSON.stringify(await result)}`);
       } 
+      // if either of the two values dont exist in storage, set them to default and save them in storage
       if(!result.minFontSize) {
         testingTools.devLog('tools.getFromStorage result.minFontSize not found');
         result.minFontSize = 0
+        tools.pushFSToStorage(result.minFontSize);
       }
       if(!result.language) {
         testingTools.devLog('tools.getFromStorage result.language not found');
         result.language = 'chinese'
+        tools.pushLangToStorage(result.language)
       }
       return await result;
-  },
+  }
+  ,
 
   // Handle initial message response
   handleFirstMessageResponse: (lastError, response, tabId, obj, _errorCallback) => {
