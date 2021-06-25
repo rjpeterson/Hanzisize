@@ -2,6 +2,8 @@ import { FilterFramesOutlined } from '@material-ui/icons';
 import tools from '../../logic/chromeTools';
 
 const mockStoredObject = {'minFontSize': 10, 'language': 'chinese'};
+const mockMFSObject = {'minFontSize': 10};
+const mockLangObject = {'language': 'chinese'};
 const mockCallback = jest.fn();
 
 describe('chromeTools', () => {
@@ -15,7 +17,13 @@ describe('chromeTools', () => {
       storage: {
         local: {
           set: jest.fn().mockReturnValue(10),
-          get: jest.fn((array, _callback) => {_callback(mockStoredObject)})
+          get: jest.fn((valueArray, _callback) => {
+            const valueToGet = valueArray[0];
+            const mFSObj = {'minFontSize': 10};
+            const langObj = {'language': 'chinese'};
+            const returnObj = (valueToGet === 'language') ? langObj : mFSObj;
+            _callback(returnObj)
+          })
         }
       },
       tabs: {
@@ -60,7 +68,7 @@ describe('chromeTools', () => {
 
     test('it returns stored language and minfontsize values', async () => {
       const result = await tools.getFromStorage();
-      expect(chrome.storage.local.get).toHaveBeenCalledTimes(1);
+      expect(chrome.storage.local.get).toHaveBeenCalledTimes(2);
       expect(result).toEqual(mockStoredObject);
     })
   })

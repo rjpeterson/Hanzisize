@@ -28,9 +28,9 @@ const tools = {
   // return minFontSize and language from chrome local storage if exist, if not, return default values
   getFromStorage: async () => {
     let resultFS = await new Promise<FontSizeObject>(resolve => {
-      chrome.storage.local.get(['minFontSize'], response => { resolve(response.minFontSize)})});
+      chrome.storage.local.get(['minFontSize'], response => { resolve(response as FontSizeObject)})});
     let resultLang = await new Promise<LanguageObject>(resolve => {
-      chrome.storage.local.get(['language'], response => { resolve(response.language)})});
+      chrome.storage.local.get(['language'], response => { resolve(response as LanguageObject)})});
 
     if(!resultFS) {
       testingTools.devLog('tools.getFromStorage minFontSize not found');
