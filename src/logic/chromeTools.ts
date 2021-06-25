@@ -32,13 +32,13 @@ const tools = {
     let resultLang = await new Promise<LanguageObject>(resolve => {
       chrome.storage.local.get(['language'], response => { resolve(response as LanguageObject)})});
 
-    if(!resultFS) {
+    if(!resultFS.minFontSize) {
       testingTools.devLog('tools.getFromStorage minFontSize not found');
       resultFS = {minFontSize: 0}
     } else {
       testingTools.devLog(`tools.getFromStorage minFontSize: ${JSON.stringify(resultFS)}`)
     }
-    if(!resultLang) {
+    if(!resultLang.language) {
       testingTools.devLog('tools.getFromStorage language not found');
       resultLang = {language: 'chinese'}
     } else {
