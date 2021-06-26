@@ -182,7 +182,7 @@ describe('chromeTools', () => {
     })
 
     test('script successfully injects', () => {
-      const spy = jest.spyOn(tools, 'secondMessageToScripts').mockImplementation(()=>{});
+      const spy = jest.spyOn(tools, 'secondMessageToScript').mockImplementation(()=>{});
 
       tools.injectContentScript(tabId, obj, mockCallback);
       expect(chrome.tabs.executeScript).toHaveBeenCalledTimes(1);
@@ -192,12 +192,12 @@ describe('chromeTools', () => {
     })
   })
   
-  describe('secondMessageToScripts', () => {
+  describe('secondMessageToScript', () => {
     const tabId = 1;
     const obj = {mock: 'obj'};
 
     test('it sends the message to the content script', () => {
-      tools.secondMessageToScripts(tabId, obj, mockCallback);
+      tools.secondMessageToScript(tabId, obj, mockCallback);
 
       expect(chrome.tabs.sendMessage).toHaveBeenCalledWith(tabId, obj, {frameId: 0}, expect.any(Function));
       expect(tools.contentResponse).toEqual('message response')

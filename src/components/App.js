@@ -35,11 +35,11 @@ function App() {
 
   useEffect(() => {
 
-    const fetchStoredData = async () => {
-      const result = await tools.getFromStorage();
-      testingTools.devLog(`app.useEffect fetched stored data: ${JSON.stringify(result)}`);
-      return result;
-    }
+    // const fetchStoredData = async () => {
+    //   const result = await tools.getFromStorage();
+    //   testingTools.devLog(`app.useEffect fetched stored data: ${JSON.stringify(result)}`);
+    //   return result;
+    // }
 
     // const fetchTabInfo = async () => {
     //   const result = await onAppMount.main()
@@ -84,7 +84,7 @@ function App() {
     // }
 
     const main = async () => {
-      const storedData = await fetchStoredData();
+      const storedData = await tools.getFromStorage();
       // const tabInfo = await fetchTabInfo();
 
       // handleInfo(tabInfo, storedData);
@@ -98,7 +98,18 @@ function App() {
           minFontSize: storedData.minFontSize,
           language: storedData.language
         }
-      })
+      }, ((response) => {
+        if(response) {
+          // disply any url invalid or injection error messages received
+          if (response.invalidUrlMessage || response.injectionError) {
+            setErrorMessage(response.invalidUrlMessage || response.injectionError)
+          } else {
+            // display iframe warning
+            setiFrames(response.multipleFrames)
+            setTabId(response.tabId)
+          }
+        }
+      }))
     }
 
     main();
