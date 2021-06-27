@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { grey } from '@material-ui/core/colors';
 
 import LangOptions from './LangOptions';
+import { LangSelectProps } from '../../../../types';
+import { SvgIconProps } from '@material-ui/core';
 
 const useStyles = makeStyles({
   menuItem: {
@@ -79,8 +81,13 @@ const useStyles = makeStyles({
   }
 })
 
-function LangSelect({language, changeHandler}) {
+function LangSelect({language, changeHandler}: LangSelectProps) {
   const classes = useStyles();
+
+  const verticalAnchor: number | 'top' | 'center' | 'bottom' = 'bottom';
+  const horizontalAnchor: number | 'left' | 'center' | 'right' = 'left';
+  const verticalTransform: number | 'top' | 'center' | 'bottom' = 'top';
+  const horizontalTransform: number | 'left' | 'center' | 'right' = 'left';
 
   // moves the menu below the select input
   const menuProps = {
@@ -89,21 +96,21 @@ function LangSelect({language, changeHandler}) {
       list: classes.list
     },
     anchorOrigin: {
-      vertical: "bottom",
-        horizontal: "left"
+      vertical: verticalAnchor,
+      horizontal: horizontalAnchor
     },
     transformOrigin: {
-      vertical: "top",
-        horizontal: "left"
+      vertical: verticalTransform,
+      horizontal: horizontalTransform
     },
     getContentAnchorEl: null
   };
 
-  const handleSelectChange = (event) => {
-    changeHandler(event.target.value)
+  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    changeHandler(event.target.value as string)
   };
 
-  const iconComponent = (props) => {
+  const iconComponent = (props: SvgIconProps) => {
     return (
       <ExpandMoreIcon className={props.className + " " + classes.icon}/>
     )};
@@ -137,12 +144,14 @@ function LangSelect({language, changeHandler}) {
   );
 }
 
-function LangSelectBar({language, changeHandler}) {
+function LangSelectBar({language, changeHandler}: LangSelectProps) {
 
-  const getLangIndex = (value) => {
+  const getLangIndex = (value: string) => {
     const currentLang = LangOptions.find(element => element.value === value);
-    const index = LangOptions.indexOf(currentLang);
-    return index;
+    if (currentLang) {
+      const index = LangOptions.indexOf(currentLang);
+      return index;
+    } else {throw new Error("currentLang not found")}
   }
 
   const previousLang = () => {

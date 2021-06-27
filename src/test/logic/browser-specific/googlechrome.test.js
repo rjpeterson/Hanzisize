@@ -29,18 +29,21 @@ describe('googlechrome', () => {
   })
 
   describe('urlInvalid', () => {
-    test('a valid url should return string "valid URL"', () => {
-      const result = googlechrome.urlInvalid(mockTab)
+    test('a valid url should return string valid=true', () => {
+      const expected = {message: '', valid: true}
+      
+      const result = googlechrome.urlValid(mockTab)
   
-      expect(result).toBeFalsy();
+      expect(result).toEqual(expected);
     })
   
     test('a webstore url should return webstore error text', () => {
       const tab = {url: 'https://chrome.google.com/webstore/category/extensions'}
+      const expected = {message: googlechrome.webstoreErrorString, valid: false}
       
-      const result = googlechrome.urlInvalid(tab)
+      const result = googlechrome.urlValid(tab)
   
-      expect(result).toEqual(googlechrome.webstoreErrorString);
+      expect(result).toEqual(expected);
     })
   })
 })

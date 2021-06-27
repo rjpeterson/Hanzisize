@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 
 import LangSelectBar from './LangSelect/LangSelect';
 import logo from '../../images/logo.png';
+import { UpperProps } from '../../../types';
 
 
 const useStyles = makeStyles({
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
   },
 })
 
-export default function Upper({language, changeHandler}) {
+export default function Upper({language, changeHandler}: UpperProps) {
   const classes = useStyles();
 
   return (

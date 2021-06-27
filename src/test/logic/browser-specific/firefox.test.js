@@ -26,18 +26,21 @@ describe('firefox', () => {
   })
 
   describe('urlInvalid', () => {
-    test('a valid url should return string "valid URL"', () => {    
-      const result = firefox.urlInvalid(mockTab)
+    test('a valid url should return string valid=true', () => {
+      const expected = {message: '', valid: true}
+      
+      const result = firefox.urlValid(mockTab)
   
-      expect(result).toBeFalsy();
+      expect(result).toEqual(expected);
     })
   
     test('an addons url should return addons error text', () => {
       const tab = {url: 'https://addons.mozilla.org/en-US/firefox/'}
+      const expected = {message: firefox.addonsErrorString, valid: false}
       
-      const result = firefox.urlInvalid(tab)
+      const result = firefox.urlValid(tab)
   
-      expect(result).toEqual(firefox.addonsErrorString);
+      expect(result).toEqual(expected);
     })
   })
 })

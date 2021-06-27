@@ -28,19 +28,22 @@ describe('opera', () => {
     })
   })
 
-  describe('urlInvalid', () => {
-    test('a valid url should return string "valid URL"', () => {
-      const result = opera.urlInvalid(mockTab)
+  describe('urlValid', () => {
+    test('a valid url should return string valid=true', () => {
+      const expected = {message: '', valid: true}
+      
+      const result = opera.urlValid(mockTab)
   
-      expect(result).toBeFalsy();
+      expect(result).toEqual(expected);
     })
   
     test('a opera addons url should return addons error text', () => {
       const tab = {url: 'https://addons.opera.com'}
+      const expected = {message: opera.addonsErrorString, valid: false}
       
-      const result = opera.urlInvalid(tab)
+      const result = opera.urlValid(tab)
   
-      expect(result).toEqual(opera.addonsErrorString);
+      expect(result).toEqual(expected);
     })
   })
 })

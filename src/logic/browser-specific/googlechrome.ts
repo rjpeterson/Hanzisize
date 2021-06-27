@@ -10,19 +10,24 @@ const googlechrome = {// chrome specific url checking
     }
   },
 
-  urlInvalid: (tab) => {
+  urlValid: (tab : chrome.tabs.Tab) => {
     // Extensions are not allowed in chrome settings pages or in the webstore. This function checks for these urls
+    let result = {
+      message: '',
+      valid: false
+    }
     if ('url' in tab) {
-      if(tab.url.match(/^chrome/i)) {
-        return googlechrome.chromeErrorString;
-      } else if (tab.url.match(/chrome\.google.com\/webstore/i)) {
-        return googlechrome.webstoreErrorString;
+      if(tab.url?.match(/^chrome/i)) {
+        result.message = googlechrome.chromeErrorString;
+      } else if (tab.url?.match(/chrome\.google.com\/webstore/i)) {
+        result.message = googlechrome.webstoreErrorString;
       } else {
-        return false;
+        result.valid = true;
       }
     } else {
       throw new Error('Active tab has no url value')
     }
+    return result
   },
 }
 
