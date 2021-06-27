@@ -1,3 +1,4 @@
+export {}
 // const opera = {// opera specific url checking
 //   chromeErrorString: "NOTE: Opera blocks extensions and does not allow them to work on special settings pages such as the current page.",
 //   addonsErrorString: "NOTE: For this addon to work you must leave addons.opera.com and go to another website. Opera blocks addons from functioning on special pages such as this one.",
@@ -12,18 +13,23 @@
 //   },
 
 //   // addons are not allowed on addons.mozilla.org or settings pages. This function checks for these urls
-//   urlInvalid: (tab) => {
+//   urlValid: (tab : chrome.tabs.Tab) => {
+//     let result = {
+//       message: '',
+//       valid: false
+//     }
 //     if ('url' in tab) {
-//       if (tab.url.match(/\/addons\.opera\.com/i)) {
-//         return opera.addonsErrorString;
-//       } else if(tab.url.match(/^chrome/i)) {
-//         return opera.chromeErrorString;
+//       if (tab.url?.match(/\/addons\.opera\.com/i)) {
+//         result.message = opera.addonsErrorString;
+//       } else if(tab.url?.match(/^chrome/i)) {
+//         result.message = opera.chromeErrorString;
 //       } else {
-//         return false
+//         result.valid = true
 //       }
 //     } else {
 //       throw new Error('Active tab has no url value')
 //     }
+//     return result
 //   }
 // }
 

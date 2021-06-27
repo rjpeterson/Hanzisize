@@ -1,7 +1,6 @@
-import { FilterFramesOutlined } from '@material-ui/icons';
 import tools from '../../logic/chromeTools';
 
-const mockStoredObject = {'minFontSize': 10, 'language': 'chinese'};
+const mockStoredObject = {'minFontSize': 10, 'language': 'arabic'};
 const defaultStoredObject = {'minFontSize': 0, 'language': 'chinese'};
 const mockCallback = jest.fn();
 
@@ -16,7 +15,13 @@ describe('chromeTools', () => {
       storage: {
         local: {
           set: jest.fn().mockReturnValue(10),
-          get: jest.fn((array, _callback) => {_callback(mockStoredObject)})
+          get: jest.fn((valueArray, _callback) => {
+            const valueToGet = valueArray[0];
+            const mFSObj = {'minFontSize': 10};
+            const langObj = {'language': 'arabic'};
+            const returnObj = (valueToGet === 'language') ? langObj : mFSObj;
+            _callback(returnObj)
+          })
         }
       },
       tabs: {
@@ -48,7 +53,7 @@ describe('chromeTools', () => {
   
   describe('pushLangToStorage', () => {
     test('sends a language value to chrome storage', () => {
-      const inputArg = 'chinese';
+      const inputArg = 'arabic';
       tools.pushLangToStorage(inputArg);
       expect(chrome.storage.local.set).toHaveBeenCalledTimes(1);
       expect(chrome.storage.local.set).toHaveBeenCalledWith({
@@ -59,12 +64,32 @@ describe('chromeTools', () => {
   
   describe('getFromStorage', () => {
 
-    describe('stored valued already exist', () => {
+    describe('storage contains values', () => {
 
       test('it returns stored language and minfontsize values', async () => {
         const result = await tools.getFromStorage();
-        expect(chrome.storage.local.get).toHaveBeenCalledTimes(1);
+      
+        expect(chrome.storage.local.get).toHaveBeenCalledTimes(2);
         expect(result).toEqual(mockStoredObject);
+      })
+
+    })
+
+    describe.only('storage is empty', () => {
+
+      test('it returns default values', async () => {
+        global.chrome.storage.local = {
+          get: jest.fn((valueArray, _callback) => {
+          const returnObj = {}
+          _callback(returnObj)
+          })
+        }
+        const expected = {'minFontSize': 0, 'language': 'chinese'};
+
+        const result = await tools.getFromStorage();
+
+        expect(chrome.storage.local.get).toHaveBeenCalledTimes(2);
+        expect(result).toEqual(expected);
       })
 
     })

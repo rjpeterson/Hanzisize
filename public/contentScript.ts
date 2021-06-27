@@ -1,5 +1,7 @@
+import { StoredData } from '../types';
+
 var test_mode = false;
-let mostRecentSettings;
+let mostRecentSettings: StoredData;
 
 const hanzisizeUtil = {
   multipleFrames: false,
@@ -34,7 +36,7 @@ const hanzisizeUtil = {
   },
 
   // apply new class to elements that contain a text_node 
-  tagTextElems(nodeSelector) {
+  tagTextElems(nodeSelector: string) {
 
     // loop through selected nodes and tag ones that contain text
     $(nodeSelector).each(function(){
@@ -56,7 +58,7 @@ const hanzisizeUtil = {
   },
 
   // apply new class to all elements with text-elem class and TEXT_NODE content matches the selected language
-  tagLangElems(nodeSelector, language) {
+  tagLangElems(nodeSelector: string, language: string) {
 
     // loop through text-elem nodes that are a child of nodeSelector and apply language specific class
     $(nodeSelector).each(function(){
@@ -82,7 +84,7 @@ const hanzisizeUtil = {
   },
 
   // Error & function handling for language selection 
-  hasLanguage(lang, str) {
+  hasLanguage(lang: string, str: string) {
     let result;
     switch (lang) {
       case 'chinese':
@@ -122,14 +124,14 @@ const hanzisizeUtil = {
   },
 
   // call singleElemeResizer on each child of {nodeSelector} that has class {language}-elem
-  cycleThroughElems(nodeSelector, language, _singleElemResizer, newMinFontSize) {
+  cycleThroughElems(nodeSelector: string, language: string, _singleElemResizer: Function, minFontSize: number) {
 
     // build query string
     const queryString = `${nodeSelector} .${language}-elem`;
 
     // loop through all elems with singleElemResizer callback func
     $(queryString).each(function() {
-      _singleElemResizer(this, newMinFontSize)
+      _singleElemResizer(this, minFontSize)
     })
   },
 
@@ -140,21 +142,21 @@ const hanzisizeUtil = {
   //case 4: OFS exists and <= NMFS. Set FS to NMFS
   //case 5: OFS does not exist. CFS < NMFS Save CFS as OFS. Set FS to NMFS
   //case 6: OFS exists && CFS < NMFS, Set FS to NMFS
-  singleElemResizer(el, newMinFontSize) {
+  singleElemResizer(el: HTMLElement, minFontSize: number) {
     const currentFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('font-size'));
     const originalFontSize = parseInt(window.getComputedStyle(el, null).getPropertyValue('--data-original-font-size'));
 
-    if (currentFontSize === newMinFontSize) {
+    if (currentFontSize === minFontSize) {
       if(test_mode) console.log('CFS equals NMFS. no change');
 
-    } else if (currentFontSize > newMinFontSize) { // from big to small
+    } else if (currentFontSize > minFontSize) { // from big to small
       if(test_mode) {console.log(`CurentFS is larger than NewMinFS`)}
 
       if (!originalFontSize) { 
         if(test_mode) {console.log(`case 2: CurrentFS is intial. No change`)}
         return;
 
-      } else if (originalFontSize > newMinFontSize) { 
+      } else if (originalFontSize > minFontSize) { 
         if(test_mode) {console.log(`case 3: CurrentFS is not intial and originalFS is larger than NewMinFS. FS set to OriginalFS`)};
 
         el.style.setProperty('font-size', originalFontSize + 'px', 'important');
@@ -163,8 +165,8 @@ const hanzisizeUtil = {
       } else {
         if(test_mode) {console.log(`case 4: CurrentFS is not initial and less than or equal to NewMinFS. FS to NewMinFS`)};
 
-        el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
-        hanzisizeUtil.adjustLineHeight(el, newMinFontSize);
+        el.style.setProperty('font-size', minFontSize + 'px', 'important');
+        hanzisizeUtil.adjustLineHeight(el, minFontSize);
       }
     } else { // CFS < NMFS   from small to big
       if(test_mode) {console.log(`CFS is less than NMFS`)}
@@ -173,31 +175,31 @@ const hanzisizeUtil = {
         if(test_mode) {console.log(`case 5: No OriginalFS. Save CurrentFS as OriginalFS. Set FS to NewMinFS`)};
 
         el.style.setProperty('--data-original-font-size', currentFontSize + 'px');
-        el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
-        hanzisizeUtil.adjustLineHeight(el, newMinFontSize);
+        el.style.setProperty('font-size', minFontSize + 'px', 'important');
+        hanzisizeUtil.adjustLineHeight(el, minFontSize);
 
       } else {
         if(test_mode) {console.log(`case 6: OriginalFS && (CurrentFS < NMFS), Set FS to NewMinFS`)};
 
-        el.style.setProperty('font-size', newMinFontSize + 'px', 'important');
-        hanzisizeUtil.adjustLineHeight(el, newMinFontSize);
+        el.style.setProperty('font-size', minFontSize + 'px', 'important');
+        hanzisizeUtil.adjustLineHeight(el, minFontSize);
       }
     }
   },
 
   // This function is borrowed from APlus Font Size Changer
   // Version 1.3.0 - Adjust line-height for websites like nytimes.com
-  adjustLineHeight(el, elFontSize) {
-    const currentLineHeight = parseInt(window.getComputedStyle(el,null).getPropertyValue("line-height"));
+  adjustLineHeight(el: HTMLElement, elFontSize:number) {
+    const currentLineHeight = window.getComputedStyle(el,null).getPropertyValue("line-height");
 
     // if line height is too small for new text size, set line height to "normal"
-    if (currentLineHeight !== "normal" && currentLineHeight <= (elFontSize+1)) {
+    if (currentLineHeight !== "normal" && parseInt(currentLineHeight) <= (elFontSize+1)) {
       el.style.setProperty("line-height", "normal", "important");
     }
   },
 
   // primary function for extension
-  main(language, minFontSize, mode, nodeSelector) {
+  main(language:string, minFontSize: number, mode: string, nodeSelector?: string) {
     if(test_mode) console.log(`initiating main function...`);
 
     // first tag DOM elements
@@ -207,7 +209,7 @@ const hanzisizeUtil = {
       hanzisizeUtil.tagLangElems('body *', language);
     } else if(mode === 'lang-change') { // resize call after language change only requires tagging lang elements
       hanzisizeUtil.tagLangElems('body *', language);
-    } else if(mode === 'mutation') { // resize call after dynamic content is loaded requires tagging text and lang elements
+    } else if(mode === 'mutation' && nodeSelector) { // resize call after dynamic content is loaded
       hanzisizeUtil.multipleFrames = hanzisizeUtil.frameCheck();
       hanzisizeUtil.tagTextElems(nodeSelector);
       hanzisizeUtil.tagLangElems(nodeSelector, language);
@@ -215,7 +217,7 @@ const hanzisizeUtil = {
 
     // if (minFontSize) {
       try {
-        if(mode === 'mutation') {
+        if(mode === 'mutation' && nodeSelector) {
           // if mutation mode, only resize elements nested inside {nodeSelector}
           hanzisizeUtil.cycleThroughElems(nodeSelector, language, hanzisizeUtil.singleElemResizer, minFontSize)
         } else {
@@ -238,9 +240,9 @@ try {
       if (test_mode) {console.log('object received by contentScript:' + JSON.stringify(obj) + 'Resizing now...')}
 
       // call resizing function with object properties received from popup
-      hanzisizeUtil.main(obj.language, obj.newMinFontSize, obj.mode);
+      hanzisizeUtil.main(obj.language, obj.minFontSize, obj.mode);
       // tell popup if multiple frames are present
-      sendResponse({received: "yes", multipleFrames: hanzisizeUtil.multipleFrames})
+      sendResponse({received: true, multipleFrames: hanzisizeUtil.multipleFrames})
   });
 
   // add mutation observer to fire new DOM scan if new element nodes have been added. This fixes the problem of the user having to manually resize everytime new content is dynamically loaded.
@@ -253,17 +255,17 @@ try {
   const config = {childList: true, subtree: true};
 
   // Callback function to execute when mutations are observed
-  const callback = function(mutationsList, observer) {
+  const mutationCallback: MutationCallback = function(mutationsList, observer) {
     console.log('mutation observer triggered')
     const obj = mostRecentSettings;
     // the below works but is pretty ineffiecient. Better solution should exist. should at least wrap in 'if(mutation.addedNodes)'
-    hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', 'body *')
+    hanzisizeUtil.main(obj.language, obj.minFontSize, 'mutation', 'body *')
 
       // maybe add parent node of each mutation to an array, remove non-uniques, and send each array item through .main?
       // Use traditional 'for loops' for IE 11
     // for(let mutation of mutationsList) {
     //   // for(let node of mutation.addedNodes) {
-    //     hanzisizeUtil.main(obj.language,obj.newMinFontSize, 'mutation', mutation.addedNodes)
+    //     hanzisizeUtil.main(obj.language,obj.minFontSize, 'mutation', mutation.addedNodes)
       // }
       // if(mutation.addedNodes.length) {
     //     // somehow get a querySelector out of this mutation object?? 
@@ -273,12 +275,12 @@ try {
     //     });
     //     // --> getElementsByClassName()
         // console.log('mutation observer - nodes have been added')
-    //     hanzisizeUtil.main(obj.language, obj.newMinFontSize, 'mutation', nodeSelector)
+    //     hanzisizeUtil.main(obj.language, obj.minFontSize, 'mutation', nodeSelector)
       // }
     // }
   };
   // Create an observer instance linked to the callback function
-  const observer = new MutationObserver(callback);
+  const observer = new MutationObserver(mutationCallback);
   // Start observing the target node for configured mutations
   observer.observe(targetNode, config);
 }

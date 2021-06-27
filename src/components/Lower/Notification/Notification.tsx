@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { NotificationProps } from '../../../../types';
 
 const useStyles = makeStyles({
   notification: {
@@ -14,10 +15,10 @@ const useStyles = makeStyles({
   }
 })
 
-export default function Notification({iFrames}) {
+export default function Notification({iFrames}: NotificationProps) {
   const classes = useStyles();
 
-  const notificationSwap = (iFrames) => {
+  const notificationSwap = () => {
     if(iFrames) {
       return (
         <Typography color='error'>
@@ -35,7 +36,7 @@ export default function Notification({iFrames}) {
 
   return (
     <Box className={classes.notification}>
-      {notificationSwap(iFrames)}
+      {notificationSwap()}
     </Box>
   )
 }

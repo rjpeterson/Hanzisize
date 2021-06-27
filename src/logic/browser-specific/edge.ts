@@ -10,20 +10,26 @@
 //     }
 //   },
 
-//   urlInvalid: (tab) => {
+//   urlValid: (tab : chrome.tabs.Tab) => {
 //     // Extensions are not allowed in chrome settings pages or in the webstore. This function checks for these urls
+//     let result = {
+//       message: '',
+//       valid: false
+//     }
 //     if ('url' in tab) {
-//       if(tab.url.match(/^edge/i)) {
-//         return edge.edgeErrorString;
-//       } else if (tab.url.match(/microsoftedge\.microsoft\.com\/addons/i)) {
-//         return edge.addonsErrorString;
+//       if(tab.url?.match(/^edge/i)) {
+//         result.message = edge.edgeErrorString;
+//       } else if (tab.url?.match(/microsoftedge\.microsoft\.com\/addons/i)) {
+//         result.message = edge.addonsErrorString;
 //       } else {
-//         return false
+//         result.valid = true
 //       }
 //     } else {
 //       throw new Error('Active tab has no url value')
 //     }
+//     return result
 //   },
 // }
 
 // export default edge;
+export {}

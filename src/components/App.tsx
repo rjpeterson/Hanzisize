@@ -1,11 +1,12 @@
 /*global chrome*/
 import React, { useState, useEffect } from 'react';
-import tools from '../logic/chromeTools';
-import onAppMount from '../logic/onAppMount';
+// import tools from '../logic/chromeTools';
+// import onAppMount from '../logic/onAppMount';
 import Upper from './Upper/Upper';
 import Lower from './Lower/Lower';
 import ErrorMessage from './ErrorMessage';
 import testingTools from '../utils/testingTools';
+import { ContentResponse, ValidityCheck, TabInfo, StoredData } from '../../types';
 
 
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
@@ -27,11 +28,11 @@ const useStyles = makeStyles({
 function App() {
   const classes = useStyles();
 
-  const [minFontSize, setMinFontSize] = useState(0);
-  const [language, setLanguage] = useState('chinese');
-  const [tabId, setTabId] = useState(null);
-  const [iFrames, setiFrames] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [minFontSize, setMinFontSize] = useState<StoredData["minFontSize"]>(0);
+  const [language, setLanguage] = useState<StoredData["language"]>('chinese');
+  // const [tabId, setTabId] = useState<TabInfo["tabId"]>(0);
+  const [iFrames, setiFrames] = useState<ContentResponse["multipleFrames"]>(false);
+  const [errorMessage, setErrorMessage] = useState<ValidityCheck["message"]>('');
 
   useEffect(() => {
 
@@ -84,14 +85,19 @@ function App() {
     // }
 
     const main = () => {
-      // const storedData = await tools.getFromStorage();
 
-      chrome.runtime.sendMessage({message: "get stored data"}, async (storedData) => {
-        const storedMinFontSize = await storedData.minFontSize;
-        const storedLanguage = await storedData.language;
+      testingTools.devLog('sending "get stored data" message to background.js')
+
+      chrome.runtime.sendMessage({message: "get stored data"}, ((response: StoredData) => {
+
+        testingTools.devLog(`app.js received storedData: ${JSON.stringify(response)} from background.js`)
+
+        const storedMinFontSize = response.minFontSize;
+        const storedLanguage = response.language;
         setMinFontSize(storedMinFontSize);
         setLanguage(storedLanguage);
-        // send content object to background script
+
+        // send content object to background.js
         testingTools.devLog('sending "popup opened" message to background.js')
         chrome.runtime.sendMessage({
           message: "popup opened",
@@ -107,18 +113,18 @@ function App() {
             } else {
               // display iframe warning
               setiFrames(response.multipleFrames)
-              setTabId(response.tabId)
+              // setTabId(response.tabId)
             }
           }
         }))
-      })
+      }))
     }
 
     main();
   }, [])
   
   // fire resizing when user selects a new language from dropdown
-  const handleLangChange = (newLanguage) => {
+  const handleLangChange = (newLanguage: string) => {
     // const newLanguage = newLanguageObj.value;
     // first store new language
     testingTools.devLog('pushing new language to storage')
@@ -152,10 +158,10 @@ function App() {
   }
 
   // fire resizing when user inputs a new minimum font size
-  const handleFSChange = (newMinFontSize) => {
+  const handleFSChange = (minFontSize: number) => {
     // first store new minfontsize
     testingTools.devLog('pushing new font size to storage')
-    chrome.runtime.sendMessage({message: 'handle font size change', minFontSize: newMinFontSize}, (response) => {
+    chrome.runtime.sendMessage({message: 'handle font size change', minFontSize: minFontSize}, (response) => {
       testingTools.devLog(`handleFSChange: ${JSON.stringify(response)}`)
     })
     // try{tools.pushFSToStorage(newMinFontSize)}//background script listens for this change, and activates content script
@@ -179,7 +185,7 @@ function App() {
     // })
 
     // finally update state
-    setMinFontSize(newMinFontSize)
+    setMinFontSize(minFontSize)
   }
 
   // display any error messages recieved

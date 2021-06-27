@@ -29,18 +29,21 @@ describe('edge', () => {
   })
 
   describe('urlInvalid', () => {
-    test('a valid url should return string "valid URL"', () => {
-      const result = edge.urlInvalid(mockTab)
+    test('a valid url should return string valid=true', () => {
+      const expected = {message: '', valid: true}
+      
+      const result = edge.urlValid(mockTab)
   
-      expect(result).toBeFalsy();
+      expect(result).toEqual(expected);
     })
   
     test('a edge addons url should return addons error text', () => {
       const tab = {url: 'https://microsoftedge.microsoft.com/addons'}
+      const expected = {message: edge.addonsErrorString, valid: false}
       
-      const result = edge.urlInvalid(tab)
+      const result = edge.urlValid(tab)
   
-      expect(result).toEqual(edge.addonsErrorString);
+      expect(result).toEqual(expected);
     })
   })
 })
