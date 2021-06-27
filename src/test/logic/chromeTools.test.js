@@ -57,7 +57,7 @@ describe('chromeTools', () => {
     }) 
   })
   
-  describe.only('getFromStorage', () => {
+  describe('getFromStorage', () => {
 
     describe('stored valued already exist', () => {
 
@@ -71,17 +71,11 @@ describe('chromeTools', () => {
 
     describe('no stored valued exist', () => {
 
-      test('it returns default values and sends them to storage', async () => {
+      test('it returns default values', async () => {
         global.chrome.storage.local.get = jest.fn((array, _callback) => {_callback({})})
-        const spyLang = jest.spyOn(tools, 'pushLangToStorage');
-        const spyMFS = jest.spyOn(tools, 'pushFSToStorage');
         const result = await tools.getFromStorage();
 
         expect(chrome.storage.local.get).toHaveBeenCalledTimes(1);
-        expect(spyLang).toHaveBeenCalledTimes(1);
-        expect(spyLang).toHaveBeenCalledWith('chinese');
-        expect(spyMFS).toHaveBeenCalledTimes(1);
-        expect(spyMFS).toHaveBeenCalledWith(0);
         // expect(chrome.storage.local.set).toHaveBeenCalledTimes(2);
         // expect(chrome.storage.local.set).toHaveBeenNthCalledWith(1, {minFontSize: 0},expect.any(Function));
         // expect(chrome.storage.local.set).toHaveBeenNthCalledWith(2, {language: 'chinese'},expect.any(Function));

@@ -83,33 +83,35 @@ function App() {
     //   })
     // }
 
-    const main = async () => {
-      const storedData = await tools.getFromStorage();
-      // const tabInfo = await fetchTabInfo();
+    const main = () => {
+      // const storedData = await tools.getFromStorage();
 
-      // handleInfo(tabInfo, storedData);
-      setMinFontSize(storedData.minFontSize);
-      setLanguage(storedData.language);
-      // send content object to background script
-      testingTools.devLog('sending "popup opened" message to background.js')
-      chrome.runtime.sendMessage({
-        message: "popup opened",
-        data: {
-          minFontSize: storedData.minFontSize,
-          language: storedData.language
-        }
-      }, ((response) => {
-        if(response) {
-          // disply any url invalid or injection error messages received
-          if (response.invalidUrlMessage || response.injectionError) {
-            setErrorMessage(response.invalidUrlMessage || response.injectionError)
-          } else {
-            // display iframe warning
-            setiFrames(response.multipleFrames)
-            setTabId(response.tabId)
+      chrome.runtime.sendMessage({message: "get stored data"}, async (storedData) => {
+        const storedMinFontSize = await storedData.minFontSize;
+        const storedLanguage = await storedData.language;
+        setMinFontSize(storedMinFontSize);
+        setLanguage(storedLanguage);
+        // send content object to background script
+        testingTools.devLog('sending "popup opened" message to background.js')
+        chrome.runtime.sendMessage({
+          message: "popup opened",
+          data: {
+            minFontSize: storedMinFontSize,
+            language: storedLanguage
           }
-        }
-      }))
+        }, ((response) => {
+          if(response) {
+            // disply any url invalid or injection error messages received
+            if (response.invalidUrlMessage || response.injectionError) {
+              setErrorMessage(response.invalidUrlMessage || response.injectionError)
+            } else {
+              // display iframe warning
+              setiFrames(response.multipleFrames)
+              setTabId(response.tabId)
+            }
+          }
+        }))
+      })
     }
 
     main();
@@ -120,8 +122,12 @@ function App() {
     // const newLanguage = newLanguageObj.value;
     // first store new language
     testingTools.devLog('pushing new language to storage')
-    try{tools.pushLangToStorage(newLanguage)} //background script listens for this change, and activates content script
-    catch(err) {console.log(`app.handleLangChange Could not push to storage: ${err}`)}
+    // send lang object to background.js
+    chrome.runtime.sendMessage({message: 'handle lang change', language: newLanguage}, (response) => {
+      testingTools.devLog(`handleLangChange: ${JSON.stringify(response)}`)
+    })
+    // try{tools.pushLangToStorage(newLanguage)} 
+    // catch(err) {console.log(`app.handleLangChange Could not push to storage: ${err}`)}
 
     // const contentObj = {
     //   'language' : newLanguage,
@@ -149,8 +155,11 @@ function App() {
   const handleFSChange = (newMinFontSize) => {
     // first store new minfontsize
     testingTools.devLog('pushing new font size to storage')
-    try{tools.pushFSToStorage(newMinFontSize)}//background script listens for this change, and activates content script
-    catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}
+    chrome.runtime.sendMessage({message: 'handle font size change', minFontSize: newMinFontSize}, (response) => {
+      testingTools.devLog(`handleFSChange: ${JSON.stringify(response)}`)
+    })
+    // try{tools.pushFSToStorage(newMinFontSize)}//background script listens for this change, and activates content script
+    // catch(err) {console.log(`app.handleFSChange Could not push to storage: ${err}`)}
 
     // const contentObj = {
     //   'language' : language,

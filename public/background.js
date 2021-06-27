@@ -216,6 +216,19 @@ const getFromStorage = async () => {
     return await result;
 }
 
+const pushFSToStorage = (minFontSize) => {
+  chrome.storage.local.set({minFontSize: minFontSize}, () => {
+    console.log(`tools.pushFSToStorage New minimum font size stored as: ${minFontSize}`)
+  })
+}
+
+// push submitted language to chrome local storage
+const pushLangToStorage = (language) => {
+  chrome.storage.local.set({language: language}, () => {
+    console.log(`tools.pushFSToStorage New language stored as: ${language}`)
+  })
+}
+
 // get active tab info so we know where to inject the content script
 const fetchTabInfo = async () => {
   // get active tab info
@@ -342,10 +355,11 @@ const secondMessageToScript = (tab_id, obj, _errorCallback) => {
   } 
 }
 
-const main = async (mode, typeOfCall, sendResponse) => {
+const main = async (mode, typeOfCall, sendResponse, data) => {
   console.log(`activating main function with args: ${mode}, ${typeOfCall}`)
   const tabInfo = await fetchTabInfo();
   let invalidUrl = false;
+  let storedData;
 
   const userBrowser = getUserBrowser();
   invalidUrl = urlInvalid(tabInfo, userBrowser);
@@ -359,7 +373,9 @@ const main = async (mode, typeOfCall, sendResponse) => {
     }
   }
 
-  const storedData = await getFromStorage();
+  if(data) {storeData = data}
+  else {storedData = await getFromStorage();}
+
   const contentObj = createContentObj(storedData, mode);
 
   console.log(`background script sending content obj: ${JSON.stringify(contentObj)}`)
@@ -400,8 +416,22 @@ chrome.runtime.onMessage.addListener(
       console.log("received message 'popup opened'")
       let mode;
       (firstResize === true) ? mode = 'initial' :  mode = 'resize'; firstResize = false;
+
       console.log(`Received message 'popup opened'. Calling main function with args mode: ${mode}, typeOfCall: 'popup', sendResponse: sendResponse`)
-      main(mode, 'popup', sendResponse)
+
+      main(mode, 'popup', sendResponse, request.data)
+    } 
+    else if (request.message === "get stored data") {
+      async () => {
+        const storedData = await getFromStorage()
+        sendResponse(storedData);
+      }
+    }
+    else if (request.message === 'handle lang change') {
+      pushLangToStorage(request.language)
+    }
+    else if (request.message === 'handle font size change') {
+      pushFSToStorage(request.minFontSize)
     }
   }
 )
