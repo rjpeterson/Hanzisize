@@ -1,6 +1,6 @@
 {
   "name": "hanzisize-reboot-react",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Selectively enlarge text of a specific language",
   "main": "index.js",
