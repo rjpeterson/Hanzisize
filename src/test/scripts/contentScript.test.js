@@ -10,6 +10,7 @@ describe('hanzisizeUtil', () => {
   const georgianString = "ლორემ იფსუმ დოლორ სით ამეთ, ლაორეეთ ფრობათუს ველ ცუ, ეხ ველ უნუმ მუნდი ევერთი. იმფედით";
   const hangulString = "그들은 찬미를 위하여서. 오직 있다. 같은 영원히 용감하고 얼음과 인생에 청춘의 전인 ? 고행을 열락의 때까지 불어 이상, ";
   const hebrewString = "הגרפים קודמות שתי אל, קבלו בחירות הקנאים אם זאת. ויש דת כלים פיסול, בקר והוא טכניים אחרונים דת. אם סדר תרבות קהילה לערוך, מה עוד לשון צרפתית לאחרונה";
+  const hebrewAlphabet = 'אּאּאּאּאּאּאּאּאּאּאּ';
   const hindiString = "उनके खरिदे आधुनिक वास्तविक तकनिकल व्रुद्धि समाज संदेश सादगि भारत वर्तमान अमितकुमार पहोच। हुआआदी व्रुद्धि भाषए कैसे";
   const japaneseString = "併メセ怖区山二やわはみ施請ざ南専のやぐ加単シネキ第朝東うた利34表ヤホセ断悪3請ハ";
   const thaiString = "เป็นข้อความแทนที่ ใช้เพื่อลดความสนใจต่อข้อความที่นำมาแสดง สำหรับการแสดงลักษณะของ";
@@ -103,6 +104,11 @@ describe('hanzisizeUtil', () => {
 
         expect(result).toBeTruthy()
       })    
+      test('it returns true on hebrew alphabetical text', () => {
+        const result = hanzisizeUtil.REGEX_HEBREW.test(hebrewAlphabet);
+
+        expect(result).toBeTruthy()
+      })
       test('it returns false on english text', () => {
         const result = hanzisizeUtil.REGEX_HEBREW.test(englishString);
 
