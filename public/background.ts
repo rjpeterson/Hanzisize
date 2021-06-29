@@ -26,7 +26,7 @@ if (typeof chrome == 'undefined') {
 import { StoredData, ContentObject, ContentResponse, ErrorCallbackFunc, LanguageObject, FontSizeObject, ValidityCheck } from '../types';
 
 
-export const browserCheck = {
+const browserCheck = {
   firefox: {// firefox specific url checking
     addonsErrorString: "NOTE: For this addon to work you must leave addons.mozilla.org and go to another website. Mozilla blocks addons from functioning on special Mozilla pages such as this one.",
     aboutErrorString: "NOTE: For this addon to work you must leave this page and go to another website. Mozilla blocks addons from functioning on special Firefox pages such as this one.",
@@ -204,7 +204,7 @@ export const browserCheck = {
   }
 }
 
-export const chromeMethods = {
+const chromeMethods = {
   // get active tab info
   getQueryResult : () => {
     return new Promise<chrome.tabs.Tab[]>(resolve => {
@@ -278,7 +278,7 @@ export const chromeMethods = {
   }
 }
 
-export const scriptMethods = {
+const scriptMethods = {
   contentResponse: {} as ContentResponse,
   firstResize: true,
   injectionError: '' as string | undefined,
@@ -513,3 +513,10 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 });
 
 console.log("background page loaded...")
+
+try { module.exports = {
+  browserCheck: browserCheck,
+  chromeMethods: chromeMethods,
+  scriptMethods: scriptMethods
+}}
+catch(err) {console.log(err + ".  'module' only necessary for testing purposes. Not needed in production.")}

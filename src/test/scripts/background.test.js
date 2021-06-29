@@ -1,5 +1,5 @@
 // import { chrome } from 'jest-chrome'
-import { browserCheck, chromeMethods, scriptMethods } from "../../../public/background";
+const { browserCheck, chromeMethods, scriptMethods } = require("../../../public/background");
 
 describe('browserCheck', () => {
   let mockTab;
