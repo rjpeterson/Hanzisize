@@ -1,4 +1,3 @@
-// import { chrome } from 'jest-chrome'
 const { browserCheck, chromeMethods, scriptMethods } = require("../../../public/background");
 
 describe('browserCheck', () => {

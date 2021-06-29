@@ -215,12 +215,6 @@ const chromeMethods = {
   // get active tab info so we know where to inject the content script
   fetchTabInfo: async () => {
 
-    // const getQueryResult : GetQueryResult = () => {
-    //   return new Promise(resolve => {
-    //     chrome.tabs.query({active: true, currentWindow: true}, response => resolve(response))
-    //   }) 
-    // }
-
     const tabs = await chromeMethods.getQueryResult()
     const tab : chrome.tabs.Tab = tabs[0];
 
@@ -238,9 +232,7 @@ const chromeMethods = {
       chrome.storage.local.get(['minFontSize'], response => { resolve(response as FontSizeObject)})});
     let resultLang = await new Promise<LanguageObject>(resolve => {
       chrome.storage.local.get(['language'], response => { resolve(response as LanguageObject)})});
-
-    // const result = await new Promise(resolve => {
-    //   chrome.storage.local.get(['minFontSize', 'language'], response => { resolve(response)})});
+      
       // if either of the two values dont exist in storage, set them to default and save them in storage
       if(!resultFS || !resultFS.minFontSize) {
         console.log('getFromStorage minFontSize not found, setting to default');
@@ -491,10 +483,6 @@ chrome.runtime.onMessage.addListener(
 chrome.storage.onChanged.addListener(function (changes, namespace) {
   console.log('listening for changes in chrome.storage')
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-    // console.log(
-    //   `Storage key "${key}" in namespace "${namespace}" changed.`,
-    //   `Old value was "${oldValue}", new value is "${newValue}".`
-    // );
     if ("language" in changes) {
       console.log(`language value in chrome storage changed from ${changes.language.oldValue} to ${changes.language.newValue}`)
     
