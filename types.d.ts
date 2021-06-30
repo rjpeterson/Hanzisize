@@ -1,28 +1,28 @@
 export interface ContentObject {
-  language: string,
-  minFontSize: number,
-  mode: string
+  language: string;
+  minFontSize: number;
+  mode: string;
 }
 
 export interface ContentResponse {
-  received: boolean,
-  multipleFrames: boolean
+  received: boolean;
+  multipleFrames: boolean;
 }
 
 export interface ValidityCheck {
-  valid: boolean,
-  message: string | undefined
+  valid: boolean;
+  message: string | undefined;
 }
 
-export interface TabInfo { 
+export interface TabInfo {
   tabId: number;
   browserValid: ValidityCheck;
-  urlValid: ValidityCheck
+  urlValid: ValidityCheck;
 }
 
 export interface StoredData {
   minFontSize: number;
-  language: string
+  language: string;
 }
 
 export interface FontSizeObject {
@@ -34,32 +34,32 @@ export interface LanguageObject {
 }
 
 export interface ErrorMessageType {
-  errorMessage: string
+  errorMessage: string;
 }
 
 export interface LowerProps {
-  minFontSize: number,
-  changeHandler: handleFSChange,
-  iFrames: boolean
+  minFontSize: number;
+  changeHandler: handleFSChange;
+  iFrames: boolean;
 }
 
 export interface FontSizeButtonsProps {
   minFontSize: number;
-  changeHandler: handleFSChange
+  changeHandler: handleFSChange;
 }
 
 export interface NotificationProps {
-  iFrames: boolean
+  iFrames: boolean;
 }
 
 export interface UpperProps {
   language: string;
-  changeHandler: handleLangChange
+  changeHandler: handleLangChange;
 }
 
 export interface LangSelectProps {
   language: string;
-  changeHandler: handleLangChange
+  changeHandler: handleLangChange;
 }
 
 export type ErrorCallbackFunc = (
@@ -67,7 +67,7 @@ export type ErrorCallbackFunc = (
   contentResponse: ContentResponse
 ) => void;
 
-export type GetQueryResult = () => Promise<chrome.tabs.Tab[]>
+export type GetQueryResult = () => Promise<chrome.tabs.Tab[]>;
 
 export type fetchStoredData = () => StoredData;
 

@@ -1,6 +1,6 @@
 {
   "name": "hanzisize-reboot-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Selectively enlarge text of a specific language",
   "main": "index.js",
@@ -55,8 +55,10 @@
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jquery": "^1.5.1",
     "jest-chrome": "^0.7.1",
+    "prettier": "2.3.2",
     "react-devtools": "^4.8.2",
     "react-test-renderer": "^16.13.1",
     "typescript": "^4.3.4",

@@ -2,43 +2,54 @@
 
 const testingTools = {
   devMode: () => {
-    if(process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
-      return true
-    } else if (chrome && chrome.runtime && typeof chrome.runtime.getManifest !== 'undefined') {
+    if (
+      process.env.NODE_ENV === "development" ||
+      process.env.NODE_ENV === "test"
+    ) {
+      return true;
+    } else if (
+      chrome &&
+      chrome.runtime &&
+      typeof chrome.runtime.getManifest !== "undefined"
+    ) {
       // update_url is set by chrome webstore on submit. If it doesn't exist, the extension was loaded locally rather than installed from webstore
-      return !('update_url' in chrome.runtime.getManifest());
+      return !("update_url" in chrome.runtime.getManifest());
     } else {
-      return false
+      return false;
     }
   },
 
   devLog: (str: string) => {
-    if(testingTools.devMode()) {console.log(str)} 
+    if (testingTools.devMode()) {
+      console.log(str);
+    }
   },
 
   setupTestEnv: () => {
-  // npm start runs app in browser tab which doesn't have accesse to required chrome apis, so we provide them here for UI testing purposes
-  if(process.env.NODE_ENV === 'development') {
-    global.chrome = {
-      runtime: {
-        // @ts-ignore
-        getManifest: () => {return {update_url: true}}
-      },
-      tabs: {
-        // @ts-ignore
-        query: ()=>{},
-        sendMessage: ()=>{}
-      },
-      storage: {
-        // @ts-ignore
-        local: {
-          get: ()=>{},
-          set: ()=>{}
-        }
-      }
+    // npm start runs app in browser tab which doesn't have accesse to required chrome apis, so we provide them here for UI testing purposes
+    if (process.env.NODE_ENV === "development") {
+      global.chrome = {
+        runtime: {
+          // @ts-ignore
+          getManifest: () => {
+            return { update_url: true };
+          },
+        },
+        tabs: {
+          // @ts-ignore
+          query: () => {},
+          sendMessage: () => {},
+        },
+        storage: {
+          // @ts-ignore
+          local: {
+            get: () => {},
+            set: () => {},
+          },
+        },
+      };
     }
-  }
-  }
-}
+  },
+};
 
 export default testingTools;

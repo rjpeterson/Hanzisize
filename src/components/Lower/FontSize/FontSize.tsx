@@ -1,112 +1,112 @@
-import React, { ChangeEvent } from 'react';
-import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { grey } from '@material-ui/core/colors';
-import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
-import { FontSizeButtonsProps } from '../../../../types';
+import React, { ChangeEvent } from "react";
+import Button from "@material-ui/core/Button";
+import Input from "@material-ui/core/Input";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { grey } from "@material-ui/core/colors";
+import Grid from "@material-ui/core/Grid";
+import { Typography } from "@material-ui/core";
+import { FontSizeButtonsProps } from "../../../../types";
 
 import "./FontSize.css";
 
 const fontSizes = {
   small: 10,
   medium: 18,
-  large: 24
-}
+  large: 24,
+};
 
 const useStyles = makeStyles({
   grid: {
-    paddingTop: '1rem',
-    paddingBottom: '.5rem',
+    paddingTop: "1rem",
+    paddingBottom: ".5rem",
   },
   subgrid: {
-    padding: '0 5px',
+    padding: "0 5px",
   },
   small: {
-    fontSize: fontSizes.small
+    fontSize: fontSizes.small,
   },
   medium: {
-    fontSize: fontSizes.medium
+    fontSize: fontSizes.medium,
   },
   large: {
-    fontSize: fontSizes.large
+    fontSize: fontSizes.large,
   },
   plusMinusButton: {
-    height: '1rem',
-    border: '1px solid',
+    height: "1rem",
+    border: "1px solid",
     borderRadius: 4,
     backgroundColor: grey[50],
     borderColor: grey[800],
     color: grey[800],
-  }
-})
+  },
+});
 
 const FontSizeInput = withStyles({
   root: {
     width: 57,
-    height: '1rem',
-    boxShadow: 'none',
-    textTransform: 'none',
-    padding: '8px 0px',
-    textAlign: 'center',
+    height: "1rem",
+    boxShadow: "none",
+    textTransform: "none",
+    padding: "8px 0px",
+    textAlign: "center",
     lineHeight: 1.5,
     color: grey[800],
-    'font-family': [
-      '-apple-system',
-      'BlinkMacSystemFont',
+    "font-family": [
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"'
+      '"Segoe UI Symbol"',
     ],
   },
   underline: {
-    '&::before': {
-      'left': '20%',
-      'width': '60%'
+    "&::before": {
+      left: "20%",
+      width: "60%",
     },
-    '&::after': {
-      'left': '20%',
-      'width': '60%'
+    "&::after": {
+      left: "20%",
+      width: "60%",
     },
-  }
+  },
 })(Input);
 
 const NormalButton = withStyles({
   root: {
     height: 57,
-    boxShadow: 'none',
-    textTransform: 'none',
-    padding: '8px 7px',
-    border: '1px solid',
+    boxShadow: "none",
+    textTransform: "none",
+    padding: "8px 7px",
+    border: "1px solid",
     borderRadius: 13,
     lineHeight: 1.5,
     backgroundColor: grey[50],
     borderColor: grey[800],
     color: grey[800],
     fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
-    '&:hover': {
+    ].join(","),
+    "&:hover": {
       backgroundColor: grey[300],
       color: grey[800],
       boxShadow: "2px 2px 6px 1px rgba(0, 0, 0, 0.1)",
-    }
+    },
   },
 })(Button);
 
@@ -114,27 +114,27 @@ const ActiveButton = withStyles({
   root: {
     height: 57,
     boxShadow: "2px 2px 6px 1px rgba(0, 0, 0, 0.1)",
-    textTransform: 'none',
-    padding: '8px 7px',
-    border: '1px solid',
+    textTransform: "none",
+    padding: "8px 7px",
+    border: "1px solid",
     borderRadius: 13,
     lineHeight: 1.5,
     backgroundColor: grey[500],
     borderColor: grey[800],
     color: grey[50],
     fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
-    '&:hover': {
+    ].join(","),
+    "&:hover": {
       backgroundColor: grey[300],
       color: grey[800],
       boxShadow: "2px 2px 6px 1px rgba(0, 0, 0, 0.1)",
@@ -142,7 +142,10 @@ const ActiveButton = withStyles({
   },
 })(Button);
 
-export default function FontSizeButtons({minFontSize, changeHandler}: FontSizeButtonsProps) {
+export default function FontSizeButtons({
+  minFontSize,
+  changeHandler,
+}: FontSizeButtonsProps) {
   const classes = useStyles();
 
   const handleButtonClick = (newValue: number) => {
@@ -150,16 +153,18 @@ export default function FontSizeButtons({minFontSize, changeHandler}: FontSizeBu
   };
 
   const decrementFontSize = () => {
-    const decrementedFontSize = (minFontSize > 0) ? (minFontSize - 1) : 0;
+    const decrementedFontSize = minFontSize > 0 ? minFontSize - 1 : 0;
     changeHandler(decrementedFontSize);
-  }
+  };
 
   const incrementFontSize = () => {
-    const incrementedFontSize = (minFontSize < 99) ? (minFontSize + 1) : 99;
+    const incrementedFontSize = minFontSize < 99 ? minFontSize + 1 : 99;
     changeHandler(incrementedFontSize);
-  }
+  };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     changeHandler(Number(event.target.value));
   };
 
@@ -172,38 +177,42 @@ export default function FontSizeButtons({minFontSize, changeHandler}: FontSizeBu
   };
 
   const buttonSwap = (minFontSize: number, fontsizeSML: number) => {
-    if(minFontSize === fontsizeSML) {
+    if (minFontSize === fontsizeSML) {
       return (
-        <ActiveButton onClick={() => { handleButtonClick(fontsizeSML)}}>
-          <Typography style={{fontSize: fontsizeSML}}>
-            Aa
-          </Typography>
+        <ActiveButton
+          onClick={() => {
+            handleButtonClick(fontsizeSML);
+          }}
+        >
+          <Typography style={{ fontSize: fontsizeSML }}>Aa</Typography>
         </ActiveButton>
-      )
+      );
     } else {
       return (
-        <NormalButton onClick={() => {handleButtonClick(fontsizeSML)}}>
-          <Typography style={{fontSize: fontsizeSML}}>
-            Aa
-          </Typography>
+        <NormalButton
+          onClick={() => {
+            handleButtonClick(fontsizeSML);
+          }}
+        >
+          <Typography style={{ fontSize: fontsizeSML }}>Aa</Typography>
         </NormalButton>
-      )
+      );
     }
-  }
+  };
 
   return (
-    <Grid 
-      container 
-      className={classes.grid} 
-      spacing={1} 
-      alignItems="center" 
+    <Grid
+      container
+      className={classes.grid}
+      spacing={1}
+      alignItems="center"
       justify="center"
     >
       <Grid item>{buttonSwap(minFontSize, fontSizes.small)}</Grid>
       <Grid item>{buttonSwap(minFontSize, fontSizes.medium)}</Grid>
       <Grid item>{buttonSwap(minFontSize, fontSizes.large)}</Grid>
       <Grid item>
-        <Grid 
+        <Grid
           container
           className={classes.subgrid}
           direction="column"
@@ -211,27 +220,26 @@ export default function FontSizeButtons({minFontSize, changeHandler}: FontSizeBu
           alignItems="center"
         >
           <Grid item>
-            <Typography variant='body2'>
-              Custom
-            </Typography>
+            <Typography variant="body2">Custom</Typography>
           </Grid>
           <Grid item xs>
-          {/* @ts-ignore */}
+            {/* @ts-ignore */}
             <FontSizeInput
               type="number"
               value={minFontSize}
-              onChange={(event) => {handleInputChange(event)}}
+              onChange={(event) => {
+                handleInputChange(event);
+              }}
               onBlur={handleBlur}
               disableUnderline
               inputProps={{
-                style: {textAlign: 'center'},
+                style: { textAlign: "center" },
                 step: 1,
                 min: 0,
                 max: 99,
-                type: 'number',
-                'aria-label': 'minimum font size',
-                }
-              }
+                type: "number",
+                "aria-label": "minimum font size",
+              }}
             />
           </Grid>
           <Grid item>
@@ -240,20 +248,24 @@ export default function FontSizeButtons({minFontSize, changeHandler}: FontSizeBu
               color="default"
               aria-label="horizontal outlined primary button group"
             >
-              <Button 
+              <Button
                 size="small"
                 className={classes.plusMinusButton}
-                onClick={() => {decrementFontSize()}}
+                onClick={() => {
+                  decrementFontSize();
+                }}
               >
                 -
               </Button>
-              <Button 
+              <Button
                 size="small"
-                className={classes.plusMinusButton}  
-                onClick={() => {incrementFontSize()}}
-                >
-                  +
-                </Button>
+                className={classes.plusMinusButton}
+                onClick={() => {
+                  incrementFontSize();
+                }}
+              >
+                +
+              </Button>
             </ButtonGroup>
           </Grid>
         </Grid>
