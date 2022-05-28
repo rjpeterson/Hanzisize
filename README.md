@@ -20,7 +20,7 @@ Hi there. I'm Ryan, the sole developer of Hanzisize. I've spent hundreds of hour
 You can show your appreciation for Hanzisize by donating in the following ways:
 * Buy me a matcha latte\!
 
-<a href="https://www.buymeacoffee.com/djmouthguard"><img src="https://github.com/rjpeterson/Hanzisize/blob/main/src/images/BMC.png" height="50px" alt="buy me a coffee button"></a>
+<a href="https://ko-fi.com/rjpeterson"><img src="https://github.com/rjpeterson/Hanzisize/blob/main/src/images/BMC.png" height="50px" alt="buy me a coffee button"></a>
 
 * Donate Bitcoin\!
 
