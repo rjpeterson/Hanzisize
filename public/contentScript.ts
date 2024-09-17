@@ -1,6 +1,26 @@
 import { StoredData } from "../types";
 
-var test_mode = false;
+const testingTools = {
+  devMode: () => {
+    if (
+      chrome &&
+      chrome.runtime &&
+      typeof chrome.runtime.getManifest !== "undefined"
+    ) {
+      // update_url is set by chrome webstore on submit. If it doesn't exist, the extension was loaded locally rather than installed from webstore
+      return !("update_url" in chrome.runtime.getManifest());
+    } else {
+      return false;
+    }
+  },
+
+  devLog: (str: string) => {
+    if (testingTools.devMode()) {
+      console.log(str);
+    }
+  },
+};
+
 let mostRecentSettings: StoredData;
 
 const hanzisizeUtil = {
@@ -84,9 +104,7 @@ const hanzisizeUtil = {
         // apply corresponding {language}-elem class
         $(this).addClass(`${language}-elem`);
       } else {
-        if (test_mode) {
-          console.log(`case 1: element does not contain ${language} text`);
-        }
+        testingTools.devLog(`case 1: element does not contain ${language} text`);
       }
     });
   },
@@ -165,49 +183,37 @@ const hanzisizeUtil = {
     );
 
     if (currentFontSize === minFontSize) {
-      if (test_mode) console.log("CFS equals NMFS. no change");
+      testingTools.devLog("CFS equals NMFS. no change");
     } else if (currentFontSize > minFontSize) {
       // from big to small
-      if (test_mode) {
-        console.log(`CurentFS is larger than NewMinFS`);
-      }
+      testingTools.devLog(`CurentFS is larger than NewMinFS`);
 
       if (!originalFontSize) {
-        if (test_mode) {
-          console.log(`case 2: CurrentFS is intial. No change`);
-        }
+        testingTools.devLog(`case 2: CurrentFS is intial. No change`);
         return;
       } else if (originalFontSize > minFontSize) {
-        if (test_mode) {
-          console.log(
+        testingTools.devLog(
             `case 3: CurrentFS is not intial and originalFS is larger than NewMinFS. FS set to OriginalFS`
           );
-        }
 
         el.style.setProperty("font-size", originalFontSize + "px", "important");
         hanzisizeUtil.adjustLineHeight(el, originalFontSize);
       } else {
-        if (test_mode) {
-          console.log(
+        testingTools.devLog(
             `case 4: CurrentFS is not initial and less than or equal to NewMinFS. FS to NewMinFS`
           );
-        }
 
         el.style.setProperty("font-size", minFontSize + "px", "important");
         hanzisizeUtil.adjustLineHeight(el, minFontSize);
       }
     } else {
       // CFS < NMFS   from small to big
-      if (test_mode) {
-        console.log(`CFS is less than NMFS`);
-      }
+      testingTools.devLog(`CFS is less than NMFS`);
 
       if (!originalFontSize) {
-        if (test_mode) {
-          console.log(
+        testingTools.devLog(
             `case 5: No OriginalFS. Save CurrentFS as OriginalFS. Set FS to NewMinFS`
           );
-        }
 
         el.style.setProperty(
           "--data-original-font-size",
@@ -216,11 +222,9 @@ const hanzisizeUtil = {
         el.style.setProperty("font-size", minFontSize + "px", "important");
         hanzisizeUtil.adjustLineHeight(el, minFontSize);
       } else {
-        if (test_mode) {
-          console.log(
+        testingTools.devLog(
             `case 6: OriginalFS && (CurrentFS < NMFS), Set FS to NewMinFS`
           );
-        }
 
         el.style.setProperty("font-size", minFontSize + "px", "important");
         hanzisizeUtil.adjustLineHeight(el, minFontSize);
@@ -251,7 +255,7 @@ const hanzisizeUtil = {
     mode: string,
     nodeSelector?: string
   ) {
-    if (test_mode) console.log(`initiating main function...`);
+    testingTools.devLog(`initiating main function...`);
 
     // first tag DOM elements
     if (mode === "initial") {
@@ -289,7 +293,7 @@ const hanzisizeUtil = {
         );
       }
     } catch (err) {
-      console.log(`Hanzisize failed: ${err}`);
+      testingTools.devLog(`Hanzisize failed: ${err}`);
     }
     // }
   },
@@ -301,13 +305,11 @@ try {
   chrome.runtime.onMessage.addListener(function (obj, sender, sendResponse) {
     // save object sent from popup
     mostRecentSettings = obj;
-    if (test_mode) {
-      console.log(
+    testingTools.devLog(
         "object received by contentScript:" +
           JSON.stringify(obj) +
           "Resizing now..."
       );
-    }
 
     // call resizing function with object properties received from popup
     hanzisizeUtil.main(obj.language, obj.minFontSize, obj.mode);
@@ -332,7 +334,7 @@ try {
     mutationsList,
     observer
   ) {
-    console.log("mutation observer triggered");
+    testingTools.devLog("mutation observer triggered");
     const obj = mostRecentSettings;
     // the below works but is pretty ineffiecient. Better solution should exist. should at least wrap in 'if(mutation.addedNodes)'
     hanzisizeUtil.main(obj.language, obj.minFontSize, "mutation", "body *");
@@ -350,7 +352,7 @@ try {
     //       nodeSelector = nodeSelector.concat('.' + element)
     //     });
     //     // --> getElementsByClassName()
-    // console.log('mutation observer - nodes have been added')
+    // testingTools.devLog('mutation observer - nodes have been added')
     //     hanzisizeUtil.main(obj.language, obj.minFontSize, 'mutation', nodeSelector)
     // }
     // }
@@ -360,18 +362,14 @@ try {
   // Start observing the target node for configured mutations
   observer.observe(targetNode, config);
 } catch (err) {
-  if (test_mode) {
-    console.log(err);
-  }
+  testingTools.devLog(err);
 }
 
 try {
   module.exports = hanzisizeUtil;
 } catch (err) {
-  if (test_mode) {
-    console.log(
+  testingTools.devLog(
       err +
         ".  'module' only necessary for testing purposes. Not needed in production."
     );
-  }
 }
